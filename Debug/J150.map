@@ -1,7 +1,7 @@
 ******************************************************************************
              TMS320C2000 Linker PC v18.12.1                    
 ******************************************************************************
->> Linked Tue Sep 15 22:34:39 2020
+>> Linked Tue Sep 15 22:55:41 2020
 
 OUTPUT FILE NAME:   <J150.out>
 ENTRY POINT SYMBOL: "_c_int00"  address: 0033a566
@@ -25,7 +25,7 @@ PAGE 0:
   FLASHE                00318000   00008000  00000000  00008000  RWIX
   FLASHD                00320000   00008000  0000001f  00007fe1  RWIX
   FLASHC                00328000   00008000  00000000  00008000  RWIX
-  FLASHA                00338000   00007f80  00002f59  00005027  RWIX
+  FLASHA                00338000   00007f80  00002f61  0000501f  RWIX
   CSM_RSVD              0033ff80   00000076  00000000  00000076  RWIX
   BEGIN                 0033fff6   00000002  00000002  00000000  RWIX
   CSM_PWL               0033fff8   00000008  00000000  00000008  RWIX
@@ -90,7 +90,7 @@ PAGE 1:
   SCIB                  00007750   00000010  00000010  00000000  RWIX
   SCIC                  00007770   00000010  00000010  00000000  RWIX
   I2CA                  00007900   00000040  00000022  0000001e  RWIX
-  RAML4                 0000c000   00001500  00000654  00000eac  RWIX
+  RAML4                 0000c000   00001500  0000065c  00000ea4  RWIX
   RAML5                 0000d500   00000500  00000000  00000500  RWIX
   RAML6                 0000e000   00001000  00000000  00001000  RWIX
   RAML7                 0000f000   00001000  00000000  00001000  RWIX
@@ -135,35 +135,35 @@ ramfuncs   0    00320000    0000001f     RUN ADDR = 00008243
                   0033adf0    00000002     pf_spi_cfg.obj (.econst:_SDB_CfgSpiHdlTbl)
                   0033adf2    00000002     pf_xintf_cfg.obj (.econst:_SDB_CfgXintfHdlTbl)
 
-.cinit     0    0033adf4    00000165     
-                  0033adf4    0000002e     sci_protocal.obj (.cinit)
-                  0033ae22    0000002b     main.obj (.cinit:_CfgGpioTbl_User)
-                  0033ae4d    00000022     main.obj (.cinit)
-                  0033ae6f    0000001d     timer0_isr.obj (.cinit)
-                  0033ae8c    0000001b     main.obj (.cinit:_CfgPwmTbl_User)
-                  0033aea7    00000014     position_ssi_service.obj (.cinit)
-                  0033aebb    0000000e     arinc429_service.obj (.cinit:_arinc429)
-                  0033aec9    0000000e     kalman_service.obj (.cinit)
-                  0033aed7    0000000e     rts2800_fpu32.lib : exit.c.obj (.cinit)
-                  0033aee5    0000000a     Flash28335_API_V210.lib : Flash28_Globals.obj (.cinit)
-                  0033aeef    0000000a     sys_state_service.obj (.cinit)
-                  0033aef9    00000009     main.obj (.cinit:_CfgTimerTbl_User)
-                  0033af02    00000008     main.obj (.cinit:_CfgInterruptTbl_User)
-                  0033af0a    00000008     main.obj (.cinit:_CfgSciTbl_User)
-                  0033af12    00000008     main.obj (.cinit:_CfgXintfTbl_User)
-                  0033af1a    00000008     spwm_service.obj (.cinit)
-                  0033af22    00000007     main.obj (.cinit:_CfgSpiTbl_User)
-                  0033af29    00000007     rvdt_service.obj (.cinit:_gTest)
-                  0033af30    00000005     rts2800_fpu32.lib : _lock.c.obj (.cinit:__lock)
-                  0033af35    00000005                       : _lock.c.obj (.cinit:__unlock)
-                  0033af3a    00000005     rvdt_service.obj (.cinit)
-                  0033af3f    00000004     main.obj (.cinit:_CfgAdcTbl_User)
-                  0033af43    00000004     sci_protocal.obj (.cinit:_gRx422TxEnableFlag)
-                  0033af47    00000004     sci_protocal.obj (.cinit:_rs422rxPack)
-                  0033af4b    00000004     adc_service.obj (.cinit)
-                  0033af4f    00000004     arinc429_service.obj (.cinit)
-                  0033af53    00000004     rts2800_fpu32.lib : memory.c.obj (.cinit)
-                  0033af57    00000002     --HOLE-- [fill = 0]
+.cinit     0    0033adf4    0000016d     
+                  0033adf4    00000033     main.obj (.cinit:_CfgGpioTbl_User)
+                  0033ae27    0000002e     sci_protocal.obj (.cinit)
+                  0033ae55    00000022     main.obj (.cinit)
+                  0033ae77    0000001d     timer0_isr.obj (.cinit)
+                  0033ae94    0000001b     main.obj (.cinit:_CfgPwmTbl_User)
+                  0033aeaf    00000014     position_ssi_service.obj (.cinit)
+                  0033aec3    0000000e     arinc429_service.obj (.cinit:_arinc429)
+                  0033aed1    0000000e     kalman_service.obj (.cinit)
+                  0033aedf    0000000e     rts2800_fpu32.lib : exit.c.obj (.cinit)
+                  0033aeed    0000000a     Flash28335_API_V210.lib : Flash28_Globals.obj (.cinit)
+                  0033aef7    0000000a     sys_state_service.obj (.cinit)
+                  0033af01    00000009     main.obj (.cinit:_CfgTimerTbl_User)
+                  0033af0a    00000008     main.obj (.cinit:_CfgInterruptTbl_User)
+                  0033af12    00000008     main.obj (.cinit:_CfgSciTbl_User)
+                  0033af1a    00000008     main.obj (.cinit:_CfgXintfTbl_User)
+                  0033af22    00000008     spwm_service.obj (.cinit)
+                  0033af2a    00000007     main.obj (.cinit:_CfgSpiTbl_User)
+                  0033af31    00000007     rvdt_service.obj (.cinit:_gTest)
+                  0033af38    00000005     rts2800_fpu32.lib : _lock.c.obj (.cinit:__lock)
+                  0033af3d    00000005                       : _lock.c.obj (.cinit:__unlock)
+                  0033af42    00000005     rvdt_service.obj (.cinit)
+                  0033af47    00000004     main.obj (.cinit:_CfgAdcTbl_User)
+                  0033af4b    00000004     sci_protocal.obj (.cinit:_gRx422TxEnableFlag)
+                  0033af4f    00000004     sci_protocal.obj (.cinit:_rs422rxPack)
+                  0033af53    00000004     adc_service.obj (.cinit)
+                  0033af57    00000004     arinc429_service.obj (.cinit)
+                  0033af5b    00000004     rts2800_fpu32.lib : memory.c.obj (.cinit)
+                  0033af5f    00000002     --HOLE-- [fill = 0]
 
 DevEmuRegsFile 
 *          1    00000880    000000d0     UNINITIALIZED
@@ -429,15 +429,14 @@ codestart
                   0000c000    00000004     rts2800_fpu32.lib : memory.c.obj (.esysmem)
                   0000c004    000003fc     --HOLE--
 
-.ebss      1    0000c400    00000254     UNINITIALIZED
+.ebss      1    0000c400    0000025c     UNINITIALIZED
                   0000c400    000000e8     adc_service.obj (.ebss)
                   0000c4e8    00000018     DSP2833x_CpuTimers.obj (.ebss)
                   0000c500    00000064     sci_protocal.obj (.ebss:_rs422rxPack)
                   0000c564    00000018     main.obj (.ebss:_CfgPwmTbl_User)
                   0000c57c    00000004     DSP2833x_DMA.obj (.ebss)
-                  0000c580    00000028     main.obj (.ebss:_CfgGpioTbl_User)
-                  0000c5a8    00000010     sci_protocal.obj (.ebss)
-                  0000c5b8    00000008     sci_protocal.obj (.ebss:_gRx422TxEnableFlag)
+                  0000c580    00000030     main.obj (.ebss:_CfgGpioTbl_User)
+                  0000c5b0    00000010     sci_protocal.obj (.ebss)
                   0000c5c0    0000001e     position_ssi_service.obj (.ebss)
                   0000c5de    0000000f     spwm_service.obj (.ebss)
                   0000c5ed    00000001     main.obj (.ebss:_CfgAdcTbl_User)
@@ -447,21 +446,22 @@ codestart
                   0000c60b    00000001     --HOLE--
                   0000c60c    0000000a     main.obj (.ebss)
                   0000c616    00000009     sys_state_service.obj (.ebss)
-                  0000c61f    00000001     --HOLE--
-                  0000c620    00000006     kalman_service.obj (.ebss)
-                  0000c626    00000006     rts2800_fpu32.lib : exit.c.obj (.ebss)
-                  0000c62c    00000005     main.obj (.ebss:_CfgInterruptTbl_User)
-                  0000c631    00000005     main.obj (.ebss:_CfgSciTbl_User)
-                  0000c636    00000005     main.obj (.ebss:_CfgXintfTbl_User)
-                  0000c63b    00000001     --HOLE--
-                  0000c63c    00000004     Flash28335_API_V210.lib : Flash28_Globals.obj (.ebss)
-                  0000c640    00000004     main.obj (.ebss:_CfgSpiTbl_User)
-                  0000c644    00000004     rvdt_service.obj (.ebss:_gTest)
-                  0000c648    00000004     rts2800_fpu32.lib : memory.c.obj (.ebss)
-                  0000c64c    00000002                       : _lock.c.obj (.ebss:__lock)
-                  0000c64e    00000002                       : _lock.c.obj (.ebss:__unlock)
-                  0000c650    00000002     arinc429_service.obj (.ebss)
-                  0000c652    00000002     rvdt_service.obj (.ebss)
+                  0000c61f    00000008     sci_protocal.obj (.ebss:_gRx422TxEnableFlag)
+                  0000c627    00000001     --HOLE--
+                  0000c628    00000006     kalman_service.obj (.ebss)
+                  0000c62e    00000006     rts2800_fpu32.lib : exit.c.obj (.ebss)
+                  0000c634    00000005     main.obj (.ebss:_CfgInterruptTbl_User)
+                  0000c639    00000005     main.obj (.ebss:_CfgSciTbl_User)
+                  0000c63e    00000002     rts2800_fpu32.lib : _lock.c.obj (.ebss:__lock)
+                  0000c640    00000005     main.obj (.ebss:_CfgXintfTbl_User)
+                  0000c645    00000001     --HOLE--
+                  0000c646    00000004     Flash28335_API_V210.lib : Flash28_Globals.obj (.ebss)
+                  0000c64a    00000004     main.obj (.ebss:_CfgSpiTbl_User)
+                  0000c64e    00000004     rvdt_service.obj (.ebss:_gTest)
+                  0000c652    00000004     rts2800_fpu32.lib : memory.c.obj (.ebss)
+                  0000c656    00000002                       : _lock.c.obj (.ebss:__unlock)
+                  0000c658    00000002     arinc429_service.obj (.ebss)
+                  0000c65a    00000002     rvdt_service.obj (.ebss)
 
 .reset     0    003fffc0    00000002     DSECT
                   003fffc0    00000002     rts2800_fpu32.lib : boot28.asm.obj (.reset)
@@ -537,9 +537,9 @@ MODULE SUMMARY
        Total:                            159     10                 9                 
                                                                                       
     .\user\src\
-       main.obj                          336     148                100               
+       main.obj                          336     156                108               
     +--+---------------------------------+-------+------------------+--------------------+
-       Total:                            336     148                100               
+       Total:                            336     156                108               
                                                                                       
     .\user_lib\asm\
        DSP2833x_CodeStartBranch.obj      10      0                  0                 
@@ -599,7 +599,7 @@ MODULE SUMMARY
        Heap:                             0       0                  1024              
        Stack:                            0       0                  768               
     +--+---------------------------------+-------+------------------+--------------------+
-       Grand Total:                      11397   1951               5064              
+       Grand Total:                      11397   1959               5072              
 
 
 GLOBAL DATA SYMBOLS: SORTED BY DATA PAGE
@@ -709,14 +709,13 @@ address     data page           name
 0000c57e     315 (0000c540)     _DMASource
 
 0000c580     316 (0000c580)     _CfgGpioTbl_User
-0000c5a8     316 (0000c580)     _gmalloc
-0000c5ac     316 (0000c580)     _gScibRxQue
-0000c5ae     316 (0000c580)     _gScibTxQue
-0000c5b0     316 (0000c580)     _gSciTxVar
-0000c5b2     316 (0000c580)     _gRxPacketHead
-0000c5b4     316 (0000c580)     _gRxPacketTail
-0000c5b6     316 (0000c580)     _gRxPacketInfo
-0000c5b8     316 (0000c580)     _gRx422TxEnableFlag
+0000c5b0     316 (0000c580)     _gmalloc
+0000c5b4     316 (0000c580)     _gScibRxQue
+0000c5b6     316 (0000c580)     _gScibTxQue
+0000c5b8     316 (0000c580)     _gSciTxVar
+0000c5ba     316 (0000c580)     _gRxPacketHead
+0000c5bc     316 (0000c580)     _gRxPacketTail
+0000c5be     316 (0000c580)     _gRxPacketInfo
 
 0000c5c4     317 (0000c5c0)     _gPositionSSIPara
 0000c5de     317 (0000c5c0)     _gSwitch
@@ -739,21 +738,22 @@ address     data page           name
 0000c616     318 (0000c600)     _gSysVersionNum
 0000c618     318 (0000c600)     _Sys_hlstPtr
 0000c61a     318 (0000c600)     _gSysStateFlag
-0000c626     318 (0000c600)     ___TI_enable_exit_profile_output
-0000c628     318 (0000c600)     ___TI_cleanup_ptr
-0000c62a     318 (0000c600)     ___TI_dtors_ptr
-0000c62c     318 (0000c600)     _CfgInterruptTbl_User
-0000c631     318 (0000c600)     _CfgSciTbl_User
-0000c636     318 (0000c600)     _CfgXintfTbl_User
-0000c63c     318 (0000c600)     _Flash_CallbackPtr
-0000c63e     318 (0000c600)     _Flash_CPUScaleFactor
+0000c61f     318 (0000c600)     _gRx422TxEnableFlag
+0000c62e     318 (0000c600)     ___TI_enable_exit_profile_output
+0000c630     318 (0000c600)     ___TI_cleanup_ptr
+0000c632     318 (0000c600)     ___TI_dtors_ptr
+0000c634     318 (0000c600)     _CfgInterruptTbl_User
+0000c639     318 (0000c600)     _CfgSciTbl_User
+0000c63e     318 (0000c600)     __lock
 
-0000c640     319 (0000c640)     _CfgSpiTbl_User
-0000c644     319 (0000c640)     _gTest
-0000c64c     319 (0000c640)     __lock
-0000c64e     319 (0000c640)     __unlock
-0000c650     319 (0000c640)     _gArinc429Para
-0000c652     319 (0000c640)     _SDB_RVDT_Read_Addr
+0000c640     319 (0000c640)     _CfgXintfTbl_User
+0000c646     319 (0000c640)     _Flash_CallbackPtr
+0000c648     319 (0000c640)     _Flash_CPUScaleFactor
+0000c64a     319 (0000c640)     _CfgSpiTbl_User
+0000c64e     319 (0000c640)     _gTest
+0000c656     319 (0000c640)     __unlock
+0000c658     319 (0000c640)     _gArinc429Para
+0000c65a     319 (0000c640)     _SDB_RVDT_Read_Addr
 
 0033a7b8    ce9e (0033a780)     _SDC_Sin_Tbl
 
@@ -920,12 +920,12 @@ page  address   name
 0     003394eb  _Calculate_Three_Phase_Duty     
 1     0000c5ed  _CfgAdcTbl_User                 
 1     0000c580  _CfgGpioTbl_User                
-1     0000c62c  _CfgInterruptTbl_User           
+1     0000c634  _CfgInterruptTbl_User           
 1     0000c564  _CfgPwmTbl_User                 
-1     0000c631  _CfgSciTbl_User                 
-1     0000c640  _CfgSpiTbl_User                 
+1     0000c639  _CfgSciTbl_User                 
+1     0000c64a  _CfgSpiTbl_User                 
 1     0000c5fa  _CfgTimerTbl_User               
-1     0000c636  _CfgXintfTbl_User               
+1     0000c640  _CfgXintfTbl_User               
 0     00339d57  _CheckEnableSciaTx              
 0     00339d68  _CheckEnableScibTx              
 0     00339d79  _CheckEnableScicTx              
@@ -1037,8 +1037,8 @@ page  address   name
 0     00008000  _Flash28_API_RunStart           
 0     0033a75e  _FlashAPI_Init                  
 1     00000a80  _FlashRegs                      
-1     0000c63e  _Flash_CPUScaleFactor           
-1     0000c63c  _Flash_CallbackPtr              
+1     0000c648  _Flash_CPUScaleFactor           
+1     0000c646  _Flash_CallbackPtr              
 0     0033825c  _GetDisplacementCurve           
 0     0033826e  _GetDynamoCurrentCurve          
 0     00338268  _GetDynamoVoltageCurve          
@@ -1145,7 +1145,7 @@ page  address   name
 0     0033ade8  _SDB_CfgTimerHdlTbl             
 0     0033adf2  _SDB_CfgXintfHdlTbl             
 0     0033adda  _SDB_MsgFuncTbl                 
-1     0000c652  _SDB_RVDT_Read_Addr             
+1     0000c65a  _SDB_RVDT_Read_Addr             
 0     0033ada4  _SDB_SingleAdUVTBL              
 0     0033ad68  _SDB_SingleAnologMaxMinInit     
 0     0033a7b8  _SDC_Sin_Tbl                    
@@ -1212,9 +1212,9 @@ page  address   name
 1     00000700  __STACK_END                     
 abs   00000300  __STACK_SIZE                    
 abs   00000400  __SYSMEM_SIZE                   
-1     0000c628  ___TI_cleanup_ptr               
-1     0000c62a  ___TI_dtors_ptr                 
-1     0000c626  ___TI_enable_exit_profile_output
+1     0000c630  ___TI_cleanup_ptr               
+1     0000c632  ___TI_dtors_ptr                 
+1     0000c62e  ___TI_enable_exit_profile_output
 0     00339459  ___TI_heap_check                
 0     0033943c  ___TI_heap_largest_available    
 0     0033941f  ___TI_heap_total_available      
@@ -1228,7 +1228,7 @@ abs   ffffffff  ___c_args__
 abs   ffffffff  ___pinit__                      
 0     00338000  ___text__                       
 0     0033a732  __args_main                     
-1     0000c64c  __lock                          
+1     0000c63e  __lock                          
 0     0033a78c  __nop                           
 0     0033a788  __register_lock                 
 0     0033a784  __register_unlock               
@@ -1236,7 +1236,7 @@ abs   ffffffff  ___pinit__
 1     0000c000  __sys_memory                    
 0     0033a7b6  __system_post_cinit             
 0     0033a7b4  __system_pre_init               
-1     0000c64e  __unlock                        
+1     0000c656  __unlock                        
 0     0033a668  _abort                          
 0     0033938a  _aligned_alloc                  
 1     0000c600  _arinc429                       
@@ -1246,30 +1246,30 @@ abs   ffffffff  ___pinit__
 0     0033a691  _copy_in                        
 0     0033a66a  _exit                           
 0     00339220  _free                           
-1     0000c650  _gArinc429Para                  
+1     0000c658  _gArinc429Para                  
 1     0000c5ee  _gFeedWatchDogCnt               
 1     0000c610  _gIsOC                          
 1     0000c60d  _gIsOcCnt                       
 1     0000c611  _gNoOC                          
 1     0000c60f  _gP                             
 1     0000c5c4  _gPositionSSIPara               
-1     0000c5b8  _gRx422TxEnableFlag             
-1     0000c5b2  _gRxPacketHead                  
-1     0000c5b6  _gRxPacketInfo                  
-1     0000c5b4  _gRxPacketTail                  
+1     0000c61f  _gRx422TxEnableFlag             
+1     0000c5ba  _gRxPacketHead                  
+1     0000c5be  _gRxPacketInfo                  
+1     0000c5bc  _gRxPacketTail                  
 1     0000c5f2  _gSSIDATA                       
 1     0000c5f4  _gSSIDATABAK                    
-1     0000c5b0  _gSciTxVar                      
-1     0000c5ac  _gScibRxQue                     
-1     0000c5ae  _gScibTxQue                     
+1     0000c5b8  _gSciTxVar                      
+1     0000c5b4  _gScibRxQue                     
+1     0000c5b6  _gScibTxQue                     
 1     0000c5df  _gSpwmPara                      
 1     0000c5de  _gSwitch                        
 1     0000c400  _gSysAnalogVar                  
 1     0000c61a  _gSysStateFlag                  
 1     0000c616  _gSysVersionNum                 
-1     0000c644  _gTest                          
+1     0000c64e  _gTest                          
 1     0000c60c  _gTestcount                     
-1     0000c5a8  _gmalloc                        
+1     0000c5b0  _gmalloc                        
 1     0000c614  _gtArinc429ReadWord             
 1     0000c612  _gtArinc429SendWord             
 1     0000c60e  _gtest                          
@@ -1775,14 +1775,13 @@ page  address   name
 1     0000c57c  _DMADest                        
 1     0000c57e  _DMASource                      
 1     0000c580  _CfgGpioTbl_User                
-1     0000c5a8  _gmalloc                        
-1     0000c5ac  _gScibRxQue                     
-1     0000c5ae  _gScibTxQue                     
-1     0000c5b0  _gSciTxVar                      
-1     0000c5b2  _gRxPacketHead                  
-1     0000c5b4  _gRxPacketTail                  
-1     0000c5b6  _gRxPacketInfo                  
-1     0000c5b8  _gRx422TxEnableFlag             
+1     0000c5b0  _gmalloc                        
+1     0000c5b4  _gScibRxQue                     
+1     0000c5b6  _gScibTxQue                     
+1     0000c5b8  _gSciTxVar                      
+1     0000c5ba  _gRxPacketHead                  
+1     0000c5bc  _gRxPacketTail                  
+1     0000c5be  _gRxPacketInfo                  
 1     0000c5c4  _gPositionSSIPara               
 1     0000c5de  _gSwitch                        
 1     0000c5df  _gSpwmPara                      
@@ -1803,20 +1802,21 @@ page  address   name
 1     0000c616  _gSysVersionNum                 
 1     0000c618  _Sys_hlstPtr                    
 1     0000c61a  _gSysStateFlag                  
-1     0000c626  ___TI_enable_exit_profile_output
-1     0000c628  ___TI_cleanup_ptr               
-1     0000c62a  ___TI_dtors_ptr                 
-1     0000c62c  _CfgInterruptTbl_User           
-1     0000c631  _CfgSciTbl_User                 
-1     0000c636  _CfgXintfTbl_User               
-1     0000c63c  _Flash_CallbackPtr              
-1     0000c63e  _Flash_CPUScaleFactor           
-1     0000c640  _CfgSpiTbl_User                 
-1     0000c644  _gTest                          
-1     0000c64c  __lock                          
-1     0000c64e  __unlock                        
-1     0000c650  _gArinc429Para                  
-1     0000c652  _SDB_RVDT_Read_Addr             
+1     0000c61f  _gRx422TxEnableFlag             
+1     0000c62e  ___TI_enable_exit_profile_output
+1     0000c630  ___TI_cleanup_ptr               
+1     0000c632  ___TI_dtors_ptr                 
+1     0000c634  _CfgInterruptTbl_User           
+1     0000c639  _CfgSciTbl_User                 
+1     0000c63e  __lock                          
+1     0000c640  _CfgXintfTbl_User               
+1     0000c646  _Flash_CallbackPtr              
+1     0000c648  _Flash_CPUScaleFactor           
+1     0000c64a  _CfgSpiTbl_User                 
+1     0000c64e  _gTest                          
+1     0000c656  __unlock                        
+1     0000c658  _gArinc429Para                  
+1     0000c65a  _SDB_RVDT_Read_Addr             
 1     0033fff8  _CsmPwl                         
 1     00380090  _PartIdRegs                     
 abs   00000300  __STACK_SIZE                    
