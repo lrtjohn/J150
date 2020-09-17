@@ -4,40 +4,40 @@
 
 SysAnalogVar gSysAnalogVar = {0};
 
-Uint16 updateForceValue(void){return Get_Adc_CHL1;}
-Uint16 updateBusCurrentP(void){return Get_Adc_CHL2;}
-Uint16 updatePower28V_M(void){return Get_Adc_CHL3;}
-Uint16 updateBridgeCurrentB(void){return Get_Adc_CHL4;}
-Uint16 updateBusCurrentB(void){return Get_Adc_CHL5;}
-Uint16 updatePower28V(void){return Get_Adc_CHL6;}
-Uint16 updateBridgeCurrentA(void){return Get_Adc_CHL7;}
-Uint16 updateBusCurrentA(void){return Get_Adc_CHL8;}
-Uint16 updateDisplacementValue(void){return Get_Adc_CHL9;}
-Uint16 updateBridgeCurrentC(void){return Get_Adc_CHL10;}
-Uint16 updateBusCurrentC(void){return Get_Adc_CHL11;}
-Uint16 updateBusCurrentC1(void){return Get_Adc_CHL12;}
-Uint16 updateBusCurrentC2(void){return Get_Adc_CHL13;}
-Uint16 updateBusCurrentC3(void){return Get_Adc_CHL14;}
-Uint16 updateBusCurrentC4(void){return Get_Adc_CHL15;}
+Uint16 updateBridgeCurrentB(void){return Get_Adc_CHL1;}
+Uint16 updateBridgeCurrentA(void){return Get_Adc_CHL2;}
+Uint16 updateDriverTemp(void){return Get_Adc_CHL3;}
+Uint16 updatePower270V_M(void){return Get_Adc_CHL4;}
+Uint16 Reversed_chl5(void){return Get_Adc_CHL5;}
+Uint16 updateVoltage28V(void){return Get_Adc_CHL6;}
+Uint16 updateCurrent28V(void){return Get_Adc_CHL7;}
+Uint16 updateMotorTemp(void){return Get_Adc_CHL8;}
+Uint16 updateBridgeCurrentC(void){return Get_Adc_CHL9;}
+Uint16 updateCurrentMin(void){return Get_Adc_CHL10;}
+Uint16 updateVoltageRef1V5(void){return Get_Adc_CHL11;}
+Uint16 updateDriverVoltage5V(void){return Get_Adc_CHL12;}
+Uint16 updateCurrentMax(void){return Get_Adc_CHL13;}
+Uint16 updateVoltageRef2V5(void){return Get_Adc_CHL14;}
+Uint16 updateVoltageAVDD5V(void){return Get_Adc_CHL15;}
 
 
 const UV SDB_SingleAdUVTBL[TOTAL_SNGL_ANAL_CHS] = 
 {
-	updateForceValue,
-	updateBusCurrentP,
-	updatePower28V_M,
-	updateBridgeCurrentB,
-	updateBusCurrentB,
-	updatePower28V,
-	updateBridgeCurrentA,
-	updateBusCurrentA,
-	updateDisplacementValue,
+ 	updateBridgeCurrentB,
+    updateBridgeCurrentA,
+	updateDriverTemp,
+	updatePower270V_M,
+	Reversed_chl5,
+	updateVoltage28V,
+	updateCurrent28V,
+	updateMotorTemp,
 	updateBridgeCurrentC,
-	updateBusCurrentC,
-    updateBusCurrentC1,
-    updateBusCurrentC2,
-    updateBusCurrentC3,
-    updateBusCurrentC4,
+	updateCurrentMin,
+	updateVoltageRef1V5,
+	updateDriverVoltage5V,
+	updateCurrentMax,
+	updateVoltageRef2V5,
+	updateVoltageAVDD5V,
 };
 
 const Uint16 SDB_SingleAnologMaxMinInit[TOTAL_SNGL_ANAL_CHS][4] = 
