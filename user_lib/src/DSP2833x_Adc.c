@@ -83,7 +83,7 @@ void ADC_Config(void)
 void Init_ADC(void)
 {
 	InitAdc();
-	ADC_Config();
+//	ADC_Config();
 }
 //===========================================================================
 // End of file.
