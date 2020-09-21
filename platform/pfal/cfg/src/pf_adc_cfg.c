@@ -16,14 +16,14 @@ void CFG_ADC(CFG_ADC_TBL cfgAdcTblElement)
 
 	AdcRegs.ADCMAXCONV.all = 0x0007; //set 8 conversions, using SEQ1
 
-    AdcRegs.ADCCHSELSEQ1.bit.CONV00 = 0x0;
-    AdcRegs.ADCCHSELSEQ1.bit.CONV01 = 0x1;
-    AdcRegs.ADCCHSELSEQ1.bit.CONV02 = 0x2;
-    AdcRegs.ADCCHSELSEQ1.bit.CONV03 = 0x3;
-    AdcRegs.ADCCHSELSEQ2.bit.CONV04 = 0x4;
-    AdcRegs.ADCCHSELSEQ2.bit.CONV05 = 0x5;
-    AdcRegs.ADCCHSELSEQ2.bit.CONV06 = 0x6;
-    AdcRegs.ADCCHSELSEQ2.bit.CONV07 = 0x7;
+    AdcRegs.ADCCHSELSEQ1.bit.CONV00 = 0x0; //ADCINA0/B0
+    AdcRegs.ADCCHSELSEQ1.bit.CONV01 = 0x1; //ADCINA1/B1
+    AdcRegs.ADCCHSELSEQ1.bit.CONV02 = 0x2; //ADCINA2/B2
+    AdcRegs.ADCCHSELSEQ1.bit.CONV03 = 0x3; //ADCINA3/B3
+    AdcRegs.ADCCHSELSEQ2.bit.CONV04 = 0x4; //ADCINA4/B4
+    AdcRegs.ADCCHSELSEQ2.bit.CONV05 = 0x5; //ADCINA5/B5
+    AdcRegs.ADCCHSELSEQ2.bit.CONV06 = 0x6; //ADCINA6/B6
+    AdcRegs.ADCCHSELSEQ2.bit.CONV07 = 0x7; //ADCINA7/B7
 
 	AdcRegs.ADCTRL1.bit.SEQ_OVRD = 0;
 	AdcRegs.ADCTRL2.bit.SOC_SEQ1 = 1;
