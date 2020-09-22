@@ -2,7 +2,7 @@
 #include <stdio.h>
 
 
-static Uint16 APP_PROTOCOL_GetCommand(unsigned char* data)
+static Uint16 J150_APP_PROTOCOL_GetCommand(unsigned char* data)
 {
     Uint16 command;
     
@@ -11,12 +11,12 @@ static Uint16 APP_PROTOCOL_GetCommand(unsigned char* data)
     return command;
 }
 
-static Uint16 APP_PROTOCOL_GetWorkMode(unsigned char* data)
+static Uint16 J150_APP_PROTOCOL_GetWorkMode(unsigned char* data)
 {
     return data[WORK_MODE_POS];
 }
 
-static Uint16 APP_PROTOCOL_GetTargetSpeed(unsigned char* data)
+static Uint16 J150_APP_PROTOCOL_GetTargetSpeed(unsigned char* data)
 {
     Uint16 targetSpeed;
     
@@ -25,73 +25,60 @@ static Uint16 APP_PROTOCOL_GetTargetSpeed(unsigned char* data)
     return targetSpeed;
 }
 
-static Uint16 APP_PROTOCOL_GetCheckSum(unsigned char* data)
+static Uint16 J150_APP_PROTOCOL_GetCheckSum(unsigned char* data)
 {
     return data[CHECK_SUM_POS];
 }
 
-static int J150_Init(void)
+static int J150_TransInit(void)
 {
     return SUCCESS;
 }
 
-static int J150_Config(void)
+static int J150_TransConfig(void)
 {
     return SUCCESS;
 }
 
-static int J150_Start(void)
+static int J150_TransStart(void)
 {
     return SUCCESS;
 }
 
-static int J150_FindHead(SCIRXQUE* q)
+static int J150_TransFindHead(SCIRXQUE* q)
 {
     return SUCCESS;
 }
 
-static int J150_CheckLength(SCIRXQUE* q)
-{
-
-    return SUCCESS;
-}
-
-static int J150_CheckTail(SCIRXQUE* q)
+static int J150_TransCheckLength(SCIRXQUE* q)
 {
 
     return SUCCESS;
 }
 
-static int J150_SaveGoodPacket(int len, SCIRXQUE* q)
+static int J150_TransCheckTail(SCIRXQUE* q)
 {
 
     return SUCCESS;
 }
 
-static int J150_CheckSum(unsigned char* q)
+static int J150_TransSaveGoodPacket(int len, SCIRXQUE* q)
 {
 
     return SUCCESS;
 }
 
-static int J150_UpdateHeadPos(SCIRXQUE* q)
+static int J150_TransCheckSum(unsigned char* q)
 {
 
     return SUCCESS;
 }
-Uint16 J150_APP_PROTOCOL_Init(SCI_APP_PROTOCOL* pAppProtocol)
+
+static int J150_TransUpdateHeadPos(SCIRXQUE* q)
 {
-    pAppProtocol->head[0]           = HEAD_1_DATA;
-    pAppProtocol->head[1]           = HEAD_1_DATA;
-    pAppProtocol->totalLen          = TOTAL_LEN;
-    pAppProtocol->getCommand        = APP_PROTOCOL_GetCommand;
-    pAppProtocol->getWorkMode       = APP_PROTOCOL_GetWorkMode;
-    pAppProtocol->getTargetSpeed    = APP_PROTOCOL_GetTargetSpeed;
-    pAppProtocol->getCheckSum       = APP_PROTOCOL_GetCheckSum;
-    return 1;
+
+    return SUCCESS;
 }
-
-
 
 SCI_APP_PROTOCOL gSciJ150AppProtocol =
 {
@@ -106,29 +93,29 @@ SCI_APP_PROTOCOL gSciJ150AppProtocol =
     {
         0
     },
-    APP_PROTOCOL_GetCommand,
-    APP_PROTOCOL_GetWorkMode,
-    APP_PROTOCOL_GetTargetSpeed,
-    APP_PROTOCOL_GetCheckSum
+    J150_APP_PROTOCOL_GetCommand,
+    J150_APP_PROTOCOL_GetWorkMode,
+    J150_APP_PROTOCOL_GetTargetSpeed,
+    J150_APP_PROTOCOL_GetCheckSum
 };
 SCI_TRANSPORT gSciJ150Trans =
 {
-    J150_Init,
-    J150_Config,
-    J150_Start,
-    J150_FindHead,
-    J150_CheckLength,
-    J150_CheckTail,
-    J150_SaveGoodPacket,
-    J150_CheckSum,
-    J150_UpdateHeadPos,
+    J150_TransInit,
+    J150_TransConfig,
+    J150_TransStart,
+    J150_TransFindHead,
+    J150_TransCheckLength,
+    J150_TransCheckTail,
+    J150_TransSaveGoodPacket,
+    J150_TransCheckSum,
+    J150_TransUpdateHeadPos,
 };
 
 void SCI_J150_UnpackData(SCIRXQUE* q, SCI_APP_PROTOCOL* pAppProtocol)
 {
     while(GetSciRxQueLength(q) >= pAppProtocol->totalLen);
     {
-        if(SCI_Adapt_FindHead(q) == FAIL)
+        if(SCI_Trans_Adapt_FindHead(q) == FAIL)
         {
             return;
         }
@@ -137,7 +124,7 @@ void SCI_J150_UnpackData(SCIRXQUE* q, SCI_APP_PROTOCOL* pAppProtocol)
             /* code */
         }
 
-        if(SCI_Adapt_CheckLength(q) == FAIL)
+        if(SCI_Trans_Adapt_CheckLength(q) == FAIL)
         {
             return;
         }
@@ -146,7 +133,7 @@ void SCI_J150_UnpackData(SCIRXQUE* q, SCI_APP_PROTOCOL* pAppProtocol)
             /* code */
         }
 
-        if(SCI_Adapt_CheckTail(q) == FAIL)
+        if(SCI_Trans_Adapt_CheckTail(q) == FAIL)
         {
             if(SciRxDeQueue(q) == 0)
             {
@@ -159,9 +146,9 @@ void SCI_J150_UnpackData(SCIRXQUE* q, SCI_APP_PROTOCOL* pAppProtocol)
             /* code */
         }
 
-        SCI_Adapt_SaveGoodPacket(pAppProtocol->totalLen, q);
+        SCI_Trans_Adapt_SaveGoodPacket(pAppProtocol->totalLen, q);
 
-        if(SCI_Adapt_CheckSum(pAppProtocol->goodPacketArray) == FAIL)
+        if(SCI_Trans_Adapt_CheckSum(pAppProtocol->goodPacketArray) == FAIL)
         {
             if(SciRxDeQueue(q) == 0)
             {
@@ -174,7 +161,6 @@ void SCI_J150_UnpackData(SCIRXQUE* q, SCI_APP_PROTOCOL* pAppProtocol)
             /* code */
         }
 
-        SCI_Adapt_UpdateHeadPos(q);
-
+        SCI_Trans_Adapt_UpdateHeadPos(q);
     }
 }
