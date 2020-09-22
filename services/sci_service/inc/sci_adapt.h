@@ -10,6 +10,8 @@ typedef int(*ADAPT_FindHead)(SCIRXQUE* q);
 typedef int(*ADAPT_CheckLength)(SCIRXQUE* q);
 typedef int(*ADAPT_CheckTail)(SCIRXQUE* q);
 typedef int(*ADAPT_CheckSum)(SCIRXQUE* q);
+typedef int(*ADAPT_SaveGoodPacket)(int len, SCIRXQUE* q);
+typedef int(*ADAPT_UpdateHeadPos)(SCIRXQUE* q);
 
 typedef struct _SCI_TRANSPORT
 {
@@ -20,7 +22,9 @@ typedef struct _SCI_TRANSPORT
     ADAPT_CheckLength       checkLength;
     ADAPT_CheckTail         checkTail;
     ADAPT_CheckSum          checkSum;
-}SCI_TRANSPORT;
+    ADAPT_SaveGoodPacket    saveGoodPacket;
+    ADAPT_UpdateHeadPos     updateHeadPos;
 
+}SCI_TRANSPORT;
 
 #endif

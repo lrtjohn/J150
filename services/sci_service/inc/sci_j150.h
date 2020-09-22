@@ -2,9 +2,6 @@
 #define SCI_J150_H
 #include "sci_adapt.h"
 
-/***********Extern globale variable***************/
-extern SCI_TRANSPORT gSciJ150Trans;
-
 /******************Macro**************************/
 #define PTR_SCI_J150_TRANS  (&gSciJ150Trans)
 
@@ -42,10 +39,7 @@ extern SCI_TRANSPORT gSciJ150Trans;
 #define CHECK_SUM_POS           (RFU_2_POS + RFU_2_POS_LEN)
 #define CHECK_SUM_POS_LEN       (1)
 
-/******************Function***********************/
-
 /******************Data structure*****************/
-
 typedef enum
 {
     WORK_MODE_NORMAL = 1,
@@ -63,7 +57,7 @@ typedef enum
 typedef Uint16(*GetCommand)(unsigned char* data);
 typedef Uint16(*GetWorkMode)(unsigned char* data);
 typedef Uint16(*GetTargetSpeed)(unsigned char* data);
-typedef Uint16(*Init)(void);
+typedef Uint16(*GetCheckSum)(unsigned char* data);
 
 typedef struct _SCI_APP_PROTOCOL
 {
@@ -72,11 +66,17 @@ typedef struct _SCI_APP_PROTOCOL
     Uint16          command;
     Uint16          workMode;
     Uint16          targetSpeed;
+    Uint16          goodPacketArray[TOTAL_LEN];
 
-    Init            init;
     GetCommand      getCommand;
     GetWorkMode     getWorkMode;
     GetTargetSpeed  getTargetSpeed;
+    GetCheckSum     getCheckSum;
 }SCI_APP_PROTOCOL;
 
+/******************Function***********************/
+extern Uint16 J150_APP_PROTOCOL_Init(SCI_APP_PROTOCOL* pAppprotocol);
+/***********Extern globale variable***************/
+extern SCI_TRANSPORT gSciJ150Trans;
+extern SCI_APP_PROTOCOL gSciJ150AppProtocol;
 #endif
