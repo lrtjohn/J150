@@ -45,6 +45,20 @@ extern SCI_TRANSPORT gSciJ150Trans;
 /******************Function***********************/
 
 /******************Data structure*****************/
+
+typedef enum
+{
+    WORK_MODE_NORMAL = 1,
+    WORK_MODE_SPECIAL
+}WORKMODE;
+
+typedef enum
+{
+    COMMAND_PARA_CONFIG = 1,
+    COMMAND_MOTOR_START,
+    COMMAND_MOTOR_STOP,
+
+}COMMAND_DEFINATION;
 typedef struct _SCI_APP_PROTOCOL
 {
     Uint16 head[HEAD_LEN];
