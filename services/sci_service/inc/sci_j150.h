@@ -49,7 +49,7 @@ extern SCI_TRANSPORT gSciJ150Trans;
 typedef enum
 {
     WORK_MODE_NORMAL = 1,
-    WORK_MODE_SPECIAL
+    WORK_MODE_SPECIAL,
 }WORKMODE;
 
 typedef enum
@@ -58,11 +58,23 @@ typedef enum
     COMMAND_MOTOR_START,
     COMMAND_MOTOR_STOP,
 
-}COMMAND_DEFINATION;
+}COMMAND_DEFINITION;
+
+typedef Uint16(*GetCommand)(unsigned char* data);
+typedef Uint16(*GetWorkMode)(unsigned char* data);
+typedef Uint16(*GetTargetSpeed)(unsigned char* data);
+
 typedef struct _SCI_APP_PROTOCOL
 {
-    Uint16 head[HEAD_LEN];
-    Uint16 totalLen;
+    Uint16          head[HEAD_LEN];
+    Uint16          totalLen;
+    Uint16          command;
+    Uint16          workMode;
+    Uint16          targetSpeed;
+
+    GetCommand      getCommand;
+    GetWorkMode     getWorkMode;
+    GetTargetSpeed  getTargetSpeed;
 }SCI_APP_PROTOCOL;
 
 #endif
