@@ -25,12 +25,6 @@ Uint32 gtArinc429ReadWord = 0;
 
 int gTestcount = 0;
 int gIsOcCnt = 0;
-int gtest = 0;
-Uint16 gP = 0;
-int gIsOC = 0;
-int gNoOC = 0;
-
-
 
 void main(void)
 {
