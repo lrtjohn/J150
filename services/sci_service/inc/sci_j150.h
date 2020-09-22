@@ -63,6 +63,7 @@ typedef enum
 typedef Uint16(*GetCommand)(unsigned char* data);
 typedef Uint16(*GetWorkMode)(unsigned char* data);
 typedef Uint16(*GetTargetSpeed)(unsigned char* data);
+typedef Uint16(*Init)(void);
 
 typedef struct _SCI_APP_PROTOCOL
 {
@@ -72,6 +73,7 @@ typedef struct _SCI_APP_PROTOCOL
     Uint16          workMode;
     Uint16          targetSpeed;
 
+    Init            init;
     GetCommand      getCommand;
     GetWorkMode     getWorkMode;
     GetTargetSpeed  getTargetSpeed;
