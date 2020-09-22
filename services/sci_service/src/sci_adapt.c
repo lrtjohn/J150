@@ -29,7 +29,7 @@ int SCI_Adapt_CheckTail(SCIRXQUE* q)
     return pSciTransport->checkTail(q);
 }
 
-int SCI_Adapt_CheckSum(SCIRXQUE* q)
+int SCI_Adapt_CheckSum(unsigned char* q)
 {
     return pSciTransport->checkSum(q);
 }
@@ -49,60 +49,4 @@ int SCI_Adapt_Init(SCI_TRANSPORT* gpSciTransport)
     pSciTransport = gpSciTransport;
     pSciTransport->init();
     return 0;
-}
-
-void SCI_Adapt_UnpackData(SCIRXQUE* q)
-{
-    while(GetSciRxQueLength(q) >= 17);
-    {
-        if(SCI_Adapt_FindHead(q) == FAIL)
-        {
-            return;
-        }
-        else
-        {
-            /* code */
-        }
-
-        if(SCI_Adapt_CheckLength(q) == FAIL)
-        {
-            return;
-        }
-        else
-        {
-            /* code */
-        }
-
-        if(SCI_Adapt_CheckTail(q) == FAIL)
-        {
-            if(SciRxDeQueue(q) == 0)
-            {
-
-            }
-            return;
-        }
-        else
-        {
-            /* code */
-        }
-
-        //SCI_Adapt_SaveGoodPacket(len, q);
-
-        if(SCI_Adapt_CheckSum(q) == FAIL)
-        {
-            if(SciRxDeQueue(q) == 0)
-            {
-
-            }
-            return;
-        }
-        else
-        {
-            /* code */
-        }
-
-
-        SCI_Adapt_UpdateHeadPos(q);
-
-    }
 }

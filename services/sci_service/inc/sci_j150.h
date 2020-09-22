@@ -66,7 +66,7 @@ typedef struct _SCI_APP_PROTOCOL
     Uint16          command;
     Uint16          workMode;
     Uint16          targetSpeed;
-    Uint16          goodPacketArray[TOTAL_LEN];
+    unsigned char   goodPacketArray[TOTAL_LEN];
 
     GetCommand      getCommand;
     GetWorkMode     getWorkMode;
@@ -77,6 +77,6 @@ typedef struct _SCI_APP_PROTOCOL
 /******************Function***********************/
 extern Uint16 J150_APP_PROTOCOL_Init(SCI_APP_PROTOCOL* pAppprotocol);
 /***********Extern globale variable***************/
-extern SCI_TRANSPORT gSciJ150Trans;
+extern SCI_TRANSPORT    gSciJ150Trans;
 extern SCI_APP_PROTOCOL gSciJ150AppProtocol;
 #endif
