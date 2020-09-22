@@ -149,6 +149,11 @@ unsigned char* SCI_APP_PROTOCOL_GetGoodPacketArray()
     return pSciJAppProtocol->goodPacketArray;
 }
 
+void SCI_APP_PROTOCOL_Init(void)
+{
+    pSciJAppProtocol = &gSciJ150AppProtocol; 
+}
+
 void SCI_J150_UnpackData(SCIRXQUE* q)
 {
     while(GetSciRxQueLength(q) >= SCI_APP_PROTOCOL_GetLength());
