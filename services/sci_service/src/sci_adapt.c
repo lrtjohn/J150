@@ -6,40 +6,39 @@ SCI_TRANSPORT* pSciTransport = NULL;
 SCI_TRANSPORT gSciTransport;
 
 
-int Adapt_Init(void)
+int SCI_Adapt_Init(SCI_TRANSPORT* gpSciTransport)
 {
-    gSciTransport.init();
+    pSciTransport = gpSciTransport;
+    pSciTransport->init();
     return 0;
 }
 
-int Adapt_Config(void)
+int SCI_Adapt_Config(void)
 {
-    gSciTransport.config();
-    return 0;
+    return pSciTransport->config();
 }
 
-int Adapt_Start(void)
+int SCI_Adapt_Start(void)
 {
-    gSciTransport.start();
-    return 0;
+    return pSciTransport->start();
 }
 
-int Adapt_FindHead(SCIRXQUE* q)
+int SCI_Adapt_FindHead(SCIRXQUE* q)
 {
-    return gSciTransport.findHead(q);
+    return pSciTransport->findHead(q);
 }
 
-int Adapt_CheckLength(SCIRXQUE* q)
+int SCI_Adapt_CheckLength(SCIRXQUE* q)
 {
-    return gSciTransport.checkLength(q);
+    return pSciTransport->checkLength(q);
 }
 
-int Adapt_CheckTail(SCIRXQUE* q)
+int SCI_Adapt_CheckTail(SCIRXQUE* q)
 {
-    return gSciTransport.checkTail(q);
+    return pSciTransport->checkTail(q);
 }
 
-int Adapt_CheckSum(SCIRXQUE* q)
+int SCI_Adapt_CheckSum(SCIRXQUE* q)
 {
-    return gSciTransport.checkSum(q);
+    return pSciTransport->checkSum(q);
 }
