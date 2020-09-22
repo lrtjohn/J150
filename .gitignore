@@ -1,8 +1,0 @@
-/Debug/
-.gitignore
-/Release/
-
-./launches
-.launches/J150.launch
-
-.vscode/
