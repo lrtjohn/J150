@@ -54,7 +54,7 @@ void main(void)
 	TURN_ON_PWM_VALVE;
 	TURN_ON_CTL_BOARD();
 
-	Init_Arinc429_Service();
+//	Init_Arinc429_Service();
 
 #if(SYS_DEBUG == INCLUDE_FEATURE)
 	DISABLE_GLOBAL_INTERRUPT;
@@ -70,7 +70,7 @@ void main(void)
 	ENABLE_GLOBAL_INTERRUPT;
 #endif
 
-	gtArinc429SendWord = 0x00002008 + 0x01010101;
+//	gtArinc429SendWord = 0x00002008 + 0x01010101;
 	
 	while(1)
 	{
@@ -114,13 +114,13 @@ void main(void)
 
         PackSciTxPacket(gScibTxQue,gSciTxVar);
 
-		Arinc429_WriteTxFIFO_ONE_WORD(gtArinc429SendWord);
+//		Arinc429_WriteTxFIFO_ONE_WORD(gtArinc429SendWord);
 
-		if(!(Arinc429_ReadStatusReg() & 0x01))
-		{
-			gtArinc429ReadWord = Arinc429_ReadRxFIFO_ONE_WORD();
-			gtArinc429SendWord++;
-		}
+//		if(!(Arinc429_ReadStatusReg() & 0x01))
+//		{
+//			gtArinc429ReadWord = Arinc429_ReadRxFIFO_ONE_WORD();
+//			gtArinc429SendWord++;
+//		}
 
         CheckEnableScibTx(gScibTxQue);
 	}
