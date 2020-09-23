@@ -190,7 +190,7 @@ static int J150_TransSaveGoodPacket(int len, SCIRXQUE* q)
     {
         pSciAppProtocol->goodPacketArray[i] = q->buffer[(q->front + i) % (q->bufferLen)];
     }
-
+    J150_APP_PROTOCOL_UnpackPayLoad();
     return SUCCESS;
 }
 

@@ -41,8 +41,6 @@ void main(void)
 	Init_Spwm_Service();
     Init_Sci_Service();
 	Init_Adc_Service();
-	SCI_Trans_Adapt_Init(&gSciTrans_J150);
-	SCI_APP_PROTOCOL_Init(&gSciAppProtocol_J150);
 
 	PFAL_ADC_CFG(CfgAdcTbl_User,sizeof(CfgAdcTbl_User)/sizeof(CfgAdcTbl_User[0]));		        //pass the test
 	PFAL_GPIO_CFG(CfgGpioTbl_User,sizeof(CfgGpioTbl_User)/sizeof(CfgGpioTbl_User[0]));	        //pass the test

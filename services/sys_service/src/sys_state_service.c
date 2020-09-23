@@ -149,5 +149,3 @@ void Init_Sys_State_Service(void)
     SET_J150_BIT_ING;
     gSysVersionNum = 0;
 }
-
-

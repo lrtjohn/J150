@@ -23,6 +23,10 @@ void CheckEnableSciaTx(SCITXQUE* RS422TxQue);
 void CheckEnableScibTx(SCITXQUE* RS422TxQue);
 void CheckEnableScicTx(SCITXQUE* RS422TxQue);
 
-#define Init_Sci_Service()          Init_Sci_Protocol()
+#define Init_Sci_Service(){                                                 \
+                            Init_Sci_Protocol();                            \
+	                        SCI_Trans_Adapt_Init(&gSciTrans_J150);          \
+	                        SCI_APP_PROTOCOL_Init(&gSciAppProtocol_J150);   \
+                          }          
 #endif
 

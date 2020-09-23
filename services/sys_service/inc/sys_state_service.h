@@ -126,6 +126,12 @@ typedef enum
 	MOTOR_STOP_ABNORMAL
 }J150_SYS_STATUS;
 
+typedef struct _J150_SYS_INFO
+{
+	/* Just add this data structure in case some special info for J150 */
+	Uint16 a;
+}J150_SYS_INFO;
+
 typedef struct _SYS_STATE_FLAG
 {
     ROTATE_DIRECTION 	rotateDirectoin;
