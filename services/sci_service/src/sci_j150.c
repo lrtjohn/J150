@@ -234,12 +234,12 @@ unsigned char* SCI_APP_PROTOCOL_GetGoodPacketArray()
     return pSciAppProtocol->goodPacketArray;
 }
 
-void SCI_APP_PROTOCOL_Init(void)
+void SCI_APP_PROTOCOL_Init(SCI_APP_PROTOCOL* appProtocol)
 {
-    pSciAppProtocol = &gSciAppProtocol_J150; 
+    pSciAppProtocol = appProtocol; 
 }
 
-void SCI_J150_UnpackData(SCIRXQUE* q)
+void J150_SCI_UnpackData(SCIRXQUE* q)
 {
     while(GetSciRxQueLength(q) >= SCI_APP_PROTOCOL_GetLength());
     {
@@ -247,18 +247,10 @@ void SCI_J150_UnpackData(SCIRXQUE* q)
         {
             return;
         }
-        else
-        {
-            /* code */
-        }
 
         if(SCI_Trans_Adapt_CheckLength(q) == FAIL)
         {
             return;
-        }
-        else
-        {
-            /* code */
         }
 
         if(SCI_Trans_Adapt_CheckTail(q) == FAIL)
@@ -269,10 +261,6 @@ void SCI_J150_UnpackData(SCIRXQUE* q)
             }
             return;
         }
-        else
-        {
-            /* code */
-        }
 
         if(SCI_Trans_Adapt_CheckSum(q) == FAIL)
         {
@@ -281,10 +269,6 @@ void SCI_J150_UnpackData(SCIRXQUE* q)
 
             }
             return;
-        }
-        else
-        {
-            /* code */
         }
 
         SCI_Trans_Adapt_SaveGoodPacket(SCI_APP_PROTOCOL_GetLength(), q);

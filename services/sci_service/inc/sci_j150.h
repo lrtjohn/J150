@@ -54,6 +54,12 @@ typedef enum
 
 }COMMAND_DEFINITION;
 
+typedef enum
+{
+    RX_STATUS_INIT,
+    RX_STATUS_CONFIG,
+}RX_STATUS;
+
 #define IS_WORK_MODE_GOOD(mode)             ((mode == WORK_MODE_NORMAL) || (mode == WORK_MODE_SPECIAL))
 #define IS_COMMAND_GOOD(cmd)                ((cmd == COMMAND_PARA_CONFIG) || (cmd == COMMAND_MOTOR_START) || (cmd == COMMAND_MOTOR_STOP))
 #define IS_TARGET_SPEED_GOOD(speed)         (speed >= 500 && speed <= 5000)
@@ -82,7 +88,8 @@ typedef struct _SCI_APP_PROTOCOL
 }SCI_APP_PROTOCOL;
 
 /******************Function***********************/
-extern Uint16 J150_APP_PROTOCOL_Init(SCI_APP_PROTOCOL* pAppprotocol);
+extern void SCI_APP_PROTOCOL_Init(SCI_APP_PROTOCOL* appProtocol);
+extern void J150_SCI_UnpackData(SCIRXQUE* q);
 /***********Extern globale variable***************/
 extern SCI_TRANSPORT    gSciTrans_J150;
 extern SCI_APP_PROTOCOL gSciAppProtocol_J150;
