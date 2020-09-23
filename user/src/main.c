@@ -41,6 +41,8 @@ void main(void)
 	Init_Spwm_Service();
     Init_Sci_Service();
 	Init_Adc_Service();
+	SCI_Trans_Adapt_Init(&gSciTrans_J150);
+	SCI_APP_PROTOCOL_Init(&gSciAppProtocol_J150);
 
 	PFAL_ADC_CFG(CfgAdcTbl_User,sizeof(CfgAdcTbl_User)/sizeof(CfgAdcTbl_User[0]));		        //pass the test
 	PFAL_GPIO_CFG(CfgGpioTbl_User,sizeof(CfgGpioTbl_User)/sizeof(CfgGpioTbl_User[0]));	        //pass the test
@@ -108,6 +110,9 @@ void main(void)
 #if(SYS_DEBUG == INCLUDE_FEATURE)
 		PF_ProcessSciRxPacket(gScibRxQue);
 		Resolver_result =(*Resolver_read) >> 6;
+#elif(J150_SCI_PROTOCOL_RX == INCLUDE_FEATURE)
+		J150_SCI_UnpackData(gScibRxQue);
+
 #else
         ProcessSciRxPacket(gScibRxQue);
 #endif

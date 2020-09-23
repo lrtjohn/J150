@@ -19,4 +19,7 @@
 #define SPWM_DUTY_GRADUAL_CHANGE            INCLUDE_FEATURE
 
 
+#define J150_SCI_PROTOCOL_RX                INCLUDE_FEATURE
+#define J150_SCI_PROTOCOL_TX                INCLUDE_FEATURE
+
 #endif

@@ -2,7 +2,6 @@
 #include "sci_adapt.h"
 
 SCI_TRANSPORT* pSciTransport = NULL;
-SCI_TRANSPORT gSciTransport;
 
 int SCI_Trans_Adapt_Config(void)
 {
