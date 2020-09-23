@@ -105,35 +105,82 @@ static int J150_TransStart(void)
 
 static int J150_TransFindHead(SCIRXQUE* q)
 {
-    return SUCCESS;
+    while(1)
+    {
+        if(q->buffer[q->front] == pSciJAppProtocol->head[0] && 
+            q->buffer[(q->front + 1) % (q->bufferLen)] == pSciJAppProtocol->head[1])
+        {
+            return SUCCESS;
+        }
+
+        if(SciRxDeQueue(q) == 0)
+        {
+            return FAIL;
+        }
+    }
 }
 
 static int J150_TransCheckLength(SCIRXQUE* q)
 {
+    if(q->buffer[(q->front + TOTAL_LEN_POS) % (q->bufferLen)] != pSciJAppProtocol->totalLen)
+    {
+        SciRxDeQueue(q);
+        return FAIL;
+    }
 
-    return SUCCESS;
+    if(GetSciRxQueLength(q) >= pSciJAppProtocol->totalLen)
+    {
+        return SUCCESS;
+    }
+    else
+    {
+        return FAIL;
+    }
 }
 
 static int J150_TransCheckTail(SCIRXQUE* q)
 {
-
+    /* J150 doesn't need to check the Tail, so always return success here */
     return SUCCESS;
 }
 
 static int J150_TransSaveGoodPacket(int len, SCIRXQUE* q)
 {
+    int i;
+
+    for(i = 0; i < pSciJAppProtocol->totalLen; ++i)
+    {
+        pSciJAppProtocol->goodPacketArray[i] = q->buffer[(q->front + i) % (q->bufferLen)];
+    }
 
     return SUCCESS;
 }
 
 static int J150_TransCheckSum(unsigned char* q)
 {
+    int i;
+    Uint16 sum = 0;
 
-    return SUCCESS;
+    for(i = TOTAL_LEN_POS; i < pSciJAppProtocol->totalLen - 1; ++i)
+    {
+        sum += pSciJAppProtocol->goodPacketArray[i];
+    }
+
+    sum |= 0x00ff;
+
+    if(sum == pSciJAppProtocol->goodPacketArray[CHECK_SUM_POS])
+    {
+        return SUCCESS;
+    }
+    else
+    {
+        return FAIL;
+    }
 }
 
 static int J150_TransUpdateHeadPos(SCIRXQUE* q)
 {
+    q->front = (q->front + pSciJAppProtocol->totalLen) % (q->bufferLen);
 
     return SUCCESS;
 }
