@@ -10,7 +10,7 @@ typedef int(*ADAPT_FindHead)(SCIRXQUE* q);
 typedef int(*ADAPT_CheckLength)(SCIRXQUE* q);
 typedef int(*ADAPT_CheckTail)(SCIRXQUE* q);
 typedef int(*ADAPT_SaveGoodPacket)(int len, SCIRXQUE* q);
-typedef int(*ADAPT_CheckSum)(unsigned char* q);
+typedef int(*ADAPT_CheckSum)(SCIRXQUE* q);
 typedef int(*ADAPT_UpdateHeadPos)(SCIRXQUE* q);
 
 typedef struct _SCI_TRANSPORT
@@ -33,7 +33,7 @@ extern int SCI_Trans_Adapt_Start(void);
 extern int SCI_Trans_Adapt_FindHead(SCIRXQUE* q);
 extern int SCI_Trans_Adapt_CheckLength(SCIRXQUE* q);
 extern int SCI_Trans_Adapt_CheckTail(SCIRXQUE* q);
-extern int SCI_Trans_Adapt_CheckSum(unsigned char* q);
+extern int SCI_Trans_Adapt_CheckSum(SCIRXQUE* q);
 extern int SCI_Trans_Adapt_UpdateHeadPos(SCIRXQUE* q);
 extern int SCI_Trans_Adapt_SaveGoodPacket(int len, SCIRXQUE* q);
 extern int SCI_Trans_Adapt_Init(SCI_TRANSPORT* gpSciTransport);

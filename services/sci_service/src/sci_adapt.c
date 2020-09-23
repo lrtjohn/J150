@@ -29,7 +29,7 @@ int SCI_Trans_Adapt_CheckTail(SCIRXQUE* q)
     return pSciTransport->checkTail(q);
 }
 
-int SCI_Trans_Adapt_CheckSum(unsigned char* q)
+int SCI_Trans_Adapt_CheckSum(SCIRXQUE* q)
 {
     return pSciTransport->checkSum(q);
 }

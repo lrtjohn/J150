@@ -58,6 +58,7 @@ typedef Uint16(*GetCommand)(unsigned char* data);
 typedef Uint16(*GetWorkMode)(unsigned char* data);
 typedef Uint16(*GetTargetSpeed)(unsigned char* data);
 typedef Uint16(*GetCheckSum)(unsigned char* data);
+typedef Uint16(*UnpackPayLoad)(void);
 
 typedef struct _SCI_APP_PROTOCOL
 {
@@ -72,11 +73,12 @@ typedef struct _SCI_APP_PROTOCOL
     GetWorkMode     getWorkMode;
     GetTargetSpeed  getTargetSpeed;
     GetCheckSum     getCheckSum;
+    UnpackPayLoad   unpackPayload;
 }SCI_APP_PROTOCOL;
 
 /******************Function***********************/
 extern Uint16 J150_APP_PROTOCOL_Init(SCI_APP_PROTOCOL* pAppprotocol);
 /***********Extern globale variable***************/
-extern SCI_TRANSPORT    gSciJ150Trans;
-extern SCI_APP_PROTOCOL gSciJ150AppProtocol;
+extern SCI_TRANSPORT    gSciTrans_J150;
+extern SCI_APP_PROTOCOL gSciAppProtocol_J150;
 #endif
