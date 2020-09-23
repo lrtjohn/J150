@@ -1,6 +1,7 @@
 #include "sci_j150.h"
 #include <stdio.h>
 
+
 /*
 * J150 protocol layer API
 */
@@ -97,6 +98,11 @@ Uint16 J150_APP_PROTOCOL_UnpackPayLoad(void)
     pSciAppProtocol->workMode       = pSciAppProtocol->getWorkMode(pSciAppProtocol->goodPacketArray);
     pSciAppProtocol->targetSpeed    = pSciAppProtocol->getTargetSpeed(pSciAppProtocol->goodPacketArray);
 
+    if(!IS_PAYLOAD_GOOD(pSciAppProtocol->workMode, pSciAppProtocol->command, pSciAppProtocol->targetSpeed))
+    {
+        /* TODO If payload parameters is illeagle, need to generate a warining */
+        return 0;
+    }
 
     switch(pSciAppProtocol->command)
     {

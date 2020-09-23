@@ -54,6 +54,11 @@ typedef enum
 
 }COMMAND_DEFINITION;
 
+#define IS_WORK_MODE_GOOD(mode)             ((mode == WORK_MODE_NORMAL) || (mode == WORK_MODE_SPECIAL))
+#define IS_COMMAND_GOOD(cmd)                ((cmd == COMMAND_PARA_CONFIG) || (cmd == COMMAND_MOTOR_START) || (cmd == COMMAND_MOTOR_STOP))
+#define IS_TARGET_SPEED_GOOD(speed)         (speed >= 500 && speed <= 5000)
+#define IS_PAYLOAD_GOOD(mode, cmd, speed)   (IS_WORK_MODE_GOOD(mode) && IS_COMMAND_GOOD(cmd) && IS_TARGET_SPEED_GOOD(speed))
+
 typedef Uint16(*GetCommand)(unsigned char* data);
 typedef Uint16(*GetWorkMode)(unsigned char* data);
 typedef Uint16(*GetTargetSpeed)(unsigned char* data);
