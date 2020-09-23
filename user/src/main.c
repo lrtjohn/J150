@@ -112,13 +112,16 @@ void main(void)
 		Resolver_result =(*Resolver_read) >> 6;
 #elif(J150_SCI_PROTOCOL_RX == INCLUDE_FEATURE)
 		J150_SCI_UnpackData(gScibRxQue);
-
 #else
         ProcessSciRxPacket(gScibRxQue);
 #endif
 		SYS_STATE_MACHINE;
 
+#if(J150_SCI_PROTOCOL_TX == INCLUDE_FEATURE)
+		/* Add J150 SCI TX here */
+#else
         PackSciTxPacket(gScibTxQue,gSciTxVar);
+#endif
 
 		Arinc429_WriteTxFIFO_ONE_WORD(gtArinc429SendWord);
 
