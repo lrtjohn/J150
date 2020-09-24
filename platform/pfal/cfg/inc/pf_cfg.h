@@ -163,7 +163,7 @@ CFG_SCI_TBL CfgSciTbl_User[] =
         },
         {
             BAUD_RATE_115200,
-            ENABLE_LOOP_BACK
+            DISABLE_LOOP_BACK
         }
     },
     // {
