@@ -145,8 +145,8 @@ static int J150_TransFindHead(SCIRXQUE* q)
 {
     while(1)
     {
-        if(q->buffer[q->front] == pSciAppProtocol->head[0] && 
-            q->buffer[(q->front + 1) % (q->bufferLen)] == pSciAppProtocol->head[1])
+        if((q->buffer[q->front] == pSciAppProtocol->head[0]) && 
+            (q->buffer[(q->front + 1) % (q->bufferLen)] == pSciAppProtocol->head[1]))
         {
             return SUCCESS;
         }
@@ -204,9 +204,9 @@ static int J150_TransCheckSum(SCIRXQUE* q)
         sum += q->buffer[(q->front + i) % (q->bufferLen)];
     }
 
-    sum |= 0x00ff;
+    sum &= 0x00ff;
 
-    if(sum == pSciAppProtocol->goodPacketArray[CHECK_SUM_POS])
+    if(sum == q->buffer[((q->front) + CHECK_SUM_POS) % (q->bufferLen)])
     {
         return SUCCESS;
     }
@@ -241,7 +241,7 @@ void SCI_APP_PROTOCOL_Init(SCI_APP_PROTOCOL* appProtocol)
 
 void J150_SCI_UnpackData(SCIRXQUE* q)
 {
-    while(GetSciRxQueLength(q) >= SCI_APP_PROTOCOL_GetLength());
+    while(GetSciRxQueLength(q) >= SCI_APP_PROTOCOL_GetLength())
     {
         if(SCI_Trans_Adapt_FindHead(q) == FAIL)
         {

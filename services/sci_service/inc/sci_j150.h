@@ -6,11 +6,11 @@
 #define PTR_SCI_J150_TRANS  (&gSciJ150Trans)
 
 /* Head1    Head2   Length    Command    WorkMode   TargetSpeed     RFU     RFU     CheckSum */
-/* 1byte    1byte   1byte     2bytes     byte       2bytes          4bytes  4bytes  1byte*/
+/* 1byte    1byte   1byte     2bytes     1byte       2bytes          4bytes  4bytes  1byte*/
 #define HEAD_LEN                (2)
 #define HEAD_1_DATA             (0x55)
 #define HEAD_2_DATA             (0xaa)
-#define TOTAL_LEN               (0x17)
+#define TOTAL_LEN               (0x11)
 
 #define HEAD_1_POS              (0)
 #define HEAD_1_POS_LEN          (1)
