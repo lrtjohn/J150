@@ -255,6 +255,7 @@ typedef struct _SYS_STATE_FLAG
 #define IS_SYS_TX_QUEUE_FULL_ERROR                      (gSysStateFlag.error.bit.txQFull | BIT8)
 
 #define SYS_STATE_MACHINE								(*Sys_hlstPtr)()
+
 extern void (*Sys_hlstPtr)(void);
 void Init_Sys_State_Service(void);
 extern SYS_STATE_FLAG gSysStateFlag;

@@ -24,7 +24,6 @@ typedef struct _SCI_TRANSPORT_RX
     ADAPT_RX_SaveGoodPacket    saveGoodPacket;
     ADAPT_RX_CheckSum          checkSum;
     ADAPT_RX_UpdateHeadPos     updateHeadPos;
-
 }SCI_TRANSPORT_RX;
 
 

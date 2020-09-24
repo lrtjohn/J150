@@ -45,7 +45,7 @@ SCI_APP_PROTOCOL_RX gSciAppProtocolRx_J150 =
         HEAD_2_DATA
     },
     TOTAL_LEN,
-    0,
+    COMMAND_PARA_NONE,
     WORK_MODE_NORMAL,
     0,
     {
@@ -104,27 +104,53 @@ static Uint16 J150_APP_RX_PROTOCOL_GetCheckSum(unsigned char* data)
 
 Uint16 J150_APP_RX_PROTOCOL_UnpackPayLoad(void)
 {
-    pSciAppProtocol->command        = pSciAppProtocol->getCommand(pSciAppProtocol->goodPacketArray);
-    pSciAppProtocol->workMode       = pSciAppProtocol->getWorkMode(pSciAppProtocol->goodPacketArray);
-    pSciAppProtocol->targetSpeed    = pSciAppProtocol->getTargetSpeed(pSciAppProtocol->goodPacketArray);
+    Uint16 command;
+    Uint16 workMode;
+    Uint16 targetSpeed;
 
+    command        = pSciAppProtocol->getCommand(pSciAppProtocol->goodPacketArray);
+    workMode       = pSciAppProtocol->getWorkMode(pSciAppProtocol->goodPacketArray);
+    targetSpeed    = pSciAppProtocol->getTargetSpeed(pSciAppProtocol->goodPacketArray);
+
+#if (0)
     if(!IS_PAYLOAD_GOOD(pSciAppProtocol->workMode, pSciAppProtocol->command, pSciAppProtocol->targetSpeed))
     {
         /* TODO If payload parameters is illeagle, need to generate a warining */
         return 0;
     }
+#endif
 
-    switch(pSciAppProtocol->command)
+    if(!IS_COMMAND_GOOD(command))
+    {
+        //TODO rx command is invalid
+        return 0;
+    }
+
+    pSciAppProtocol->command = (COMMAND_DEFINITION)command;
+
+    switch(command)
     {
         case COMMAND_PARA_CONFIG:
             /* Update the work mode and target speed here */
+            if(IS_TARGET_SPEED_GOOD(targetSpeed) &&
+                IS_WORK_MODE_GOOD(workMode))
+            {
+                pSciAppProtocol->targetSpeed = targetSpeed;
+                pSciAppProtocol->workMode = (WORKMODE)workMode;
+            }
+            else
+            {
+                //TODO target speed or work mode is invalid, generate warining here
+            }
             break;
 
         case COMMAND_MOTOR_START:
             /* Ignore the work mode and target speed parameters */
+            pSciAppProtocol->command = (COMMAND_DEFINITION)command;
             break;
 
         case COMMAND_MOTOR_STOP:
+            pSciAppProtocol->command = (COMMAND_DEFINITION)command;
             /* Ignore the work mode and target speed parameters */
             break;
         

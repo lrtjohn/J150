@@ -1,6 +1,7 @@
 #ifndef SCI_J150_H
 #define SCI_J150_H
 #include "sci_adapt.h"
+#include "sys_state_service.h"
 
 /******************Macro**************************/
 #define PTR_SCI_J150_TRANS  (&gSciJ150Trans)
@@ -48,10 +49,10 @@ typedef enum
 
 typedef enum
 {
+    COMMAND_PARA_NONE = 0, 
     COMMAND_PARA_CONFIG = 1,
-    COMMAND_MOTOR_START,
-    COMMAND_MOTOR_STOP,
-
+    COMMAND_MOTOR_START = 2,
+    COMMAND_MOTOR_STOP =3,
 }COMMAND_DEFINITION;
 
 typedef enum
@@ -73,10 +74,10 @@ typedef Uint16(*UnpackPayLoad)(void);
 
 typedef struct _SCI_APP_PROTOCOL_RX
 {
-    Uint16          head[HEAD_LEN];
-    Uint16          totalLen;
-    Uint16          command;
-    Uint16          workMode;
+    Uint16                      head[HEAD_LEN];
+    Uint16                      totalLen;
+    COMMAND_DEFINITION          command;
+    WORKMODE                    workMode;
     Uint16          targetSpeed;
     unsigned char   goodPacketArray[TOTAL_LEN];
 
