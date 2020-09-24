@@ -40,6 +40,8 @@
 #define CHECK_SUM_POS           (RFU_2_POS + RFU_2_POS_LEN)
 #define CHECK_SUM_POS_LEN       (1)
 
+#define RX_MIN_TARGET_SPEED     (500)
+#define RX_MAX_TARGET_SPEED     (5000)
 /******************Data structure*****************/
 typedef enum
 {
@@ -63,7 +65,7 @@ typedef enum
 
 #define IS_WORK_MODE_GOOD(mode)             ((mode == WORK_MODE_NORMAL) || (mode == WORK_MODE_SPECIAL))
 #define IS_COMMAND_GOOD(cmd)                ((cmd == COMMAND_PARA_CONFIG) || (cmd == COMMAND_MOTOR_START) || (cmd == COMMAND_MOTOR_STOP))
-#define IS_TARGET_SPEED_GOOD(speed)         (speed >= 500 && speed <= 5000)
+#define IS_TARGET_SPEED_GOOD(speed)         (speed >= RX_MIN_TARGET_SPEED && speed <= RX_MAX_TARGET_SPEED)
 #define IS_PAYLOAD_GOOD(mode, cmd, speed)   (IS_WORK_MODE_GOOD(mode) && IS_COMMAND_GOOD(cmd) && IS_TARGET_SPEED_GOOD(speed))
 
 typedef Uint16(*GetCommand)(unsigned char* data);
