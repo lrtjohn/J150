@@ -121,6 +121,7 @@ void main(void)
         PackSciTxPacket(gScibTxQue,gSciTxVar);
 #endif
 
+        //PackSciTxPacket(gScibTxQue,gSciTxVar);
 		Arinc429_WriteTxFIFO_ONE_WORD(gtArinc429SendWord);
 
 		if(!(Arinc429_ReadStatusReg() & 0x01))
