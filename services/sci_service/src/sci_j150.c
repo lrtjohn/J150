@@ -47,9 +47,9 @@ SCI_APP_PROTOCOL_RX gSciAppProtocolRx_J150 =
     TOTAL_LEN,
     COMMAND_PARA_NONE,
     WORK_MODE_NORMAL,
-    0,
+    RX_MIN_TARGET_SPEED ,                  /*init target speed*/
     {
-        0
+        0                                  /* good packet array */
     },
     J150_APP_RX_PROTOCOL_GetCommand,
     J150_APP_RX_PROTOCOL_GetWorkMode,
