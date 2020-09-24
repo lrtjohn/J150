@@ -80,14 +80,14 @@ typedef struct _SCI_APP_PROTOCOL_RX
     Uint16                      totalLen;
     COMMAND_DEFINITION          command;
     WORKMODE                    workMode;
-    Uint16          targetSpeed;
-    unsigned char   goodPacketArray[TOTAL_LEN];
+    Uint16                      targetSpeed;
+    unsigned char               goodPacketArray[TOTAL_LEN];
 
-    GetCommand      getCommand;
-    GetWorkMode     getWorkMode;
-    GetTargetSpeed  getTargetSpeed;
-    GetCheckSum     getCheckSum;
-    UnpackPayLoad   unpackPayload;
+    GetCommand                  getCommand;
+    GetWorkMode                 getWorkMode;
+    GetTargetSpeed              getTargetSpeed;
+    GetCheckSum                 getCheckSum;
+    UnpackPayLoad               unpackPayload;
 }SCI_APP_PROTOCOL_RX;
 
 /******************Function***********************/
@@ -96,4 +96,85 @@ extern void J150_SCI_UnpackData(SCIRXQUE* q);
 /***********Extern globale variable***************/
 extern SCI_TRANSPORT_RX    gSciTransRx_J150;
 extern SCI_APP_PROTOCOL_RX gSciAppProtocolRx_J150;
+
+/*******************SCI TX PROTOCOL START HERE********************/
+#define TX_HEAD1_POS                (0)
+#define TX_HEAD1_LEN                (1)
+
+#define TX_HEAD2_POS                (TX_HEAD1_POS + TX_HEAD1_LEN)
+#define TX_HEAD2_LEN                (1)
+
+#define TX_LENGTH_POS               (TX_HEAD2_POS + TX_HEAD2_LEN)
+#define TX_LENGTH_LEN               (1)
+
+#define TX_WORK_STATUS_POS          (TX_LENGTH_POS + TX_LENGTH_LEN)
+#define TX_WORK_STATUS_LEN          (2)
+
+#define TX_SYS_STATUS_1_POS         (TX_WORK_STATUS_POS + TX_WORK_STATUS_LEN)
+#define TX_SYS_STATUS_1_LEN         (2)
+
+#define TX_SYS_STATUS_2_POS         (TX_SYS_STATUS_1_POS + TX_SYS_STATUS_1_LEN)
+#define TX_SYS_STATUS_2_LEN         (2)
+
+#define TX_FAULT_STATUS_POS         (TX_SYS_STATUS_2_POS + TX_SYS_STATUS_2_LEN)
+#define TX_FAULT_STATUS_LEN         (4)
+
+#define TX_FRAME_CNT_POS            (TX_FAULT_STATUS_POS + TX_FAULT_STATUS_LEN)
+#define TX_FRAME_CNT_LEN            (4)
+
+#define TX_TARGET_SPEED_POS         (TX_FRAME_CNT_POS + TX_FRAME_CNT_LEN)
+#define TX_TARGET_SPEED_LEN         (2)
+
+#define TX_CURRENT_SPEED_POS        (TX_TARGET_SPEED_POS  + TX_TARGET_SPEED_LEN)
+#define TX_CURRENT_SPEED_LEN        (2)
+
+#define TX_BUS_VOLTAGE_POS          (TX_CURRENT_SPEED_POS + TX_CURRENT_SPEED_LEN)
+#define TX_BUS_VOLTAGE_LEN          (2)
+
+#define TX_BUS_CURRENT_POS          (TX_BUS_VOLTAGE_POS + TX_BUS_VOLTAGE_LEN)
+#define TX_BUS_CURRENT_LEN          (2)
+
+#define TX_SERVO_TEMP_POS           (TX_BUS_CURRENT_POS + TX_BUS_CURRENT_LEN)
+#define TX_SERVO_TEMP_LEN           (1)
+
+#define TX_MOTOR_TEMP_POS           (TX_SERVO_TEMP_POS + TX_SERVO_TEMP_LEN)
+#define TX_MOTOR_TEMP_LEN           (1)
+
+#define TX_FW_VERSION_POS           (TX_MOTOR_TEMP_POS + TX_MOTOR_TEMP_LEN)
+#define TX_FW_VERSION_LEN           (2)
+
+#define TX_WORK_MODE_POS            (TX_FW_VERSION_POS + TX_FW_VERSION_LEN)
+#define TX_WORK_MODE_LEN            (1)
+
+#define TX_RFU_POS                  (TX_WORK_MODE_POS + TX_WORK_MODE_LEN)
+#define TX_RFU_LEN                  (2)
+
+#define TX_CHECK_SUM_POS            (TX_RFU_POS + TX_RFU_LEN)
+#define TX_CHECK_SUM_LEN            (1)
+
+#define SCI_TX_ONE_FRAME_LENGTH     (0)
+
+typedef struct _SCI_TX_PAYLOAD_INFO
+{
+    Uint16 txHead1;     /* 1 byte */
+    Uint16 txHead2;     /* 1 byte */
+    Uint16 txLength;    /* 1 byte */
+    Uint16 workStatus;  /* 2 byte */
+    Uint16 sysStatus1;  /* 2 byte */
+    Uint16 sysStatus2;  /* 2 byte */
+    Uint32 faultStatus; /* 4 byte */
+    Uint32 frameCnt;    /* 4 byte */
+    Uint16 targetSpeed; /* 2 byte */
+    Uint16 currentSpeed;/* 2 byte */
+    Uint16 busVoltage;  /* 2 byte */
+    Uint16 busCurrent;  /* 2 byte */
+    Uint16 servoTemp;   /* 1 byte */
+    Uint16 motorTemp;   /* 1 byte */
+    Uint16 fwVersionNum;/* 2 byte */
+    Uint16 workMode;    /* 1 byte */
+    Uint16 RFU;         /* 2 byte */
+    Uint16 checkSum;    /* 1 byte */
+    /* data */
+}SCI_TX_PAYLOAD_INFO;
+
 #endif
