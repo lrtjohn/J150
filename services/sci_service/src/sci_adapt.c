@@ -1,51 +1,51 @@
 #include <stdio.h>
 #include "sci_adapt.h"
 
-SCI_TRANSPORT* pSciTransport = NULL;
+SCI_TRANSPORT_RX* pSciTransportRx = NULL;
 
-int SCI_Trans_Adapt_Config(void)
+int SCI_Trans_AdaptRx_Config(void)
 {
-    return pSciTransport->config();
+    return pSciTransportRx->config();
 }
 
-int SCI_Trans_Adapt_Start(void)
+int SCI_Trans_AdaptRx_Start(void)
 {
-    return pSciTransport->start();
+    return pSciTransportRx->start();
 }
 
-int SCI_Trans_Adapt_FindHead(SCIRXQUE* q)
+int SCI_Trans_AdaptRx_FindHead(SCIRXQUE* q)
 {
-    return pSciTransport->findHead(q);
+    return pSciTransportRx->findHead(q);
 }
 
-int SCI_Trans_Adapt_CheckLength(SCIRXQUE* q)
+int SCI_Trans_AdaptRx_CheckLength(SCIRXQUE* q)
 {
-    return pSciTransport->checkLength(q);
+    return pSciTransportRx->checkLength(q);
 }
 
-int SCI_Trans_Adapt_CheckTail(SCIRXQUE* q)
+int SCI_Trans_AdaptRx_CheckTail(SCIRXQUE* q)
 {
-    return pSciTransport->checkTail(q);
+    return pSciTransportRx->checkTail(q);
 }
 
-int SCI_Trans_Adapt_CheckSum(SCIRXQUE* q)
+int SCI_Trans_AdaptRx_CheckSum(SCIRXQUE* q)
 {
-    return pSciTransport->checkSum(q);
+    return pSciTransportRx->checkSum(q);
 }
 
-int SCI_Trans_Adapt_UpdateHeadPos(SCIRXQUE* q)
+int SCI_Trans_AdaptRx_UpdateHeadPos(SCIRXQUE* q)
 {
-    return pSciTransport->updateHeadPos(q);
+    return pSciTransportRx->updateHeadPos(q);
 }
 
-int SCI_Trans_Adapt_SaveGoodPacket(int len, SCIRXQUE* q)
+int SCI_Trans_AdaptRx_SaveGoodPacket(int len, SCIRXQUE* q)
 {
-    return pSciTransport->saveGoodPacket(len, q);
+    return pSciTransportRx->saveGoodPacket(len, q);
 }
 
-int SCI_Trans_Adapt_Init(SCI_TRANSPORT* gpSciTransport)
+int SCI_Trans_AdaptRx_Init(SCI_TRANSPORT_RX* gpSciTransportRx)
 {
-    pSciTransport = gpSciTransport;
-    pSciTransport->init();
+    pSciTransportRx = gpSciTransportRx;
+    pSciTransportRx->init();
     return 0;
 }

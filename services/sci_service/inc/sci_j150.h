@@ -71,7 +71,7 @@ typedef Uint16(*GetTargetSpeed)(unsigned char* data);
 typedef Uint16(*GetCheckSum)(unsigned char* data);
 typedef Uint16(*UnpackPayLoad)(void);
 
-typedef struct _SCI_APP_PROTOCOL
+typedef struct _SCI_APP_PROTOCOL_RX
 {
     Uint16          head[HEAD_LEN];
     Uint16          totalLen;
@@ -85,12 +85,12 @@ typedef struct _SCI_APP_PROTOCOL
     GetTargetSpeed  getTargetSpeed;
     GetCheckSum     getCheckSum;
     UnpackPayLoad   unpackPayload;
-}SCI_APP_PROTOCOL;
+}SCI_APP_PROTOCOL_RX;
 
 /******************Function***********************/
-extern void SCI_APP_PROTOCOL_Init(SCI_APP_PROTOCOL* appProtocol);
+extern void SCI_APP_PROTOCOL_Init(SCI_APP_PROTOCOL_RX* appProtocol);
 extern void J150_SCI_UnpackData(SCIRXQUE* q);
 /***********Extern globale variable***************/
-extern SCI_TRANSPORT    gSciTrans_J150;
-extern SCI_APP_PROTOCOL gSciAppProtocol_J150;
+extern SCI_TRANSPORT_RX    gSciTransRx_J150;
+extern SCI_APP_PROTOCOL_RX gSciAppProtocolRx_J150;
 #endif
