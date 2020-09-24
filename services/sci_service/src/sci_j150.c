@@ -259,8 +259,7 @@ static int J150_TransRxUpdateHeadPos(SCIRXQUE* q)
     return SUCCESS;
 }
 
-
-Uint16 SCI_APP_PROTOCOL_GetLength()
+Uint16 SCI_APP_RX_PROTOCOL_ADAPT_GetLength()
 {
     return pSciAppProtocol->totalLen;
 }
@@ -277,7 +276,7 @@ void SCI_APP_PROTOCOL_Init(SCI_APP_PROTOCOL_RX* appProtocol)
 
 void J150_SCI_UnpackData(SCIRXQUE* q)
 {
-    while(GetSciRxQueLength(q) >= SCI_APP_PROTOCOL_GetLength())
+    while(GetSciRxQueLength(q) >= SCI_APP_RX_PROTOCOL_ADAPT_GetLength())
     {
         if(SCI_Trans_AdaptRx_FindHead(q) == FAIL)
         {
@@ -301,7 +300,7 @@ void J150_SCI_UnpackData(SCIRXQUE* q)
             return;
         }
 
-        SCI_Trans_AdaptRx_SaveGoodPacket(SCI_APP_PROTOCOL_GetLength(), q);
+        SCI_Trans_AdaptRx_SaveGoodPacket(SCI_APP_RX_PROTOCOL_ADAPT_GetLength(), q);
 
         SCI_Trans_AdaptRx_UpdateHeadPos(q);
     }
