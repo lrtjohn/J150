@@ -291,19 +291,13 @@ void J150_SCI_UnpackData(SCIRXQUE* q)
 
         if(SCI_Trans_AdaptRx_CheckTail(q) == FAIL)
         {
-            if(SciRxDeQueue(q) == 0)
-            {
-
-            }
+            SciRxDeQueue(q);
             return;
         }
 
         if(SCI_Trans_AdaptRx_CheckSum(q) == FAIL)
         {
-            if(SciRxDeQueue(q) == 0)
-            {
-
-            }
+            SciRxDeQueue(q);
             return;
         }
 
