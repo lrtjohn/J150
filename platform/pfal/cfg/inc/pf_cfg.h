@@ -45,6 +45,7 @@ CFG_GPIO_TBL CfgGpioTbl_User[] =
 #define EPWM_PERIOD_K 40
 CFG_PWM_TBL CfgPwmTbl_User[] =
 {
+#if(PF_PWM_1A == INCLUDE_FEATURE)
    {
        {
            PWM1A
@@ -53,6 +54,8 @@ CFG_PWM_TBL CfgPwmTbl_User[] =
            EPWM_PERIOD_K
        }
    },
+#endif
+#if(PF_PWM_1B == INCLUDE_FEATURE)
    {
        {
            PWM1B
@@ -61,6 +64,8 @@ CFG_PWM_TBL CfgPwmTbl_User[] =
            EPWM_PERIOD_K
        }
    },
+#endif
+#if(PF_PWM_2A == INCLUDE_FEATURE)
    {
        {
            PWM2A
@@ -69,6 +74,8 @@ CFG_PWM_TBL CfgPwmTbl_User[] =
            EPWM_PERIOD_K
        }
    },
+#endif
+#if(PF_PWM_2B == INCLUDE_FEATURE)
    {
        {
            PWM2B
@@ -77,6 +84,8 @@ CFG_PWM_TBL CfgPwmTbl_User[] =
            EPWM_PERIOD_K
        }
    },
+#endif
+#if(PF_PWM_3A == INCLUDE_FEATURE)
    {
        {
            PWM3A
@@ -85,6 +94,8 @@ CFG_PWM_TBL CfgPwmTbl_User[] =
            EPWM_PERIOD_K
        }
    },
+#endif
+#if(PF_PWM_3B == INCLUDE_FEATURE)
    {
        {
            PWM3B
@@ -92,55 +103,68 @@ CFG_PWM_TBL CfgPwmTbl_User[] =
        {
            EPWM_PERIOD_K
        }
+   },
+#endif
+#if(PF_PWM_4A == INCLUDE_FEATURE)
+   {
+       {
+           PWM4A
+       },
+       {
+           EPWM_PERIOD_K
+       }
+   },
+#endif
+#if(PF_PWM_4B == INCLUDE_FEATURE)
+   {
+       {
+           PWM4B
+       },
+       {
+           EPWM_PERIOD_K
+       }
+   },
+#endif
+#if(PF_PWM_5A == INCLUDE_FEATURE)
+   {
+       {
+           PWM5A
+       },
+       {
+           EPWM_PERIOD_K
+       }
+   },
+#endif
+#if(PF_PWM_5B == INCLUDE_FEATURE)
+   {
+       {
+           PWM5B
+       },
+       {
+           EPWM_PERIOD_K
+       }
+   },
+#endif
+#if(PF_PWM_6A == INCLUDE_FEATURE)
+   {
+       {
+           PWM6A
+       },
+       {
+           EPWM_PERIOD_K
+       }
+   },
+#endif
+#if(PF_PWM_6B == INCLUDE_FEATURE)
+   {
+       {
+           PWM6B
+       },
+       {
+           EPWM_PERIOD_K
+       }
    }
-//   {
-//       {
-//           PWM4A
-//       },
-//       {
-//           EPWM_PERIOD_K
-//       }
-//   },
-//   {
-//       {
-//           PWM4B
-//       },
-//       {
-//           EPWM_PERIOD_K
-//       }
-//   },
-//   {
-//       {
-//           PWM5A
-//       },
-//       {
-//           EPWM_PERIOD_K
-//       }
-//   },
-//   {
-//       {
-//           PWM5B
-//       },
-//       {
-//           EPWM_PERIOD_K
-//       }
-//   },
-//   {
-//       {
-//           PWM6A
-//       },
-//       {
-//           EPWM_PERIOD_K
-//       }
-//   },
-//   {
-//       {
-//           PWM6B
-//       },
-//       {
-//           EPWM_PERIOD_K
-//       }
-//   }
+#endif
 };
 
 CFG_SCI_TBL CfgSciTbl_User[] =
