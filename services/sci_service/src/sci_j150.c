@@ -119,7 +119,7 @@ Uint16 J150_APP_RX_PROTOCOL_UnpackPayLoad(void)
     }
 #endif
 
-    if(!IS_COMMAND_GOOD(command))
+    if (!IS_COMMAND_GOOD(command))
     {
         //TODO rx command is invalid
         return 0;
@@ -131,10 +131,8 @@ Uint16 J150_APP_RX_PROTOCOL_UnpackPayLoad(void)
     {
         case COMMAND_PARA_CONFIG:
             /* Update the work mode and target speed here */
-            if(IS_TARGET_SPEED_GOOD(targetSpeed) &&
-                IS_WORK_MODE_GOOD(workMode))
+            if (IS_WORK_MODE_GOOD(workMode))
             {
-                pSciAppProtocol->targetSpeed = targetSpeed;
                 pSciAppProtocol->workMode = (WORKMODE)workMode;
             }
             else
@@ -144,13 +142,16 @@ Uint16 J150_APP_RX_PROTOCOL_UnpackPayLoad(void)
             break;
 
         case COMMAND_MOTOR_START:
-            /* Ignore the work mode and target speed parameters */
-            pSciAppProtocol->command = (COMMAND_DEFINITION)command;
+            if (IS_TARGET_SPEED_GOOD(targetSpeed))
+            {
+                pSciAppProtocol->command = (COMMAND_DEFINITION)command;
+                pSciAppProtocol->targetSpeed = targetSpeed;
+
+            }
             break;
 
         case COMMAND_MOTOR_STOP:
             pSciAppProtocol->command = (COMMAND_DEFINITION)command;
-            /* Ignore the work mode and target speed parameters */
             break;
         
         default:
