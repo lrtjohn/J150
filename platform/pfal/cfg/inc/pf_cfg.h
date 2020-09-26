@@ -242,6 +242,9 @@ CFG_INTERRUPT_TBL CfgInterruptTbl_User[] =
     EPWM1,
     SCIBRX,
     SCIBTX,
+    ECAP4,
+    ECAP5,
+    ECAP6,
     // SCICRX,
     // SCICTX
 };
