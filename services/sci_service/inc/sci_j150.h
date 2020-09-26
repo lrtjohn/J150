@@ -97,6 +97,13 @@ extern void J150_SCI_UnpackData(SCIRXQUE* q);
 extern SCI_TRANSPORT_RX    gSciTransRx_J150;
 extern SCI_APP_PROTOCOL_RX gSciAppProtocolRx_J150;
 
+/**************************************************************************************************************************
+     ██  ██ ███████  ██████      ████████ ██   ██     ██████  ██████   ██████  ████████  ██████   ██████  ██████  ██      
+     ██ ███ ██      ██  ████        ██     ██ ██      ██   ██ ██   ██ ██    ██    ██    ██    ██ ██      ██    ██ ██      
+     ██  ██ ███████ ██ ██ ██        ██      ███       ██████  ██████  ██    ██    ██    ██    ██ ██      ██    ██ ██      
+██   ██  ██      ██ ████  ██        ██     ██ ██      ██      ██   ██ ██    ██    ██    ██    ██ ██      ██    ██ ██      
+ █████   ██ ███████  ██████         ██    ██   ██     ██      ██   ██  ██████     ██     ██████   ██████  ██████  ███████ 
+****************************************************************************************************************************/
 /*******************SCI TX PROTOCOL START HERE********************/
 #define TX_HEAD1_POS                (0)
 #define TX_HEAD1_LEN                (1)
@@ -152,9 +159,12 @@ extern SCI_APP_PROTOCOL_RX gSciAppProtocolRx_J150;
 #define TX_CHECK_SUM_POS            (TX_RFU_POS + TX_RFU_LEN)
 #define TX_CHECK_SUM_LEN            (1)
 
-#define SCI_TX_ONE_FRAME_LENGTH     (0)
+#define SCI_TX_ONE_FRAME_LENGTH     (33)
 
-typedef struct _SCI_TX_PAYLOAD_INFO
+#define LSB_FIRST_SEND              (1)
+#define MSB_FIRST_SEND              (0)
+
+typedef struct _SCI_APP_PROTOCOL_TX
 {
     Uint16 txHead1;     /* 1 byte */
     Uint16 txHead2;     /* 1 byte */
@@ -175,6 +185,11 @@ typedef struct _SCI_TX_PAYLOAD_INFO
     Uint16 RFU;         /* 2 byte */
     Uint16 checkSum;    /* 1 byte */
     /* data */
-}SCI_TX_PAYLOAD_INFO;
+}SCI_APP_PROTOCOL_TX;
 
+#if (1) 
+
+#endif
+extern Uint16 gTxFrameArray[SCI_TX_ONE_FRAME_LENGTH];
+extern void SCI_TX_SendPacket(Uint16* txFrameArray, SCI_APP_PROTOCOL_TX* data, SCITXQUE* txQue);
 #endif

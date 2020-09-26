@@ -11,6 +11,7 @@
 |  $$$$$$/ /$$$$$$|  $$$$$$/|  $$$$$$/      |  $$$$$$/|  $$$$$$/ /$$$$$$      | $$      | $$  | $$|  $$$$$$/   | $$ |  $$$$$$/|  $$$$$$/|  $$$$$$/| $$$$$$$$
  \______/ |______/ \______/  \______/        \______/  \______/ |______/      |__/      |__/  |__/ \______/    |__/  \______/  \______/  \______/ |________/
 ********************************************************************************************************************************************************/
+Uint16 gTxFrameArray[SCI_TX_ONE_FRAME_LENGTH] = {0};
 
 /*
 * J150 protocol layer API
@@ -304,4 +305,103 @@ void J150_SCI_UnpackData(SCIRXQUE* q)
 
         SCI_Trans_AdaptRx_UpdateHeadPos(q);
     }
+}
+/**************************************************************************************************************************
+     ██  ██ ███████  ██████      ████████ ██   ██     ██████  ██████   ██████  ████████  ██████   ██████  ██████  ██      
+     ██ ███ ██      ██  ████        ██     ██ ██      ██   ██ ██   ██ ██    ██    ██    ██    ██ ██      ██    ██ ██      
+     ██  ██ ███████ ██ ██ ██        ██      ███       ██████  ██████  ██    ██    ██    ██    ██ ██      ██    ██ ██      
+██   ██  ██      ██ ████  ██        ██     ██ ██      ██      ██   ██ ██    ██    ██    ██    ██ ██      ██    ██ ██      
+ █████   ██ ███████  ██████         ██    ██   ██     ██      ██   ██  ██████     ██     ██████   ██████  ██████  ███████ 
+****************************************************************************************************************************/
+static void U16_TO_U8(void* d, void* s)
+{
+#if (0)
+    *((Uint16*)d) = *((Uint16*)s);
+    *((Uint16*)d + 1) = *((Uint16*)s + 1);
+#endif
+
+#if(LSB_FIRST_SEND)
+    *((Uint16*)d) = (*((Uint16*)s)) & 0x00ff;
+    *((Uint16*)d + 1) = (*((Uint16*)s)) >> 8;
+#endif
+
+#if(MSB_FIRST_SEND)
+    *((Uint16*)d + 1) = (*((Uint16*)s)) >> 8;
+    *((Uint16*)d) = (*((Uint16*)s)) & 0x00ff;
+#endif
+}
+
+static void U32_TO_U8(void* d, void* s)
+{
+#if(0)
+    *((Uint16*)d) = *((Uint16*)s);
+    *((Uint16*)d + 1) = *((Uint16*)s + 1);
+    *((Uint16*)d + 2) = *((Uint16*)s + 2);
+    *((Uint16*)d + 3) = *((Uint16*)s + 3);
+#endif
+
+#if(LSB_FIRST_SEND)
+    *((Uint16*)d) = (*((Uint32*)s)) & 0x000000ff;
+    *((Uint16*)d + 1) = (*((Uint32*)s)) >> 8;
+    *((Uint16*)d + 2) = (*((Uint32*)s)) >> 16;
+    *((Uint16*)d + 3) = (*((Uint32*)s)) >> 24;
+#endif
+
+#if(MSB_FIRST_SEND)
+    *((Uint16*)d + 3) = (*((Uint32*)s)) >> 24;
+    *((Uint16*)d + 2) = (*((Uint32*)s)) >> 16;
+    *((Uint16*)d + 1) = (*((Uint32*)s)) >> 8;
+    *((Uint16*)d) = (*((Uint32*)s)) & 0x000000ff;
+#endif
+}
+
+Uint16 SCI_TX_CheckSum(Uint16* array, Uint16 len)
+{
+    Uint16 i = 0;
+    Uint16 checkSum = 0;
+
+    for(i = TX_LENGTH_POS; i < TX_CHECK_SUM_POS - 1; ++i)
+    {
+        checkSum += array[i];
+    }
+
+    //checkSum &= 0x00ff;
+
+    return checkSum;
+}
+
+void SCI_TX_SendPacket(Uint16* txFrameArray, SCI_APP_PROTOCOL_TX* data, SCITXQUE* txQue)
+{
+    Uint16 i;
+
+    txFrameArray[TX_HEAD1_POS] = data->txHead1;
+    txFrameArray[TX_HEAD2_POS] = data->txHead2;
+    txFrameArray[TX_LENGTH_POS] = data->txLength;
+    U16_TO_U8(&txFrameArray[TX_WORK_STATUS_POS], &data->workStatus);
+    U16_TO_U8(&txFrameArray[TX_SYS_STATUS_1_POS], &data->sysStatus1);
+    U16_TO_U8(&txFrameArray[TX_SYS_STATUS_2_POS], &data->sysStatus2);
+    U32_TO_U8(&txFrameArray[TX_FAULT_STATUS_POS], &data->faultStatus);
+    U32_TO_U8(&txFrameArray[TX_FRAME_CNT_POS], &data->frameCnt);
+    U16_TO_U8(&txFrameArray[TX_TARGET_SPEED_POS], &data->targetSpeed);
+    U16_TO_U8(&txFrameArray[TX_CURRENT_SPEED_POS], &data->currentSpeed);
+    U16_TO_U8(&txFrameArray[TX_BUS_VOLTAGE_POS], &data->busVoltage);
+    U16_TO_U8(&txFrameArray[TX_BUS_CURRENT_POS], &data->busCurrent);
+    txFrameArray[TX_SERVO_TEMP_POS] = data->servoTemp;
+    txFrameArray[TX_MOTOR_TEMP_POS] = data->motorTemp;
+    U16_TO_U8(&txFrameArray[TX_FW_VERSION_POS], &data->fwVersionNum);
+    txFrameArray[TX_WORK_MODE_POS] = data->workMode;
+    U16_TO_U8(&txFrameArray[TX_RFU_POS], &data->RFU);
+
+    data->checkSum = SCI_TX_CheckSum(txFrameArray, data->txLength);
+    txFrameArray[TX_CHECK_SUM_POS] = data->checkSum;
+
+    for(i = 0; i < data->txLength; ++i)
+    {
+
+ 		if(SciTxEnQueue(txFrameArray[i],txQue) == 0)
+        {
+            return;
+        }
+    }
+
 }
