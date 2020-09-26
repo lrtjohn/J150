@@ -365,7 +365,7 @@ void CAP_Config(void){
 	ECap6Config();
 }
 
-void Init_CAP(void)
+void Init_ECap_Service(void)
 {
 	InitECapGpio();
 	CAP_Config();

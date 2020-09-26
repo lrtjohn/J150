@@ -34,6 +34,7 @@ void main(void)
 	Init_Spwm_Service();
     Init_Sci_Service();
 	Init_Adc_Service();
+	Init_ECap_Service();
 
 	PFAL_ADC_CFG(CfgAdcTbl_User,sizeof(CfgAdcTbl_User)/sizeof(CfgAdcTbl_User[0]));		        //pass the test
 	PFAL_GPIO_CFG(CfgGpioTbl_User,sizeof(CfgGpioTbl_User)/sizeof(CfgGpioTbl_User[0]));	        //pass the test
