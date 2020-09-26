@@ -111,6 +111,10 @@ extern SCI_APP_PROTOCOL_RX gSciAppProtocolRx_J150;
  █████   ██ ███████  ██████         ██    ██   ██     ██      ██   ██  ██████     ██     ██████   ██████  ██████  ███████ 
 ****************************************************************************************************************************/
 /*******************SCI TX PROTOCOL START HERE********************/
+#define TX_HEAD1_DATA               (0x55)
+#define TX_HEAD2_DATA               (0xAA)
+#define TX_LENGTH_DATA              (0x21)
+
 #define TX_HEAD1_POS                (0)
 #define TX_HEAD1_LEN                (1)
 
@@ -165,7 +169,7 @@ extern SCI_APP_PROTOCOL_RX gSciAppProtocolRx_J150;
 #define TX_CHECK_SUM_POS            (TX_RFU_POS + TX_RFU_LEN)
 #define TX_CHECK_SUM_LEN            (1)
 
-#define SCI_TX_ONE_FRAME_LENGTH     (33)
+#define SCI_TX_ONE_FRAME_LENGTH     (TX_LENGTH_DATA)
 
 #define LSB_FIRST_SEND              (1)
 #define MSB_FIRST_SEND              (0)

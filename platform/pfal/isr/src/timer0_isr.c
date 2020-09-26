@@ -67,9 +67,6 @@ void PFAL_Timer0_ISR(void)
         SCI_APP_PROTOCOL_TX testData;
 		memset(&testData, 0 , sizeof(testData));
 #if (1)
-        testData.txHead1        = 0x55;
-        testData.txHead2        = 0x55;
-        testData.txLength       = 33;
         testData.workStatus     = 0x1234;
         testData.sysStatus1     = 0x5678;
         testData.sysStatus2     = 0x9012;
