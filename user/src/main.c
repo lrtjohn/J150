@@ -8,8 +8,6 @@
 /*
  *******
  * main.c
- * Test github pull request
- * Test create branch
  *******
 */
 #if(SYS_DEBUG == INCLUDE_FEATURE)
@@ -19,7 +17,7 @@ Uint16 flashArrayR[4] = {0, 0, 0, 0};
 int i = 0;
 #endif
 
-Uint32 gtArinc429SendWord = 1;
+Uint32 gtArinc429SendWord = 0x00002008 + 0x01010101;
 Uint32 gtArinc429ReadWord = 0;
 
 int gTestcount = 0;
@@ -48,7 +46,9 @@ void main(void)
 //	TURN_ON_PWM_VALVE;
 	ENABLE_GATE_DRIVER();
 
-//	Init_Arinc429_Service();
+#if (ARINC429_FEATURE == INCLUDE_FEATURE)
+	Init_Arinc429_Service();
+#endif
 
 #if(SYS_DEBUG == INCLUDE_FEATURE)
 	DISABLE_GLOBAL_INTERRUPT;
@@ -64,7 +64,6 @@ void main(void)
 	ENABLE_GLOBAL_INTERRUPT;
 #endif
 
-//	gtArinc429SendWord = 0x00002008 + 0x01010101;
 	
 	while(1)
 	{
@@ -96,13 +95,15 @@ void main(void)
         PackSciTxPacket(gScibTxQue,gSciTxVar);
 #endif
 
-//		Arinc429_WriteTxFIFO_ONE_WORD(gtArinc429SendWord);
+#if (ARINC429_FEATURE == INCLUDE_FEATURE)
+		Arinc429_WriteTxFIFO_ONE_WORD(gtArinc429SendWord);
 
-//		if(!(Arinc429_ReadStatusReg() & 0x01))
-//		{
-//			gtArinc429ReadWord = Arinc429_ReadRxFIFO_ONE_WORD();
-//			gtArinc429SendWord++;
-//		}
+		if(!(Arinc429_ReadStatusReg() & 0x01))
+		{
+			gtArinc429ReadWord = Arinc429_ReadRxFIFO_ONE_WORD();
+			gtArinc429SendWord++;
+		}
+#endif
 
         CheckEnableScibTx(gScibTxQue);
 	}
