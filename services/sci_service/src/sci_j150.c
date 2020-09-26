@@ -216,13 +216,13 @@ static int J150_TransRxFindHead(SCIRXQUE* q)
 {
     while(1)
     {
-        if((q->buffer[q->front] == pSciAppProtocol->head[0]) && 
+        if ((q->buffer[q->front] == pSciAppProtocol->head[0]) && 
             (q->buffer[(q->front + 1) % (q->bufferLen)] == pSciAppProtocol->head[1]))
         {
             return SUCCESS;
         }
 
-        if(SciRxDeQueue(q) == 0)
+        if (SciRxDeQueue(q) == 0)
         {
             return FAIL;
         }
@@ -231,13 +231,13 @@ static int J150_TransRxFindHead(SCIRXQUE* q)
 
 static int J150_TransRxCheckLength(SCIRXQUE* q)
 {
-    if(q->buffer[(q->front + TOTAL_LEN_POS) % (q->bufferLen)] != pSciAppProtocol->totalLen)
+    if (q->buffer[(q->front + TOTAL_LEN_POS) % (q->bufferLen)] != pSciAppProtocol->totalLen)
     {
         SciRxDeQueue(q);
         return FAIL;
     }
 
-    if(GetSciRxQueLength(q) >= pSciAppProtocol->totalLen)
+    if (GetSciRxQueLength(q) >= pSciAppProtocol->totalLen)
     {
         return SUCCESS;
     }
@@ -257,7 +257,7 @@ static int J150_TransRxSaveGoodPacket(int len, SCIRXQUE* q)
 {
     int i;
 
-    for(i = 0; i < pSciAppProtocol->totalLen; ++i)
+    for (i = 0; i < pSciAppProtocol->totalLen; ++i)
     {
         pSciAppProtocol->goodPacketArray[i] = q->buffer[(q->front + i) % (q->bufferLen)];
     }
@@ -270,14 +270,14 @@ static int J150_TransRxCheckSum(SCIRXQUE* q)
     int i;
     Uint16 sum = 0;
 
-    for(i = TOTAL_LEN_POS; i < pSciAppProtocol->totalLen - 1; ++i)
+    for (i = TOTAL_LEN_POS; i < pSciAppProtocol->totalLen - 1; ++i)
     {
         sum += q->buffer[(q->front + i) % (q->bufferLen)];
     }
 
     sum &= 0x00ff;
 
-    if(sum == q->buffer[((q->front) + CHECK_SUM_POS) % (q->bufferLen)])
+    if (sum == q->buffer[((q->front) + CHECK_SUM_POS) % (q->bufferLen)])
     {
         return SUCCESS;
     }
@@ -311,25 +311,25 @@ void SCI_APP_PROTOCOL_Init(SCI_APP_PROTOCOL_RX* appProtocol)
 
 void J150_SCI_UnpackData(SCIRXQUE* q)
 {
-    while(GetSciRxQueLength(q) >= SCI_APP_RX_PROTOCOL_ADAPT_GetLength())
+    while (GetSciRxQueLength(q) >= SCI_APP_RX_PROTOCOL_ADAPT_GetLength())
     {
-        if(SCI_Trans_AdaptRx_FindHead(q) == FAIL)
+        if (SCI_Trans_AdaptRx_FindHead(q) == FAIL)
         {
             return;
         }
 
-        if(SCI_Trans_AdaptRx_CheckLength(q) == FAIL)
+        if (SCI_Trans_AdaptRx_CheckLength(q) == FAIL)
         {
             return;
         }
 
-        if(SCI_Trans_AdaptRx_CheckTail(q) == FAIL)
+        if (SCI_Trans_AdaptRx_CheckTail(q) == FAIL)
         {
             SciRxDeQueue(q);
             return;
         }
 
-        if(SCI_Trans_AdaptRx_CheckSum(q) == FAIL)
+        if (SCI_Trans_AdaptRx_CheckSum(q) == FAIL)
         {
             SciRxDeQueue(q);
             return;
@@ -394,7 +394,7 @@ Uint16 SCI_TX_CheckSum(Uint16* array, Uint16 len)
     Uint16 i = 0;
     Uint16 checkSum = 0;
 
-    for(i = TX_LENGTH_POS; i < TX_CHECK_SUM_POS - 1; ++i)
+    for (i = TX_LENGTH_POS; i < TX_CHECK_SUM_POS - 1; ++i)
     {
         checkSum += array[i];
     }
@@ -426,10 +426,10 @@ void SCI_TX_SendPacket(Uint16* txFrameArray, SCI_APP_PROTOCOL_TX* data, SCITXQUE
     data->checkSum = SCI_TX_CheckSum(txFrameArray, data->txLength);
     txFrameArray[TX_CHECK_SUM_POS] = data->checkSum;
 
-    for(i = 0; i < txFrameArray[TX_LENGTH_POS]; ++i)
+    for (i = 0; i < txFrameArray[TX_LENGTH_POS]; ++i)
     {
 
- 		if(SciTxEnQueue(txFrameArray[i],txQue) == 0)
+ 		if (SciTxEnQueue(txFrameArray[i],txQue) == 0)
         {
             return;
         }
