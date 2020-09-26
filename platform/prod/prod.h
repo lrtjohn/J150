@@ -14,6 +14,19 @@
 #define PF_XINTF                            INCLUDE_FEATURE
 #define PF_FLASH                            INCLUDE_FEATURE
 
+#define PF_PWM_1A							INCLUDE_FEATURE
+#define PF_PWM_1B							INCLUDE_FEATURE
+#define PF_PWM_2A							INCLUDE_FEATURE
+#define PF_PWM_2B							INCLUDE_FEATURE
+#define PF_PWM_3A							INCLUDE_FEATURE
+#define PF_PWM_3B							INCLUDE_FEATURE
+#define PF_PWM_4A							NOT_INCLUDE_FEATURE
+#define PF_PWM_4B							NOT_INCLUDE_FEATURE
+#define PF_PWM_5A							NOT_INCLUDE_FEATURE
+#define PF_PWM_5B							NOT_INCLUDE_FEATURE
+#define PF_PWM_6A							NOT_INCLUDE_FEATURE
+#define PF_PWM_6B							NOT_INCLUDE_FEATURE
+
 #define SYS_DEBUG                           NOT_INCLUDE_FEATURE
 
 #define SPWM_DUTY_GRADUAL_CHANGE            INCLUDE_FEATURE

@@ -36,7 +36,7 @@ typedef struct _ALARM_16BIT
 	Uint16 busVoltage   : 1;
 	Uint16 busCurrent   : 1;
 	Uint16 hardware     : 1;
-	Uint16 pgVdd3V3     : 1;
+	Uint16 pgVcc5V      : 1;
 	Uint16 pg1v9        : 1;
 	Uint16 pgVcc3V3     : 1;
 	Uint16 j            : 1;
@@ -182,7 +182,7 @@ typedef struct _SYS_STATE_FLAG
 #define BUS_VOLTAGE_ALARM_MASK                          BIT3
 #define BUS_CURRENT_ALARM_MASK                          BIT4
 #define HARDWARE_ALARM_MASK                             BIT5
-#define POWER_GOOD_VDD3V3_MASK                          BIT6
+#define POWER_GOOD_VCC5V_MASK                           BIT6
 #define POWER_GOOD_1V9_MASK                             BIT7
 #define POWER_GOOD_VCC3V3_MASK                          BIT8
 
@@ -229,9 +229,9 @@ typedef struct _SYS_STATE_FLAG
 #define CLEAR_SYS_HARDWARE_ALARM                        (gSysStateFlag.alarm.bit.hardware = 0)
 #define IS_SYS_HARDWARE_ALARM                           (gSysStateFlag.alarm.bit.hardware | HARDWARE_ALARM_MASK)
 
-#define SET_SYS_PG_VDD3V3_ALARM                         (gSysStateFlag.alarm.bit.pgVdd3V3 = 1)
-#define CLEAR_SYS_PG_VDD3V3_ALARM                       (gSysStateFlag.alarm.bit.pgVdd3V3 = 0)
-#define IS_SYS_PG_VDD3V3_ALARM                          (gSysStateFlag.alarm.bit.pgVdd3V3 | POWER_GOOD_VDD3V3_MASK)
+#define SET_SYS_PG_VCC5V_ALARM                         (gSysStateFlag.alarm.bit.pgVcc5V = 1)
+#define CLEAR_SYS_PG_VCC5V_ALARM                       (gSysStateFlag.alarm.bit.pgVcc5V = 0)
+#define IS_SYS_PG_VCC5V_ALARM                          (gSysStateFlag.alarm.bit.pgVcc5V | POWER_GOOD_VCC5V_MASK)
 
 #define SET_SYS_PG_1V9_ALARM                            (gSysStateFlag.alarm.bit.pg1v9 = 1)
 #define CLEAR_SYS_PG_1V9_ALARM                          (gSysStateFlag.alarm.bit.pg1v9 = 0)

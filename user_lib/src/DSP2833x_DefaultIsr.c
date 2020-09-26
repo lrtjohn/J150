@@ -24,6 +24,7 @@
 #include "DSP2833x_Device.h"     // DSP2833x Headerfile Include File
 #include "DSP2833x_Examples.h"   // DSP2833x Examples Include File
 #include "pf_isr.h"
+#include "ecap_isr.h"
 
 interrupt void  TINT0_ISR(void)
 {
@@ -558,14 +559,14 @@ interrupt void ECAP3_INT_ISR(void)    // ECAP-3
 interrupt void ECAP4_INT_ISR(void)     // ECAP-4
 {
   // Insert ISR Code here
+	ECap4_Isr();
+//	ECap4Regs.ECCLR.bit.CEVT1 = 1;
+//	ECap4Regs.ECCLR.bit.CEVT2 = 1;
+//	ECap4Regs.ECCLR.bit.CEVT3 = 1;
+//	ECap4Regs.ECCLR.bit.CEVT4 = 1;
 
-	ECap4Regs.ECCLR.bit.CEVT1 = 1;
-	ECap4Regs.ECCLR.bit.CEVT2 = 1;
-	ECap4Regs.ECCLR.bit.CEVT3 = 1;
-	ECap4Regs.ECCLR.bit.CEVT4 = 1;
-
-	ECap4Regs.ECCLR.bit.INT = 1;
-
+//	ECap4Regs.ECCLR.bit.INT = 1;
+	ECap4Regs.ECCLR.all = 0xFFFF;
 	PieCtrlRegs.PIEACK.all = PIEACK_GROUP4;
 }
 
@@ -573,30 +574,32 @@ interrupt void ECAP4_INT_ISR(void)     // ECAP-4
 interrupt void ECAP5_INT_ISR(void)     // ECAP-5
 {
   // Insert ISR Code here
-
+	ECap5_Isr();
   // To receive more interrupts from this PIE group, acknowledge this interrupt
 
-	ECap5Regs.ECCLR.bit.CEVT1 = 1;
-	ECap5Regs.ECCLR.bit.CEVT2 = 1;
-	ECap5Regs.ECCLR.bit.CEVT3 = 1;
-	ECap5Regs.ECCLR.bit.CEVT4 = 1;
+//	ECap5Regs.ECCLR.bit.CEVT1 = 1;
+//	ECap5Regs.ECCLR.bit.CEVT2 = 1;
+//	ECap5Regs.ECCLR.bit.CEVT3 = 1;
+//	ECap5Regs.ECCLR.bit.CEVT4 = 1;
 
-	ECap5Regs.ECCLR.bit.INT = 1;
+//	ECap5Regs.ECCLR.bit.INT = 1;
+	ECap5Regs.ECCLR.all = 0xFFFF;
 	PieCtrlRegs.PIEACK.all = PIEACK_GROUP4;
 }
 // INT4.6
 interrupt void ECAP6_INT_ISR(void)     // ECAP-6
 {
   // Insert ISR Code here
-
+	ECap6_Isr();
   // To receive more interrupts from this PIE group, acknowledge this interrupt
 
-	ECap6Regs.ECCLR.bit.CEVT1 = 1;
-	ECap6Regs.ECCLR.bit.CEVT2 = 1;
-	ECap6Regs.ECCLR.bit.CEVT3 = 1;
-	ECap6Regs.ECCLR.bit.CEVT4 = 1;
+//	ECap6Regs.ECCLR.bit.CEVT1 = 1;
+//	ECap6Regs.ECCLR.bit.CEVT2 = 1;
+//	ECap6Regs.ECCLR.bit.CEVT3 = 1;
+//	ECap6Regs.ECCLR.bit.CEVT4 = 1;
 
-	ECap6Regs.ECCLR.bit.INT = 1;
+//	ECap6Regs.ECCLR.bit.INT = 1;
+	ECap6Regs.ECCLR.all = 0xFFFF;
 	PieCtrlRegs.PIEACK.all = PIEACK_GROUP4;
 }
 // INT4.7 - Reserved

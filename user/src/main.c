@@ -26,12 +26,6 @@ Uint32 gtArinc429ReadWord = 0;
 
 int gTestcount = 0;
 int gIsOcCnt = 0;
-int gtest = 0;
-Uint16 gP = 0;
-int gIsOC = 0;
-int gNoOC = 0;
-
-
 
 void main(void)
 {
@@ -41,6 +35,7 @@ void main(void)
 	Init_Spwm_Service();
     Init_Sci_Service();
 	Init_Adc_Service();
+	Init_ECap_Service();
 
 	PFAL_ADC_CFG(CfgAdcTbl_User,sizeof(CfgAdcTbl_User)/sizeof(CfgAdcTbl_User[0]));		        //pass the test
 	PFAL_GPIO_CFG(CfgGpioTbl_User,sizeof(CfgGpioTbl_User)/sizeof(CfgGpioTbl_User[0]));	        //pass the test
@@ -51,11 +46,11 @@ void main(void)
 	PFAL_TIMER_CFG(CfgTimerTbl_User,sizeof(CfgTimerTbl_User)/sizeof(CfgTimerTbl_User[0]));      //pass the test
 	PFAL_INTERRUPT_CFG(CfgInterruptTbl_User,sizeof(CfgInterruptTbl_User)/sizeof(CfgInterruptTbl_User[0]));
 	Disable_All_Epwms();
-	ENABLE_DRIVE_BOARD_PWM_OUTPUT();
-	TURN_ON_PWM_VALVE;
-	TURN_ON_CTL_BOARD();
+	HARDWARE_OVER_CURRENT_CLEAR();
+//	TURN_ON_PWM_VALVE;
+	ENABLE_GATE_DRIVER();
 
-	Init_Arinc429_Service();
+//	Init_Arinc429_Service();
 
 #if(SYS_DEBUG == INCLUDE_FEATURE)
 	DISABLE_GLOBAL_INTERRUPT;
@@ -71,31 +66,14 @@ void main(void)
 	ENABLE_GLOBAL_INTERRUPT;
 #endif
 
-	gtArinc429SendWord = 0x00002008 + 0x01010101;
+//	gtArinc429SendWord = 0x00002008 + 0x01010101;
 	
 	while(1)
 	{
-		
-
-//		gP = Get_RVDT_Position(SDB_RVDT_Read_Addr);
-//		if(gtest == 0){
-//			Disable_All_Epwms();
-//		}
-//		else{
-//			Enable_All_Epwms();
-//		}
-
-		if(IS_OC){
-			gIsOC++;
-		}
-		else{
-			gNoOC++;
-		}
-
 		gTestcount++;
 		if(gTestcount == 1000){
-			if(IS_OC){
-				ENABLE_DRIVE_BOARD_PWM_OUTPUT();
+			if(IS_HARDWARE_OC){
+				HARDWARE_OVER_CURRENT_CLEAR();
 				gIsOcCnt++;
 				gTestcount = 0;
 			}
@@ -121,14 +99,13 @@ void main(void)
         PackSciTxPacket(gScibTxQue,gSciTxVar);
 #endif
 
-        //PackSciTxPacket(gScibTxQue,gSciTxVar);
-		Arinc429_WriteTxFIFO_ONE_WORD(gtArinc429SendWord);
+//		Arinc429_WriteTxFIFO_ONE_WORD(gtArinc429SendWord);
 
-		if(!(Arinc429_ReadStatusReg() & 0x01))
-		{
-			gtArinc429ReadWord = Arinc429_ReadRxFIFO_ONE_WORD();
-			gtArinc429SendWord++;
-		}
+//		if(!(Arinc429_ReadStatusReg() & 0x01))
+//		{
+//			gtArinc429ReadWord = Arinc429_ReadRxFIFO_ONE_WORD();
+//			gtArinc429SendWord++;
+//		}
 
         CheckEnableScibTx(gScibTxQue);
 	}
