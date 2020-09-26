@@ -17,8 +17,6 @@ int gtest = 0;
 Uint16 flashArrayW[4] = {0x0802, 0x1991, 0x1234, 0x5678};
 Uint16 flashArrayR[4] = {0, 0, 0, 0};
 int i = 0;
-Uint16 *Resolver_read=(Uint16 *)0x100000;
-Uint16 Resolver_result=0;
 #endif
 
 Uint32 gtArinc429SendWord = 1;
@@ -83,19 +81,18 @@ void main(void)
 		}
 
 		DIGIT_SIG_ROUTING_INSPECTION();
+
 #if(SYS_DEBUG == INCLUDE_FEATURE)
 		PF_ProcessSciRxPacket(gScibRxQue);
-		Resolver_result =(*Resolver_read) >> 6;
 #elif(J150_SCI_PROTOCOL_RX == INCLUDE_FEATURE)
 		J150_SCI_UnpackData(gScibRxQue);
 #else
         ProcessSciRxPacket(gScibRxQue);
 #endif
+
 		SYS_STATE_MACHINE;
 
-#if(J150_SCI_PROTOCOL_TX == INCLUDE_FEATURE)
-		/* Add J150 SCI TX here */
-#else
+#if(J150_SCI_PROTOCOL_TX == NOT_INCLUDE_FEATURE)
         PackSciTxPacket(gScibTxQue,gSciTxVar);
 #endif
 
