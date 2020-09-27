@@ -61,29 +61,6 @@ void PFAL_Timer0_ISR(void)
 
     if (IS_SCI_TX_TIMER_EXPIRE)
     {
-
-#if (J150_SCI_PROTOCOL_TX == INCLUDE_FEATURE)
-        RESET_SCI_TX_TIMER_CNT;
-        SCI_APP_PROTOCOL_TX testData;
-		memset(&testData, 0 , sizeof(testData));
-#if (0)
-        testData.workStatus     = 0x1234;
-        testData.sysStatus1     = 0x5678;
-        testData.sysStatus2     = 0x9012;
-        testData.faultStatus    = 0x44332211;
-        testData.frameCnt       = 0x55667788;
-        testData.targetSpeed    = 0x3344;
-        testData.currentSpeed   = 0x3344;
-        testData.busVoltage     = 0x7788;
-        testData.busCurrent     = 0x1122;
-        testData.servoTemp      = 0x09;
-        testData.motorTemp      = 0x08;
-        testData.fwVersionNum   = 0x00;
-        testData.workMode       = 0x82;
-        testData.RFU            = 0x9999;
-        J150_SCI_TX_SendPacket(gTxFrameArray, &testData, gScibTxQue);
-#endif
         SCI_TX_PackData(gScibTxQue);
-#endif /* J150 SCI PROTOCOL TX */
     }
 }

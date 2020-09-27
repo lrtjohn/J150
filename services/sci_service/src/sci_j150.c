@@ -322,7 +322,6 @@ static int J150_TransTxCalCheckSum(void);
 static int J150_SCI_TX_PackOneFrame(void);
 static int J150_TransTxEnQueOneFrame(SCITXQUE* txQue);
 
-
 SCI_APP_PROTOCOL_TX* pSciTxAppProtocol = NULL;
 SCI_APP_PROTOCOL_TX gSciAppProtocolTx_J150 =
 {
@@ -453,50 +452,3 @@ void SCI_APP_PROTOCOL_TX_Init(SCI_APP_PROTOCOL_TX* txAppProtocol)
 {
     pSciTxAppProtocol = txAppProtocol; 
 }
-
-/* Rmove in the future */
-#if (0)
-Uint16 J150_SCI_TX_CheckSum(Uint16* array, Uint16 len)
-{
-    Uint16 i = 0;
-    Uint16 checkSum = 0;
-
-    for (i = TX_LENGTH_POS; i < TX_CHECK_SUM_POS - 1; ++i)
-    {
-        checkSum += array[i];
-    }
-
-    return checkSum;
-}
-
-void J150_SCI_TX_SendPacket(Uint16* txFrameArray, SCI_APP_PROTOCOL_TX* data, SCITXQUE* txQue)
-{
-    Uint16 i;
-
-    U16_TO_U8(&txFrameArray[TX_WORK_STATUS_POS], &data->workStatus);
-    U16_TO_U8(&txFrameArray[TX_SYS_STATUS_1_POS], &data->sysStatus1);
-    U16_TO_U8(&txFrameArray[TX_SYS_STATUS_2_POS], &data->sysStatus2);
-    U32_TO_U8(&txFrameArray[TX_FAULT_STATUS_POS], &data->faultStatus);
-    U32_TO_U8(&txFrameArray[TX_FRAME_CNT_POS], &data->frameCnt);
-    U16_TO_U8(&txFrameArray[TX_TARGET_SPEED_POS], &data->targetSpeed);
-    U16_TO_U8(&txFrameArray[TX_CURRENT_SPEED_POS], &data->currentSpeed);
-    U16_TO_U8(&txFrameArray[TX_BUS_VOLTAGE_POS], &data->busVoltage);
-    U16_TO_U8(&txFrameArray[TX_BUS_CURRENT_POS], &data->busCurrent);
-    txFrameArray[TX_SERVO_TEMP_POS] = data->servoTemp;
-    txFrameArray[TX_MOTOR_TEMP_POS] = data->motorTemp;
-    U16_TO_U8(&txFrameArray[TX_FW_VERSION_POS], &data->fwVersionNum);
-    txFrameArray[TX_WORK_MODE_POS] = data->workMode;
-    U16_TO_U8(&txFrameArray[TX_RFU_POS], &data->RFU);
-
-    data->checkSum = J150_SCI_TX_CheckSum(txFrameArray, data->txLength);
-    txFrameArray[TX_CHECK_SUM_POS] = data->checkSum;
-
-    for (i = 0; i < txFrameArray[TX_LENGTH_POS]; ++i)
-    {
- 		if (SciTxEnQueue(txFrameArray[i],txQue) == 0)
-        {
-            return;
-        }
-    }
-}
-#endif
