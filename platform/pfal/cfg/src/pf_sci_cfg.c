@@ -178,7 +178,7 @@ void CFG_SCI_B(CFG_SCI_TBL cfgSciTblElement)
     ScibRegs.SCIFFTX.bit.TXFFIENA       = 1;
 
     ScibRegs.SCIFFTX.bit.TXFFINTCLR     = 1;
-    ScibRegs.SCIFFRX.all                = 0x2028;
+    ScibRegs.SCIFFRX.all                = 0x2021;
 
     ScibRegs.SCIFFRX.bit.RXFFIENA       = 1;
     ScibRegs.SCIFFCT.all                = 0x0;
