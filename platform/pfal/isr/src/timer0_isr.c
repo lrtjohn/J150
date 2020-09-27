@@ -35,7 +35,7 @@ TIMER_INTERVAL_CNT gTimerCnt =
     0,      // control 
     1,      // control threshold
     0,      // sci tx 
-    200     // sci tx threshold
+    4     // sci tx threshold
 };
 
 void PFAL_Timer0_ISR(void)
