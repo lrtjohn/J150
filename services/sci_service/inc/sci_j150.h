@@ -92,7 +92,6 @@ typedef struct _SCI_APP_PROTOCOL_RX
     GetCommand                  getCommand;
     GetWorkMode                 getWorkMode;
     GetTargetSpeed              getTargetSpeed;
-    GetCheckSum                 getCheckSum;
     UnpackPayLoad               unpackPayload;
 }SCI_APP_PROTOCOL_RX;
 

@@ -1,7 +1,6 @@
 #include "sci_j150.h"
 #include <stdio.h>
 
-
 /**************************************************************************************************************************
      ██  ██ ███████  ██████      ██████  ██   ██     ██████  ██████   ██████  ████████  ██████   ██████  ██████  ██      
      ██ ███ ██      ██  ████     ██   ██  ██ ██      ██   ██ ██   ██ ██    ██    ██    ██    ██ ██      ██    ██ ██      
@@ -52,7 +51,6 @@ Uint16 gTxFrameArray[SCI_TX_ONE_FRAME_LENGTH] =
 static Uint16 J150_APP_RX_PROTOCOL_GetCommand(unsigned char* data);
 static Uint16 J150_APP_RX_PROTOCOL_GetWorkMode(unsigned char* data);
 static Uint16 J150_APP_RX_PROTOCOL_GetTargetSpeed(unsigned char* data);
-static Uint16 J150_APP_RX_PROTOCOL_GetCheckSum(unsigned char* data);
 Uint16 J150_APP_RX_PROTOCOL_UnpackPayLoad(void);
 /*
 * J150 transport layer API
@@ -88,7 +86,6 @@ SCI_APP_PROTOCOL_RX gSciAppProtocolRx_J150 =
     J150_APP_RX_PROTOCOL_GetCommand,
     J150_APP_RX_PROTOCOL_GetWorkMode,
     J150_APP_RX_PROTOCOL_GetTargetSpeed,
-    J150_APP_RX_PROTOCOL_GetCheckSum,
     J150_APP_RX_PROTOCOL_UnpackPayLoad
 };
 
@@ -103,6 +100,19 @@ SCI_TRANSPORT_RX gSciTransRx_J150 =
     J150_TransRxSaveGoodPacket,
     J150_TransRxCheckSum,
     J150_TransRxUpdateHeadPos,
+
+    {
+        HEAD_1_DATA,
+        HEAD_2_DATA,
+    },
+    HEAD_LEN,
+    {
+        0,
+        0,
+    },
+    0,          // tail length
+    TOTAL_LEN,
+    &gSciAppProtocolRx_J150 
 };
 
 /*
@@ -129,11 +139,6 @@ static Uint16 J150_APP_RX_PROTOCOL_GetTargetSpeed(unsigned char* data)
     targetSpeed = ((data[TARGET_SPEED_POS]) << 8) | data[TARGET_SPEED_POS + 1];
 
     return targetSpeed;
-}
-
-static Uint16 J150_APP_RX_PROTOCOL_GetCheckSum(unsigned char* data)
-{
-    return data[CHECK_SUM_POS];
 }
 
 Uint16 J150_APP_RX_PROTOCOL_UnpackPayLoad(void)
@@ -214,30 +219,35 @@ static int J150_TransRxStart(void)
 
 static int J150_TransRxFindHead(SCIRXQUE* q)
 {
-    while(1)
+    int i;
+
+    while (1)
     {
-        if ((q->buffer[q->front] == pSciAppProtocol->head[0]) && 
-            (q->buffer[(q->front + 1) % (q->bufferLen)] == pSciAppProtocol->head[1]))
+        for (i = 0; i < gSciTransRx_J150.mRxHeadLength; ++i)
         {
-            return SUCCESS;
+            if (q->buffer[q->front] != gSciTransRx_J150.mRxHead[i]) 
+            {
+                if (SciRxDeQueue(q) == 0)
+                {
+                    return FAIL;
+                }
+                break;
+            }
         }
 
-        if (SciRxDeQueue(q) == 0)
-        {
-            return FAIL;
-        }
+        return SUCCESS;
     }
 }
 
 static int J150_TransRxCheckLength(SCIRXQUE* q)
 {
-    if (q->buffer[(q->front + TOTAL_LEN_POS) % (q->bufferLen)] != pSciAppProtocol->totalLen)
+    if (q->buffer[(q->front + TOTAL_LEN_POS) % (q->bufferLen)] != gSciTransRx_J150.mTotalLength)
     {
         SciRxDeQueue(q);
         return FAIL;
     }
 
-    if (GetSciRxQueLength(q) >= pSciAppProtocol->totalLen)
+    if (GetSciRxQueLength(q) >= gSciTransRx_J150.mTotalLength)
     {
         return SUCCESS;
     }
@@ -257,7 +267,7 @@ static int J150_TransRxSaveGoodPacket(int len, SCIRXQUE* q)
 {
     int i;
 
-    for (i = 0; i < pSciAppProtocol->totalLen; ++i)
+    for (i = 0; i < gSciTransRx_J150.mTotalLength; ++i)
     {
         pSciAppProtocol->goodPacketArray[i] = q->buffer[(q->front + i) % (q->bufferLen)];
     }
@@ -270,7 +280,7 @@ static int J150_TransRxCheckSum(SCIRXQUE* q)
     int i;
     Uint16 sum = 0;
 
-    for (i = TOTAL_LEN_POS; i < pSciAppProtocol->totalLen - 1; ++i)
+    for (i = TOTAL_LEN_POS; i < gSciTransRx_J150.mTotalLength - 1; ++i)
     {
         sum += q->buffer[(q->front + i) % (q->bufferLen)];
     }
@@ -289,7 +299,7 @@ static int J150_TransRxCheckSum(SCIRXQUE* q)
 
 static int J150_TransRxUpdateHeadPos(SCIRXQUE* q)
 {
-    q->front = (q->front + pSciAppProtocol->totalLen) % (q->bufferLen);
+    q->front = (q->front + gSciTransRx_J150.mTotalLength) % (q->bufferLen);
 
     return SUCCESS;
 }

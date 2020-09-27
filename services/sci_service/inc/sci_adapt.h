@@ -3,6 +3,9 @@
 
 #include "sci_queue.h"
 
+#define SCI_RX_HEAD_LEN_MAX     (2)
+#define SCI_RX_TAIL_LEN_MAX     (2)
+
 typedef int(*ADAPT_RX_Init)(void);
 typedef int(*ADAPT_RX_Config)(void);
 typedef int(*ADAPT_RX_Start)(void);
@@ -24,6 +27,13 @@ typedef struct _SCI_TRANSPORT_RX
     ADAPT_RX_SaveGoodPacket    saveGoodPacket;
     ADAPT_RX_CheckSum          checkSum;
     ADAPT_RX_UpdateHeadPos     updateHeadPos;
+
+    Uint16 mRxHead[SCI_RX_HEAD_LEN_MAX];
+    Uint16 mRxHeadLength;
+    Uint16 mRxTail[SCI_RX_TAIL_LEN_MAX];
+    Uint16 mRxTailLength;
+    Uint16 mTotalLength;
+    void*   mpAppProtocol;
 }SCI_TRANSPORT_RX;
 
 
@@ -36,4 +46,5 @@ extern int SCI_Trans_AdaptRx_CheckSum(SCIRXQUE* q);
 extern int SCI_Trans_AdaptRx_UpdateHeadPos(SCIRXQUE* q);
 extern int SCI_Trans_AdaptRx_SaveGoodPacket(int len, SCIRXQUE* q);
 extern int SCI_Trans_AdaptRx_Init(SCI_TRANSPORT_RX* gpSciTransport);
+extern void SCI_RX_UnpackData(SCIRXQUE* q);
 #endif
