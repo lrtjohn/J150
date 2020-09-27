@@ -82,8 +82,6 @@ typedef Uint16(*UnpackPayLoad)(void);
 
 typedef struct _SCI_APP_PROTOCOL_RX
 {
-    Uint16                      head[HEAD_LEN];
-    Uint16                      totalLen;
     COMMAND_DEFINITION          command;
     WORKMODE                    workMode;
     Uint16                      targetSpeed;
@@ -196,9 +194,6 @@ typedef struct _SCI_APP_PROTOCOL_TX
     /* data */
 }SCI_APP_PROTOCOL_TX;
 
-#if (1) 
-
-#endif
 extern Uint16 gTxFrameArray[SCI_TX_ONE_FRAME_LENGTH];
 extern void SCI_TX_SendPacket(Uint16* txFrameArray, SCI_APP_PROTOCOL_TX* data, SCITXQUE* txQue);
 #endif

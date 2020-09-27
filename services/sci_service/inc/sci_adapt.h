@@ -33,18 +33,14 @@ typedef struct _SCI_TRANSPORT_RX
     Uint16 mRxTail[SCI_RX_TAIL_LEN_MAX];
     Uint16 mRxTailLength;
     Uint16 mTotalLength;
-    void*   mpAppProtocol;
+    void*  mpAppProtocol;
 }SCI_TRANSPORT_RX;
 
 
+extern void U16_TO_U8(void* d, void* s);
+extern void U32_TO_U8(void* d, void* s);
 extern int SCI_Trans_AdaptRx_Config(void);
 extern int SCI_Trans_AdaptRx_Start(void);
-extern int SCI_Trans_AdaptRx_FindHead(SCIRXQUE* q);
-extern int SCI_Trans_AdaptRx_CheckLength(SCIRXQUE* q);
-extern int SCI_Trans_AdaptRx_CheckTail(SCIRXQUE* q);
-extern int SCI_Trans_AdaptRx_CheckSum(SCIRXQUE* q);
-extern int SCI_Trans_AdaptRx_UpdateHeadPos(SCIRXQUE* q);
-extern int SCI_Trans_AdaptRx_SaveGoodPacket(int len, SCIRXQUE* q);
-extern int SCI_Trans_AdaptRx_Init(SCI_TRANSPORT_RX* gpSciTransport);
+extern int SCI_Trans_AdaptRx_Init(SCI_TRANSPORT_RX* gpSciTransportRx);
 extern void SCI_RX_UnpackData(SCIRXQUE* q);
 #endif

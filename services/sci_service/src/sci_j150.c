@@ -1,13 +1,6 @@
 #include "sci_j150.h"
 #include <stdio.h>
 
-/**************************************************************************************************************************
-     ██  ██ ███████  ██████      ██████  ██   ██     ██████  ██████   ██████  ████████  ██████   ██████  ██████  ██      
-     ██ ███ ██      ██  ████     ██   ██  ██ ██      ██   ██ ██   ██ ██    ██    ██    ██    ██ ██      ██    ██ ██      
-     ██  ██ ███████ ██ ██ ██     ██████    ███       ██████  ██████  ██    ██    ██    ██    ██ ██      ██    ██ ██      
-██   ██  ██      ██ ████  ██     ██   ██  ██ ██      ██      ██   ██ ██    ██    ██    ██    ██ ██      ██    ██ ██      
- █████   ██ ███████  ██████      ██   ██ ██   ██     ██      ██   ██  ██████     ██     ██████   ██████  ██████  ███████ 
-****************************************************************************************************************************/
 Uint16 gTxFrameArray[SCI_TX_ONE_FRAME_LENGTH] = 
 {
     TX_HEAD1_DATA,          // 0
@@ -72,11 +65,6 @@ SCI_APP_PROTOCOL_RX* pSciAppProtocol = NULL;
 
 SCI_APP_PROTOCOL_RX gSciAppProtocolRx_J150 =
 {
-    {
-        HEAD_1_DATA,
-        HEAD_2_DATA
-    },
-    TOTAL_LEN,
     COMMAND_PARA_NONE,
     WORK_MODE_NORMAL,
     RX_MIN_TARGET_SPEED ,                  /*init target speed*/
@@ -100,7 +88,6 @@ SCI_TRANSPORT_RX gSciTransRx_J150 =
     J150_TransRxSaveGoodPacket,
     J150_TransRxCheckSum,
     J150_TransRxUpdateHeadPos,
-
     {
         HEAD_1_DATA,
         HEAD_2_DATA,
@@ -115,6 +102,13 @@ SCI_TRANSPORT_RX gSciTransRx_J150 =
     &gSciAppProtocolRx_J150 
 };
 
+/**************************************************************************************************************************
+     ██  ██ ███████  ██████      ██████  ██   ██     ██████  ██████   ██████  ████████  ██████   ██████  ██████  ██      
+     ██ ███ ██      ██  ████     ██   ██  ██ ██      ██   ██ ██   ██ ██    ██    ██    ██    ██ ██      ██    ██ ██      
+     ██  ██ ███████ ██ ██ ██     ██████    ███       ██████  ██████  ██    ██    ██    ██    ██ ██      ██    ██ ██      
+██   ██  ██      ██ ████  ██     ██   ██  ██ ██      ██      ██   ██ ██    ██    ██    ██    ██ ██      ██    ██ ██      
+ █████   ██ ███████  ██████      ██   ██ ██   ██     ██      ██   ██  ██████     ██     ██████   ██████  ██████  ███████ 
+****************************************************************************************************************************/
 /*
 * API definition
 */
@@ -198,7 +192,6 @@ Uint16 J150_APP_RX_PROTOCOL_UnpackPayLoad(void)
             break;
     }
 
-
     return 0;
 }
 
@@ -225,7 +218,7 @@ static int J150_TransRxFindHead(SCIRXQUE* q)
     {
         for (i = 0; i < gSciTransRx_J150.mRxHeadLength; ++i)
         {
-            if (q->buffer[q->front] != gSciTransRx_J150.mRxHead[i]) 
+            if (q->buffer[(q->front + i) % (q->bufferLen)] != gSciTransRx_J150.mRxHead[i]) 
             {
                 if (SciRxDeQueue(q) == 0)
                 {
@@ -269,7 +262,7 @@ static int J150_TransRxSaveGoodPacket(int len, SCIRXQUE* q)
 
     for (i = 0; i < gSciTransRx_J150.mTotalLength; ++i)
     {
-        pSciAppProtocol->goodPacketArray[i] = q->buffer[(q->front + i) % (q->bufferLen)];
+        ((SCI_APP_PROTOCOL_RX*)(gSciTransRx_J150.mpAppProtocol))->goodPacketArray[i] = q->buffer[(q->front + i) % (q->bufferLen)];
     }
     J150_APP_RX_PROTOCOL_UnpackPayLoad();
     return SUCCESS;
@@ -304,11 +297,6 @@ static int J150_TransRxUpdateHeadPos(SCIRXQUE* q)
     return SUCCESS;
 }
 
-Uint16 SCI_APP_RX_PROTOCOL_ADAPT_GetLength()
-{
-    return pSciAppProtocol->totalLen;
-}
-
 unsigned char* SCI_APP_PROTOCOL_GetGoodPacketArray()
 {
     return pSciAppProtocol->goodPacketArray;
@@ -319,37 +307,6 @@ void SCI_APP_PROTOCOL_Init(SCI_APP_PROTOCOL_RX* appProtocol)
     pSciAppProtocol = appProtocol; 
 }
 
-void J150_SCI_UnpackData(SCIRXQUE* q)
-{
-    while (GetSciRxQueLength(q) >= SCI_APP_RX_PROTOCOL_ADAPT_GetLength())
-    {
-        if (SCI_Trans_AdaptRx_FindHead(q) == FAIL)
-        {
-            return;
-        }
-
-        if (SCI_Trans_AdaptRx_CheckLength(q) == FAIL)
-        {
-            return;
-        }
-
-        if (SCI_Trans_AdaptRx_CheckTail(q) == FAIL)
-        {
-            SciRxDeQueue(q);
-            return;
-        }
-
-        if (SCI_Trans_AdaptRx_CheckSum(q) == FAIL)
-        {
-            SciRxDeQueue(q);
-            return;
-        }
-
-        SCI_Trans_AdaptRx_SaveGoodPacket(SCI_APP_RX_PROTOCOL_ADAPT_GetLength(), q);
-
-        SCI_Trans_AdaptRx_UpdateHeadPos(q);
-    }
-}
 /**************************************************************************************************************************
      ██  ██ ███████  ██████      ████████ ██   ██     ██████  ██████   ██████  ████████  ██████   ██████  ██████  ██      
      ██ ███ ██      ██  ████        ██     ██ ██      ██   ██ ██   ██ ██    ██    ██    ██    ██ ██      ██    ██ ██      
@@ -357,47 +314,7 @@ void J150_SCI_UnpackData(SCIRXQUE* q)
 ██   ██  ██      ██ ████  ██        ██     ██ ██      ██      ██   ██ ██    ██    ██    ██    ██ ██      ██    ██ ██      
  █████   ██ ███████  ██████         ██    ██   ██     ██      ██   ██  ██████     ██     ██████   ██████  ██████  ███████ 
 ****************************************************************************************************************************/
-static void U16_TO_U8(void* d, void* s)
-{
-#if (0)
-    *((Uint16*)d) = *((Uint16*)s);
-    *((Uint16*)d + 1) = *((Uint16*)s + 1);
-#endif
 
-#if(LSB_FIRST_SEND)
-    *((Uint16*)d) = (*((Uint16*)s)) & 0x00ff;
-    *((Uint16*)d + 1) = (*((Uint16*)s)) >> 8;
-#endif
-
-#if(MSB_FIRST_SEND)
-    *((Uint16*)d + 1) = (*((Uint16*)s)) >> 8;
-    *((Uint16*)d) = (*((Uint16*)s)) & 0x00ff;
-#endif
-}
-
-static void U32_TO_U8(void* d, void* s)
-{
-#if(0)
-    *((Uint16*)d) = *((Uint16*)s);
-    *((Uint16*)d + 1) = *((Uint16*)s + 1);
-    *((Uint16*)d + 2) = *((Uint16*)s + 2);
-    *((Uint16*)d + 3) = *((Uint16*)s + 3);
-#endif
-
-#if(LSB_FIRST_SEND)
-    *((Uint16*)d) = (*((Uint32*)s)) & 0x000000ff;
-    *((Uint16*)d + 1) = (*((Uint32*)s)) >> 8;
-    *((Uint16*)d + 2) = (*((Uint32*)s)) >> 16;
-    *((Uint16*)d + 3) = (*((Uint32*)s)) >> 24;
-#endif
-
-#if(MSB_FIRST_SEND)
-    *((Uint16*)d + 3) = (*((Uint32*)s)) >> 24;
-    *((Uint16*)d + 2) = (*((Uint32*)s)) >> 16;
-    *((Uint16*)d + 1) = (*((Uint32*)s)) >> 8;
-    *((Uint16*)d) = (*((Uint32*)s)) & 0x000000ff;
-#endif
-}
 
 Uint16 SCI_TX_CheckSum(Uint16* array, Uint16 len)
 {
