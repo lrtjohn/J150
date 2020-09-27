@@ -109,17 +109,38 @@ typedef enum _SYS_RUNNING_STATE
     
 }SYS_RUNNING_STATE;
 
+
+typedef enum
+{
+	BIT_ING,
+	BIT_NORMAL,
+	BIT_ABNORMAL,
+	CONFIG_PARA_ING,
+	CONFIG_PARA_NORMAL,
+	CONFIG_PARA_ABNORMAL,
+	MOTOR_RUN_ING,
+	MOTOR_RUN_NORMAL,
+	MOTOR_RUN_ABNORMAL,
+	MOTOR_STOP_ING,
+	MOTOR_STOP_NORMAL,
+	MOTOR_STOP_ABNORMAL
+}J150_SYS_STATUS;
+
+typedef struct _J150_SYS_INFO
+{
+	/* Just add this data structure in case some special info for J150 */
+	Uint16 a;
+}J150_SYS_INFO;
+
 typedef struct _SYS_STATE_FLAG
 {
-    ROTATE_DIRECTION rotateDirectoin;
-    SYSALARM alarm;
-	SYSWARNING warning;
-	SYSERRO error;
-    SYS_RUNNING_STATE sysRunningState;
-    /* data */
+    ROTATE_DIRECTION 	rotateDirectoin;
+    SYSALARM 			alarm;
+	SYSWARNING 			warning;
+	SYSERRO 			error;
+    SYS_RUNNING_STATE 	sysRunningState;
+	J150_SYS_STATUS	  	j150SysStatus;
 }SYS_STATE_FLAG;
-
-
 
 #define SET_SYS_RUNNING_STATE_INIT                      (gSysStateFlag.sysRunningState = SYS_INIT)
 #define SET_SYS_RUNNING_STATE_FORWARD_RUN               (gSysStateFlag.sysRunningState = SYS_FORWARD_RUN)
@@ -127,6 +148,32 @@ typedef struct _SYS_STATE_FLAG
 #define SET_SYS_RUNNING_STATE_STOP                      (gSysStateFlag.sysRunningState = SYS_STOP)
 #define SET_SYS_RUNNING_STATE_ALARM                     (gSysStateFlag.sysRunningState = SYS_ALARM)
 #define SET_SYS_RUNNING_STATE_WARNING                   (gSysStateFlag.sysRunningState = SYS_WARNING)
+
+#define SET_J150_BIT_ING								(gSysStateFlag.j150SysStatus = BIT_ING)
+#define SET_J150_BIT_NORMAL								(gSysStateFlag.j150SysStatus = BIT_NORMAL)
+#define SET_J150_BIT_ABNORMAL							(gSysStateFlag.j150SysStatus = BIT_ABNORMAL)
+#define SET_J150_CONFIG_PARA_ING						(gSysStateFlag.j150SysStatus = CONFIG_PARA_ING)
+#define SET_J150_CONFIG_PARA_NORMAL						(gSysStateFlag.j150SysStatus = CONFIG_PARA_NORMAL)
+#define SET_J150_CONFIG_PARA_ABNORMAL					(gSysStateFlag.j150SysStatus = CONFIG_PARA_ABNORMAL)
+#define SET_J150_MORTOR_RUN_ING							(gSysStateFlag.j150SysStatus = MOTOR_RUN_ING)
+#define SET_J150_MORTOR_RUN_NORMAL						(gSysStateFlag.j150SysStatus = MOTOR_RUN_NORMAL)
+#define SET_J150_MORTOR_RUN_ABNORMAL					(gSysStateFlag.j150SysStatus = MOTOR_RUN_ABNORMAL)
+#define SET_J150_MORTOR_STOP_ING						(gSysStateFlag.j150SysStatus = MOTOR_STOP_ING)
+#define SET_J150_MORTOR_STOP_NORMAL						(gSysStateFlag.j150SysStatus = MOTOR_STOP_NORMAL)
+#define SET_J150_MORTOR_STOP_ABNORMAL					(gSysStateFlag.j150SysStatus = MOTOR_STOP_ABNORMAL)
+
+#define IS_J150_BIT_ING									(gSysStateFlag.j150SysStatus == BIT_ING)
+#define IS_J150_BIT_NORMAL								(gSysStateFlag.j150SysStatus == BIT_NORMAL)
+#define IS_J150_BIT_ABNORMAL							(gSysStateFlag.j150SysStatus == BIT_ABNORMAL)
+#define IS_J150_CONFIG_PARA_ING							(gSysStateFlag.j150SysStatus == CONFIG_PARA_ING)
+#define IS_J150_CONFIG_PARA_NORMAL						(gSysStateFlag.j150SysStatus == CONFIG_PARA_NORMAL)
+#define IS_J150_CONFIG_PARA_ABNORMAL					(gSysStateFlag.j150SysStatus == CONFIG_PARA_ABNORMAL)
+#define IS_J150_MORTOR_RUN_ING							(gSysStateFlag.j150SysStatus == MOTOR_RUN_ING)
+#define IS_J150_MORTOR_RUN_NORMAL						(gSysStateFlag.j150SysStatus == MOTOR_RUN_NORMAL)
+#define IS_J150_MORTOR_RUN_ABNORMAL						(gSysStateFlag.j150SysStatus == MOTOR_RUN_ABNORMAL)
+#define IS_J150_MORTOR_STOP_ING							(gSysStateFlag.j150SysStatus == MOTOR_STOP_ING)
+#define IS_J150_MORTOR_STOP_NORMAL						(gSysStateFlag.j150SysStatus == MOTOR_STOP_NORMAL)
+#define IS_J150_MORTOR_STOP_ABNORMAL					(gSysStateFlag.j150SysStatus == MOTOR_STOP_ABNORMAL)
 
 
 #define SOFTWARE_ALARM_MASK                             BIT0
@@ -208,6 +255,7 @@ typedef struct _SYS_STATE_FLAG
 #define IS_SYS_TX_QUEUE_FULL_ERROR                      (gSysStateFlag.error.bit.txQFull | BIT8)
 
 #define SYS_STATE_MACHINE								(*Sys_hlstPtr)()
+
 extern void (*Sys_hlstPtr)(void);
 void Init_Sys_State_Service(void);
 extern SYS_STATE_FLAG gSysStateFlag;

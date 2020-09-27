@@ -10,6 +10,8 @@
 #include "adc_service.h"
 #include "gpio_service.h"
 #include "arinc429_service.h"
+#include "sci_adapt.h"
+#include "sci_j150.h"
 
 
 

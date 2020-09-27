@@ -25,6 +25,18 @@ void CFG_INTERRUPT(CFG_ISR_ENABLE isrEnable)
     case ECAP1:
         /* code */
         break;
+    case ECAP4:
+        /* code */
+    	PieCtrlRegs.PIEIER4.bit.INTx4 = 1;//ECAP4
+        break;
+    case ECAP5:
+        /* code */
+    	PieCtrlRegs.PIEIER4.bit.INTx5 = 1;//ECAP5
+        break;
+    case ECAP6:
+        /* code */
+    	PieCtrlRegs.PIEIER4.bit.INTx6 = 1;//ECAP6
+        break;
     case SCIARX:
         /* code */
         break;

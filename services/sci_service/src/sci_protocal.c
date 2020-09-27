@@ -459,6 +459,7 @@ void Init_Sci_Protocol(void)
 	gSciTxVar[6].updateValue = GetTemperatureCurve;
 	gSciTxVar[7].updateValue = GetMotorAccelCurve;
 
+#if(0)
 
 	gRxPacketHead = (PF_RX_PACKET_HEAD*)malloc(sizeof(PF_RX_PACKET_HEAD));
 	if(gRxPacketHead == NULL)
@@ -516,6 +517,7 @@ void Init_Sci_Protocol(void)
 	gRxPacketInfo->totallLen = 0;
 
 	gRxPacketInfo->updateTotalLen = calRxPacketTotalLen;
+#endif
 }
 
 int PF_FindRxPacketHead(PF_RING_BUFFER *ringBuffer)
