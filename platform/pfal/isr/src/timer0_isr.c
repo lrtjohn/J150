@@ -27,7 +27,6 @@ int gtimertest = 0;
 #define RESET_SCI_TX_TIMER_CNT          (gTimerCnt.sciTxCnt  = 0)
 #define RESET_CONTROL_TIMER_TIMER_CNT   (gTimerCnt.controlCnt = 0)
 
-
 TIMER_INTERVAL_CNT gTimerCnt = 
 {
     0,      // watch dog
@@ -35,7 +34,7 @@ TIMER_INTERVAL_CNT gTimerCnt =
     0,      // control 
     1,      // control threshold
     0,      // sci tx 
-    4     // sci tx threshold
+    4       // sci tx threshold
 };
 
 void PFAL_Timer0_ISR(void)
@@ -61,6 +60,8 @@ void PFAL_Timer0_ISR(void)
 
     if (IS_SCI_TX_TIMER_EXPIRE)
     {
+        RESET_SCI_TX_TIMER_CNT;
+
         SCI_TX_PackData(gScibTxQue);
     }
 }

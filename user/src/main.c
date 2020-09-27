@@ -33,13 +33,13 @@ void main(void)
 	Init_Adc_Service();
 	Init_ECap_Service();
 
-	PFAL_ADC_CFG(CfgAdcTbl_User,sizeof(CfgAdcTbl_User)/sizeof(CfgAdcTbl_User[0]));		        //pass the test
-	PFAL_GPIO_CFG(CfgGpioTbl_User,sizeof(CfgGpioTbl_User)/sizeof(CfgGpioTbl_User[0]));	        //pass the test
-	PFAL_PWM_CFG(CfgPwmTbl_User,sizeof(CfgPwmTbl_User)/sizeof(CfgPwmTbl_User[0]));		        //pass the test
-	PFAL_SCI_CFG(CfgSciTbl_User,sizeof(CfgSciTbl_User)/sizeof(CfgSciTbl_User[0]));		        //pass the test
-	PFAL_SPI_CFG(CfgSpiTbl_User,sizeof(CfgSpiTbl_User)/sizeof(CfgSpiTbl_User[0]));              //pass the test
-	PFAL_XINTF_CFG(CfgXintfTbl_User,sizeof(CfgXintfTbl_User)/sizeof(CfgXintfTbl_User[0]));  
-	PFAL_TIMER_CFG(CfgTimerTbl_User,sizeof(CfgTimerTbl_User)/sizeof(CfgTimerTbl_User[0]));      //pass the test
+	PFAL_ADC_CFG(CfgAdcTbl_User,sizeof(CfgAdcTbl_User)/sizeof(CfgAdcTbl_User[0]));		        			// pass the test
+	PFAL_GPIO_CFG(CfgGpioTbl_User,sizeof(CfgGpioTbl_User)/sizeof(CfgGpioTbl_User[0]));	        			// pass the test
+	PFAL_PWM_CFG(CfgPwmTbl_User,sizeof(CfgPwmTbl_User)/sizeof(CfgPwmTbl_User[0]));		        			// pass the test
+	PFAL_SCI_CFG(CfgSciTbl_User,sizeof(CfgSciTbl_User)/sizeof(CfgSciTbl_User[0]));		        			// pass the test
+	PFAL_SPI_CFG(CfgSpiTbl_User,sizeof(CfgSpiTbl_User)/sizeof(CfgSpiTbl_User[0]));              			// pass the test
+	PFAL_XINTF_CFG(CfgXintfTbl_User,sizeof(CfgXintfTbl_User)/sizeof(CfgXintfTbl_User[0]));  				// pass the test
+	PFAL_TIMER_CFG(CfgTimerTbl_User,sizeof(CfgTimerTbl_User)/sizeof(CfgTimerTbl_User[0]));      			// pass the test
 	PFAL_INTERRUPT_CFG(CfgInterruptTbl_User,sizeof(CfgInterruptTbl_User)/sizeof(CfgInterruptTbl_User[0]));
 	Disable_All_Epwms();
 	HARDWARE_OVER_CURRENT_CLEAR();
@@ -52,12 +52,12 @@ void main(void)
 
 #if(SYS_DEBUG == INCLUDE_FEATURE)
 	DISABLE_GLOBAL_INTERRUPT;
-	if(Flash_WR(0x330000, flashArrayW, sizeof(flashArrayW)) != STATUS_SUCCESS)
+	if (Flash_WR(0x330000, flashArrayW, sizeof(flashArrayW)) != STATUS_SUCCESS)
 	{
 		gtest |= 0x01;
 	}
 
-	if(Flash_RD(0x330000,flashArrayR, sizeof(flashArrayR)) != STATUS_SUCCESS)
+	if (Flash_RD(0x330000,flashArrayR, sizeof(flashArrayR)) != STATUS_SUCCESS)
 	{
 		gtest |= 0x02;
 	}
@@ -68,13 +68,13 @@ void main(void)
 	while(1)
 	{
 		gTestcount++;
-		if(gTestcount == 1000){
-			if(IS_HARDWARE_OC){
+		if (gTestcount == 1000){
+			if (IS_HARDWARE_OC){
 				HARDWARE_OVER_CURRENT_CLEAR();
 				gIsOcCnt++;
 				gTestcount = 0;
 			}
-			else{
+			else {
 				gTestcount = 0;
 			}
 		}
@@ -98,7 +98,7 @@ void main(void)
 #if (ARINC429_FEATURE == INCLUDE_FEATURE)
 		Arinc429_WriteTxFIFO_ONE_WORD(gtArinc429SendWord);
 
-		if(!(Arinc429_ReadStatusReg() & 0x01))
+		if (!(Arinc429_ReadStatusReg() & 0x01))
 		{
 			gtArinc429ReadWord = Arinc429_ReadRxFIFO_ONE_WORD();
 			gtArinc429SendWord++;
