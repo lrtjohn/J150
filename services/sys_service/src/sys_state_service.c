@@ -146,7 +146,6 @@ void Init_Sys_State_Service(void)
     INIT_SYS_RUNNING_STATE;            
     INIT_SYS_ROTATE_DIRECTION;
     SYS_STATE_MACHINE_INIT;
+    SET_J150_BIT_ING;
     gSysVersionNum = 0;
 }
-
-
