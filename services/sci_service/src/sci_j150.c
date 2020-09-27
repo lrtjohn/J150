@@ -61,7 +61,7 @@ Uint16 gTxFrameArray[SCI_TX_ONE_FRAME_LENGTH] =
     0                       // 32
 };
 
-SCI_APP_PROTOCOL_RX* pSciAppProtocol = NULL;
+SCI_APP_PROTOCOL_RX* pSciRxAppProtocol = NULL;
 SCI_APP_PROTOCOL_RX gSciAppProtocolRx_J150 =
 {
     COMMAND_PARA_NONE,
@@ -140,9 +140,9 @@ Uint16 J150_APP_RX_PROTOCOL_UnpackPayLoad(void)
     Uint16 workMode;
     Uint16 targetSpeed;
 
-    command        = pSciAppProtocol->getCommand(pSciAppProtocol->goodPacketArray);
-    workMode       = pSciAppProtocol->getWorkMode(pSciAppProtocol->goodPacketArray);
-    targetSpeed    = pSciAppProtocol->getTargetSpeed(pSciAppProtocol->goodPacketArray);
+    command        = pSciRxAppProtocol->getCommand(pSciRxAppProtocol->goodPacketArray);
+    workMode       = pSciRxAppProtocol->getWorkMode(pSciRxAppProtocol->goodPacketArray);
+    targetSpeed    = pSciRxAppProtocol->getTargetSpeed(pSciRxAppProtocol->goodPacketArray);
 
 #if (0)
     if(!IS_PAYLOAD_GOOD(pSciAppProtocol->workMode, pSciAppProtocol->command, pSciAppProtocol->targetSpeed))
@@ -158,7 +158,7 @@ Uint16 J150_APP_RX_PROTOCOL_UnpackPayLoad(void)
         return 0;
     }
 
-    pSciAppProtocol->command = (COMMAND_DEFINITION)command;
+    pSciRxAppProtocol->command = (COMMAND_DEFINITION)command;
 
     switch(command)
     {
@@ -166,7 +166,7 @@ Uint16 J150_APP_RX_PROTOCOL_UnpackPayLoad(void)
             /* Update the work mode and target speed here */
             if (IS_WORK_MODE_GOOD(workMode))
             {
-                pSciAppProtocol->workMode = (WORKMODE)workMode;
+                pSciRxAppProtocol->workMode = (WORKMODE)workMode;
             }
             else
             {
@@ -177,14 +177,14 @@ Uint16 J150_APP_RX_PROTOCOL_UnpackPayLoad(void)
         case COMMAND_MOTOR_START:
             if (IS_TARGET_SPEED_GOOD(targetSpeed))
             {
-                pSciAppProtocol->command = (COMMAND_DEFINITION)command;
-                pSciAppProtocol->targetSpeed = targetSpeed;
+                pSciRxAppProtocol->command = (COMMAND_DEFINITION)command;
+                pSciRxAppProtocol->targetSpeed = targetSpeed;
 
             }
             break;
 
         case COMMAND_MOTOR_STOP:
-            pSciAppProtocol->command = (COMMAND_DEFINITION)command;
+            pSciRxAppProtocol->command = (COMMAND_DEFINITION)command;
             break;
         
         default:
@@ -298,12 +298,12 @@ static int J150_TransRxUpdateHeadPos(SCIRXQUE* q)
 
 unsigned char* SCI_APP_PROTOCOL_GetGoodPacketArray()
 {
-    return pSciAppProtocol->goodPacketArray;
+    return pSciRxAppProtocol->goodPacketArray;
 }
 
-void SCI_APP_PROTOCOL_Init(SCI_APP_PROTOCOL_RX* appProtocol)
+void SCI_APP_PROTOCOL_RX_Init(SCI_APP_PROTOCOL_RX* rxAppProtocol)
 {
-    pSciAppProtocol = appProtocol; 
+    pSciRxAppProtocol = rxAppProtocol; 
 }
 
 /**************************************************************************************************************************
@@ -323,7 +323,7 @@ static int J150_SCI_TX_PackOneFrame(void);
 static int J150_TransTxEnQueOneFrame(SCITXQUE* txQue);
 
 
-SCI_APP_PROTOCOL_TX* pSciAppProtocolTx_J150 = NULL;
+SCI_APP_PROTOCOL_TX* pSciTxAppProtocol = NULL;
 SCI_APP_PROTOCOL_TX gSciAppProtocolTx_J150 =
 {
    TX_HEAD1_DATA, 
@@ -385,38 +385,17 @@ static int J150_TransTxStart(void)
     return SUCCESS;
 }
 
-Uint16 gDebug = 0;
-Uint16 gDebug2 = 0;
 static int J150_TransTxUpdatePayLoad(void)
 {
     SCI_APP_PROTOCOL_TX* data;
-    data = &gSciAppProtocolTx_J150;
+
+    data = pSciTxAppProtocol;
+
     if(data == NULL)
     {
         return FAIL;
     }
 
-#if (0)
-    gDebug = (*(gSciTransTx_J150.mpTxOneFrameArray + 0));
-    gDebug2 = gTxFrameArray[0];
-    U16_TO_U8(&(gTxFrameArray[TX_WORK_STATUS_POS]), &data->workStatus);
-    U16_TO_U8(&(gTxFrameArray[TX_SYS_STATUS_1_POS]), &data->sysStatus1);
-    U16_TO_U8(&(gTxFrameArray[TX_SYS_STATUS_2_POS]), &data->sysStatus2);
-    U32_TO_U8(&(gTxFrameArray[TX_FAULT_STATUS_POS]), &data->faultStatus);
-    U32_TO_U8(&(gTxFrameArray[TX_FRAME_CNT_POS]), &data->frameCnt);
-    U16_TO_U8(&(gTxFrameArray[TX_TARGET_SPEED_POS]), &data->targetSpeed);
-    U16_TO_U8(&(gTxFrameArray[TX_CURRENT_SPEED_POS]), &data->currentSpeed);
-    U16_TO_U8(&(gTxFrameArray[TX_BUS_VOLTAGE_POS]), &data->busVoltage);
-    U16_TO_U8(&(gTxFrameArray[TX_BUS_CURRENT_POS]), &data->busCurrent);
-    gTxFrameArray[TX_SERVO_TEMP_POS] = data->servoTemp;
-    gTxFrameArray[TX_MOTOR_TEMP_POS] = data->motorTemp;
-    U16_TO_U8(&(gTxFrameArray[TX_FW_VERSION_POS]), &data->fwVersionNum);
-    gTxFrameArray[TX_WORK_MODE_POS] = data->workMode;
-    U16_TO_U8(&(gTxFrameArray[TX_RFU_POS]), &data->RFU);
-
-#endif
-
-#if(1)
     U16_TO_U8(&(gSciTransTx_J150.mpTxOneFrameArray[TX_WORK_STATUS_POS]), &data->workStatus);
     U16_TO_U8(&(gSciTransTx_J150.mpTxOneFrameArray[TX_SYS_STATUS_1_POS]), &data->sysStatus1);
     U16_TO_U8(&(gSciTransTx_J150.mpTxOneFrameArray[TX_SYS_STATUS_2_POS]), &data->sysStatus2);
@@ -431,7 +410,6 @@ static int J150_TransTxUpdatePayLoad(void)
     U16_TO_U8(&(gSciTransTx_J150.mpTxOneFrameArray[TX_FW_VERSION_POS]), &data->fwVersionNum);
     gSciTransTx_J150.mpTxOneFrameArray[TX_WORK_MODE_POS] = data->workMode;
     U16_TO_U8(&(gSciTransTx_J150.mpTxOneFrameArray[TX_RFU_POS]), &data->RFU);
-#endif
 
     return SUCCESS;
 }
@@ -453,6 +431,7 @@ static int J150_TransTxCalCheckSum(void)
 
 static int J150_SCI_TX_PackOneFrame(void)
 {
+    /* currently nothing to do in this function */
     return SUCCESS;
 }
 
@@ -470,7 +449,13 @@ static int J150_TransTxEnQueOneFrame(SCITXQUE* txQue)
     return SUCCESS;
 }
 
+void SCI_APP_PROTOCOL_TX_Init(SCI_APP_PROTOCOL_TX* txAppProtocol)
+{
+    pSciTxAppProtocol = txAppProtocol; 
+}
+
 /* Rmove in the future */
+#if (0)
 Uint16 J150_SCI_TX_CheckSum(Uint16* array, Uint16 len)
 {
     Uint16 i = 0;
@@ -508,11 +493,10 @@ void J150_SCI_TX_SendPacket(Uint16* txFrameArray, SCI_APP_PROTOCOL_TX* data, SCI
 
     for (i = 0; i < txFrameArray[TX_LENGTH_POS]; ++i)
     {
-
  		if (SciTxEnQueue(txFrameArray[i],txQue) == 0)
         {
             return;
         }
     }
-
 }
+#endif
