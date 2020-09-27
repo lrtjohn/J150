@@ -1,0 +1,7 @@
+/***************************0.0.1*******************************/
+Version Number: 0.0.1
+Date: 2020/09/27
+Author:Simon
+
+What new: 
+	1. Basic function of J150 SCI protocol RX and TX 
