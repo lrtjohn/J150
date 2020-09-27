@@ -187,7 +187,7 @@ CFG_SCI_TBL CfgSciTbl_User[] =
         },
         {
             BAUD_RATE_115200,
-            ENABLE_LOOP_BACK
+            DISABLE_LOOP_BACK
         }
     },
     // {
@@ -224,7 +224,7 @@ CFG_TIMER_TBL CfgTimerTbl_User[] =
 {
     {
         TIMER0,       //Timer moudule, timer0 timer1
-        20000,         //timer period, unit:us
+        5000,         //timer period, unit:us
         120          //system frequency
     },
     {
