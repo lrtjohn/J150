@@ -2,6 +2,9 @@
 #define SCI_ADAPT_H
 
 #include "sci_queue.h"
+
+#define LSB_FIRST_SEND              (1)
+#define MSB_FIRST_SEND              (0)
 /***********************************************************************************
 ███████  ██████ ██      █████  ██████   █████  ██████  ████████     ██████  ██   ██ 
 ██      ██      ██     ██   ██ ██   ██ ██   ██ ██   ██    ██        ██   ██  ██ ██  
@@ -71,8 +74,8 @@ typedef struct _SCI_TRANSPORT_TX
     Uint16 mTxTail[SCI_RX_TAIL_LEN_MAX];
     Uint16 mTxTailLength;
     Uint16 mTxTotalLength;
-    Uint16* mpTxOneFrameArray;
     void*  mpTxAppProtocol;   
+    Uint16* mpTxOneFrameArray;
 }SCI_TRANSPORT_TX;
 
 extern void U16_TO_U8(void* d, void* s);

@@ -35,12 +35,12 @@ TIMER_INTERVAL_CNT gTimerCnt =
     0,      // control 
     1,      // control threshold
     0,      // sci tx 
-    4       // sci tx threshold
+    200     // sci tx threshold
 };
 
 void PFAL_Timer0_ISR(void)
 {
-#if(SYS_DEBUG == INCLUDE_FEATURE)
+#if (SYS_DEBUG == INCLUDE_FEATURE)
     gtimertest++;
 #endif
 
@@ -62,11 +62,11 @@ void PFAL_Timer0_ISR(void)
     if (IS_SCI_TX_TIMER_EXPIRE)
     {
 
-#if(J150_SCI_PROTOCOL_TX == INCLUDE_FEATURE)
+#if (J150_SCI_PROTOCOL_TX == INCLUDE_FEATURE)
         RESET_SCI_TX_TIMER_CNT;
         SCI_APP_PROTOCOL_TX testData;
 		memset(&testData, 0 , sizeof(testData));
-#if (1)
+#if (0)
         testData.workStatus     = 0x1234;
         testData.sysStatus1     = 0x5678;
         testData.sysStatus2     = 0x9012;
@@ -83,7 +83,7 @@ void PFAL_Timer0_ISR(void)
         testData.RFU            = 0x9999;
         J150_SCI_TX_SendPacket(gTxFrameArray, &testData, gScibTxQue);
 #endif
-
+        SCI_TX_PackData(gScibTxQue);
 #endif /* J150 SCI PROTOCOL TX */
     }
 }

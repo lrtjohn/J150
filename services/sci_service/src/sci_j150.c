@@ -62,7 +62,6 @@ Uint16 gTxFrameArray[SCI_TX_ONE_FRAME_LENGTH] =
 };
 
 SCI_APP_PROTOCOL_RX* pSciAppProtocol = NULL;
-
 SCI_APP_PROTOCOL_RX gSciAppProtocolRx_J150 =
 {
     COMMAND_PARA_NONE,
@@ -323,6 +322,30 @@ static int J150_TransTxCalCheckSum(void);
 static int J150_SCI_TX_PackOneFrame(void);
 static int J150_TransTxEnQueOneFrame(SCITXQUE* txQue);
 
+
+SCI_APP_PROTOCOL_TX* pSciAppProtocolTx_J150 = NULL;
+SCI_APP_PROTOCOL_TX gSciAppProtocolTx_J150 =
+{
+   TX_HEAD1_DATA, 
+   TX_HEAD2_DATA, 
+   TX_LENGTH_DATA, 
+   0,   // Work status
+   0,   // System status1
+   0,   // System status2
+   0,   // Fault status
+   0,   // Frame count
+   0,   // Traget speed
+   0,   // Current speed
+   0,   // Bus voltage
+   0,   // Bus current
+   0,   // Servo temperature
+   0,   // Motor temperature
+   0,   // Firmware version Number
+   0,   // Work Mode
+   0,   // RFU
+   0    // Check Sum
+};
+
 SCI_TRANSPORT_TX gSciTransTx_J150 =
 {
     J150_TransTxInit,
@@ -343,14 +366,8 @@ SCI_TRANSPORT_TX gSciTransTx_J150 =
     },
     0,
     TX_LENGTH_DATA,
+    &gSciAppProtocolTx_J150,
     gTxFrameArray,
-    NULL
-};
-
-SCI_APP_PROTOCOL_TX* pSciAppProtocolTx_J150 = NULL;
-SCI_APP_PROTOCOL_TX gSciAppProtocolTx_J150 =
-{
-    0
 };
 
 static int J150_TransTxInit(void)
@@ -368,13 +385,69 @@ static int J150_TransTxStart(void)
     return SUCCESS;
 }
 
+Uint16 gDebug = 0;
+Uint16 gDebug2 = 0;
 static int J150_TransTxUpdatePayLoad(void)
 {
+    SCI_APP_PROTOCOL_TX* data;
+    data = &gSciAppProtocolTx_J150;
+    if(data == NULL)
+    {
+        return FAIL;
+    }
+
+#if (0)
+    gDebug = (*(gSciTransTx_J150.mpTxOneFrameArray + 0));
+    gDebug2 = gTxFrameArray[0];
+    U16_TO_U8(&(gTxFrameArray[TX_WORK_STATUS_POS]), &data->workStatus);
+    U16_TO_U8(&(gTxFrameArray[TX_SYS_STATUS_1_POS]), &data->sysStatus1);
+    U16_TO_U8(&(gTxFrameArray[TX_SYS_STATUS_2_POS]), &data->sysStatus2);
+    U32_TO_U8(&(gTxFrameArray[TX_FAULT_STATUS_POS]), &data->faultStatus);
+    U32_TO_U8(&(gTxFrameArray[TX_FRAME_CNT_POS]), &data->frameCnt);
+    U16_TO_U8(&(gTxFrameArray[TX_TARGET_SPEED_POS]), &data->targetSpeed);
+    U16_TO_U8(&(gTxFrameArray[TX_CURRENT_SPEED_POS]), &data->currentSpeed);
+    U16_TO_U8(&(gTxFrameArray[TX_BUS_VOLTAGE_POS]), &data->busVoltage);
+    U16_TO_U8(&(gTxFrameArray[TX_BUS_CURRENT_POS]), &data->busCurrent);
+    gTxFrameArray[TX_SERVO_TEMP_POS] = data->servoTemp;
+    gTxFrameArray[TX_MOTOR_TEMP_POS] = data->motorTemp;
+    U16_TO_U8(&(gTxFrameArray[TX_FW_VERSION_POS]), &data->fwVersionNum);
+    gTxFrameArray[TX_WORK_MODE_POS] = data->workMode;
+    U16_TO_U8(&(gTxFrameArray[TX_RFU_POS]), &data->RFU);
+
+#endif
+
+#if(1)
+    U16_TO_U8(&(gSciTransTx_J150.mpTxOneFrameArray[TX_WORK_STATUS_POS]), &data->workStatus);
+    U16_TO_U8(&(gSciTransTx_J150.mpTxOneFrameArray[TX_SYS_STATUS_1_POS]), &data->sysStatus1);
+    U16_TO_U8(&(gSciTransTx_J150.mpTxOneFrameArray[TX_SYS_STATUS_2_POS]), &data->sysStatus2);
+    U32_TO_U8(&(gSciTransTx_J150.mpTxOneFrameArray[TX_FAULT_STATUS_POS]), &data->faultStatus);
+    U32_TO_U8(&(gSciTransTx_J150.mpTxOneFrameArray[TX_FRAME_CNT_POS]), &data->frameCnt);
+    U16_TO_U8(&(gSciTransTx_J150.mpTxOneFrameArray[TX_TARGET_SPEED_POS]), &data->targetSpeed);
+    U16_TO_U8(&(gSciTransTx_J150.mpTxOneFrameArray[TX_CURRENT_SPEED_POS]), &data->currentSpeed);
+    U16_TO_U8(&(gSciTransTx_J150.mpTxOneFrameArray[TX_BUS_VOLTAGE_POS]), &data->busVoltage);
+    U16_TO_U8(&(gSciTransTx_J150.mpTxOneFrameArray[TX_BUS_CURRENT_POS]), &data->busCurrent);
+    gSciTransTx_J150.mpTxOneFrameArray[TX_SERVO_TEMP_POS] = data->servoTemp;
+    gSciTransTx_J150.mpTxOneFrameArray[TX_MOTOR_TEMP_POS] = data->motorTemp;
+    U16_TO_U8(&(gSciTransTx_J150.mpTxOneFrameArray[TX_FW_VERSION_POS]), &data->fwVersionNum);
+    gSciTransTx_J150.mpTxOneFrameArray[TX_WORK_MODE_POS] = data->workMode;
+    U16_TO_U8(&(gSciTransTx_J150.mpTxOneFrameArray[TX_RFU_POS]), &data->RFU);
+#endif
+
     return SUCCESS;
 }
 
 static int J150_TransTxCalCheckSum(void)
 {
+    Uint16 i = 0;
+    Uint16 checkSum = 0;
+
+    for (i = TX_LENGTH_POS; i < TX_CHECK_SUM_POS - 1; ++i)
+    {
+        checkSum += gSciTransTx_J150.mpTxOneFrameArray[i];
+    }
+
+    gSciTransTx_J150.mpTxOneFrameArray[TX_CHECK_SUM_POS] = checkSum;
+
     return SUCCESS;
 }
 
@@ -389,7 +462,7 @@ static int J150_TransTxEnQueOneFrame(SCITXQUE* txQue)
 
     for (i = 0; i < gSciTransTx_J150.mTxTotalLength; ++i)
     {
- 		if (SciTxEnQueue(gSciTransTx_J150.mTxTotalLength,txQue) == 0)
+ 		if (SciTxEnQueue(gSciTransTx_J150.mpTxOneFrameArray[i], txQue) == 0)
         {
             return FAIL;
         }
@@ -397,6 +470,7 @@ static int J150_TransTxEnQueOneFrame(SCITXQUE* txQue)
     return SUCCESS;
 }
 
+/* Rmove in the future */
 Uint16 J150_SCI_TX_CheckSum(Uint16* array, Uint16 len)
 {
     Uint16 i = 0;

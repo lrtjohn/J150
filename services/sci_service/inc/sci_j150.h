@@ -168,8 +168,6 @@ extern SCI_APP_PROTOCOL_RX gSciAppProtocolRx_J150;
 
 #define SCI_TX_ONE_FRAME_LENGTH     (TX_LENGTH_DATA)
 
-#define LSB_FIRST_SEND              (1)
-#define MSB_FIRST_SEND              (0)
 
 typedef struct _SCI_APP_PROTOCOL_TX
 {
@@ -194,6 +192,7 @@ typedef struct _SCI_APP_PROTOCOL_TX
     /* data */
 }SCI_APP_PROTOCOL_TX;
 
+extern SCI_TRANSPORT_TX gSciTransTx_J150;
 extern Uint16 gTxFrameArray[SCI_TX_ONE_FRAME_LENGTH];
 extern void J150_SCI_TX_SendPacket(Uint16* txFrameArray, SCI_APP_PROTOCOL_TX* data, SCITXQUE* txQue);
 #endif
