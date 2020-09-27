@@ -195,5 +195,5 @@ typedef struct _SCI_APP_PROTOCOL_TX
 }SCI_APP_PROTOCOL_TX;
 
 extern Uint16 gTxFrameArray[SCI_TX_ONE_FRAME_LENGTH];
-extern void SCI_TX_SendPacket(Uint16* txFrameArray, SCI_APP_PROTOCOL_TX* data, SCITXQUE* txQue);
+extern void J150_SCI_TX_SendPacket(Uint16* txFrameArray, SCI_APP_PROTOCOL_TX* data, SCITXQUE* txQue);
 #endif

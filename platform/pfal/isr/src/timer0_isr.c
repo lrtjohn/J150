@@ -81,7 +81,7 @@ void PFAL_Timer0_ISR(void)
         testData.fwVersionNum   = 0x00;
         testData.workMode       = 0x82;
         testData.RFU            = 0x9999;
-        SCI_TX_SendPacket(gTxFrameArray, &testData, gScibTxQue);
+        J150_SCI_TX_SendPacket(gTxFrameArray, &testData, gScibTxQue);
 #endif
 
 #endif /* J150 SCI PROTOCOL TX */

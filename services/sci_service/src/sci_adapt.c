@@ -2,6 +2,8 @@
 #include "sci_adapt.h"
 
 SCI_TRANSPORT_RX* pSciTransportRx = NULL;
+SCI_TRANSPORT_TX* pSciTransportTx = NULL;
+
 void U16_TO_U8(void* d, void* s)
 {
 #if (0)
@@ -43,7 +45,13 @@ void U32_TO_U8(void* d, void* s)
     *((Uint16*)d) = (*((Uint32*)s)) & 0x000000ff;
 #endif
 }
-
+/***********************************************************************************
+███████  ██████ ██      █████  ██████   █████  ██████  ████████     ██████  ██   ██ 
+██      ██      ██     ██   ██ ██   ██ ██   ██ ██   ██    ██        ██   ██  ██ ██  
+███████ ██      ██     ███████ ██   ██ ███████ ██████     ██        ██████    ███   
+     ██ ██      ██     ██   ██ ██   ██ ██   ██ ██         ██        ██   ██  ██ ██  
+███████  ██████ ██     ██   ██ ██████  ██   ██ ██         ██        ██   ██ ██   ██ 
+************************************************************************************/
 int SCI_Trans_AdaptRx_Config(void)
 {
     return pSciTransportRx->config();
@@ -93,7 +101,7 @@ int SCI_Trans_AdaptRx_Init(SCI_TRANSPORT_RX* gpSciTransportRx)
 
 inline Uint16 SCI_Trans_AdaptRx_GetLength()
 {
-    return pSciTransportRx->mTotalLength;
+    return pSciTransportRx->mRxTotalLength;
 }
 
 void SCI_RX_UnpackData(SCIRXQUE* q)
@@ -126,4 +134,46 @@ void SCI_RX_UnpackData(SCIRXQUE* q)
 
         SCI_Trans_AdaptRx_UpdateHeadPos(q);
     }
+}
+/***********************************************************************************
+███████  ██████ ██      █████  ██████   █████  ██████  ████████     ████████ ██   ██ 
+██      ██      ██     ██   ██ ██   ██ ██   ██ ██   ██    ██           ██     ██ ██  
+███████ ██      ██     ███████ ██   ██ ███████ ██████     ██           ██      ███   
+     ██ ██      ██     ██   ██ ██   ██ ██   ██ ██         ██           ██     ██ ██  
+███████  ██████ ██     ██   ██ ██████  ██   ██ ██         ██           ██    ██   ██
+************************************************************************************/
+int SCI_Trans_AdaptTx_Init(SCI_TRANSPORT_TX* gpSciTransportTx)
+{
+    pSciTransportTx = gpSciTransportTx;
+    pSciTransportTx->init();
+    return 0;
+
+}
+
+inline int SCI_Trans_AdaptTx_UpdatePayLoad()
+{
+    return pSciTransportTx->updatePayLoad();
+}
+
+inline int SCI_Trans_AdaptTx_CalCheckSum()
+{
+    return pSciTransportTx->calCheckSum();
+}
+
+inline int SCI_Trans_AdaptTx_PackOneFrame()
+{
+    return pSciTransportTx->packOneFrame();
+}
+
+inline int SCI_Trans_AdaptTx_EnQueOneFrame(SCITXQUE* txQue)
+{
+    return pSciTransportTx->enQueOneFrame(txQue);
+}
+
+void SCI_TX_PackData(SCITXQUE* txQue)
+{
+    SCI_Trans_AdaptTx_UpdatePayLoad();
+    SCI_Trans_AdaptTx_CalCheckSum();
+    SCI_Trans_AdaptTx_PackOneFrame();
+    SCI_Trans_AdaptTx_EnQueOneFrame(txQue);
 }

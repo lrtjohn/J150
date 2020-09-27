@@ -1,6 +1,29 @@
 #include "sci_j150.h"
 #include <stdio.h>
 
+/*
+* J150 protocol layer API
+*/
+static Uint16 J150_APP_RX_PROTOCOL_GetCommand(unsigned char* data);
+static Uint16 J150_APP_RX_PROTOCOL_GetWorkMode(unsigned char* data);
+static Uint16 J150_APP_RX_PROTOCOL_GetTargetSpeed(unsigned char* data);
+Uint16 J150_APP_RX_PROTOCOL_UnpackPayLoad(void);
+/*
+* J150 transport layer API
+*/
+static int J150_TransRxInit(void);
+static int J150_TransRxConfig(void);
+static int J150_TransRxStart(void);
+static int J150_TransRxFindHead(SCIRXQUE* q);
+static int J150_TransRxCheckLength(SCIRXQUE* q);
+static int J150_TransRxCheckTail(SCIRXQUE* q);
+static int J150_TransRxSaveGoodPacket(int len, SCIRXQUE* q);
+static int J150_TransRxCheckSum(SCIRXQUE* q);
+static int J150_TransRxUpdateHeadPos(SCIRXQUE* q);
+
+/*
+* J150 protocol and transport layer global variable
+*/
 Uint16 gTxFrameArray[SCI_TX_ONE_FRAME_LENGTH] = 
 {
     TX_HEAD1_DATA,          // 0
@@ -38,29 +61,6 @@ Uint16 gTxFrameArray[SCI_TX_ONE_FRAME_LENGTH] =
     0                       // 32
 };
 
-/*
-* J150 protocol layer API
-*/
-static Uint16 J150_APP_RX_PROTOCOL_GetCommand(unsigned char* data);
-static Uint16 J150_APP_RX_PROTOCOL_GetWorkMode(unsigned char* data);
-static Uint16 J150_APP_RX_PROTOCOL_GetTargetSpeed(unsigned char* data);
-Uint16 J150_APP_RX_PROTOCOL_UnpackPayLoad(void);
-/*
-* J150 transport layer API
-*/
-static int J150_TransRxInit(void);
-static int J150_TransRxConfig(void);
-static int J150_TransRxStart(void);
-static int J150_TransRxFindHead(SCIRXQUE* q);
-static int J150_TransRxCheckLength(SCIRXQUE* q);
-static int J150_TransRxCheckTail(SCIRXQUE* q);
-static int J150_TransRxSaveGoodPacket(int len, SCIRXQUE* q);
-static int J150_TransRxCheckSum(SCIRXQUE* q);
-static int J150_TransRxUpdateHeadPos(SCIRXQUE* q);
-
-/*
-* J150 protocol and transport layer global variable
-*/
 SCI_APP_PROTOCOL_RX* pSciAppProtocol = NULL;
 
 SCI_APP_PROTOCOL_RX gSciAppProtocolRx_J150 =
@@ -234,13 +234,13 @@ static int J150_TransRxFindHead(SCIRXQUE* q)
 
 static int J150_TransRxCheckLength(SCIRXQUE* q)
 {
-    if (q->buffer[(q->front + TOTAL_LEN_POS) % (q->bufferLen)] != gSciTransRx_J150.mTotalLength)
+    if (q->buffer[(q->front + TOTAL_LEN_POS) % (q->bufferLen)] != gSciTransRx_J150.mRxTotalLength)
     {
         SciRxDeQueue(q);
         return FAIL;
     }
 
-    if (GetSciRxQueLength(q) >= gSciTransRx_J150.mTotalLength)
+    if (GetSciRxQueLength(q) >= gSciTransRx_J150.mRxTotalLength)
     {
         return SUCCESS;
     }
@@ -260,9 +260,9 @@ static int J150_TransRxSaveGoodPacket(int len, SCIRXQUE* q)
 {
     int i;
 
-    for (i = 0; i < gSciTransRx_J150.mTotalLength; ++i)
+    for (i = 0; i < gSciTransRx_J150.mRxTotalLength; ++i)
     {
-        ((SCI_APP_PROTOCOL_RX*)(gSciTransRx_J150.mpAppProtocol))->goodPacketArray[i] = q->buffer[(q->front + i) % (q->bufferLen)];
+        ((SCI_APP_PROTOCOL_RX*)(gSciTransRx_J150.mpRxAppProtocol))->goodPacketArray[i] = q->buffer[(q->front + i) % (q->bufferLen)];
     }
     J150_APP_RX_PROTOCOL_UnpackPayLoad();
     return SUCCESS;
@@ -273,7 +273,7 @@ static int J150_TransRxCheckSum(SCIRXQUE* q)
     int i;
     Uint16 sum = 0;
 
-    for (i = TOTAL_LEN_POS; i < gSciTransRx_J150.mTotalLength - 1; ++i)
+    for (i = TOTAL_LEN_POS; i < gSciTransRx_J150.mRxTotalLength - 1; ++i)
     {
         sum += q->buffer[(q->front + i) % (q->bufferLen)];
     }
@@ -292,7 +292,7 @@ static int J150_TransRxCheckSum(SCIRXQUE* q)
 
 static int J150_TransRxUpdateHeadPos(SCIRXQUE* q)
 {
-    q->front = (q->front + gSciTransRx_J150.mTotalLength) % (q->bufferLen);
+    q->front = (q->front + gSciTransRx_J150.mRxTotalLength) % (q->bufferLen);
 
     return SUCCESS;
 }
@@ -315,8 +315,89 @@ void SCI_APP_PROTOCOL_Init(SCI_APP_PROTOCOL_RX* appProtocol)
  █████   ██ ███████  ██████         ██    ██   ██     ██      ██   ██  ██████     ██     ██████   ██████  ██████  ███████ 
 ****************************************************************************************************************************/
 
+static int J150_TransTxInit(void);
+static int J150_TransTxConfig(void);
+static int J150_TransTxStart(void);
+static int J150_TransTxUpdatePayLoad(void);
+static int J150_TransTxCalCheckSum(void);
+static int J150_SCI_TX_PackOneFrame(void);
+static int J150_TransTxEnQueOneFrame(SCITXQUE* txQue);
 
-Uint16 SCI_TX_CheckSum(Uint16* array, Uint16 len)
+SCI_TRANSPORT_TX gSciTransTx_J150 =
+{
+    J150_TransTxInit,
+    J150_TransTxConfig,
+    J150_TransTxStart,
+    J150_TransTxUpdatePayLoad,
+    J150_TransTxCalCheckSum,
+    J150_SCI_TX_PackOneFrame,
+    J150_TransTxEnQueOneFrame,   
+    {
+        TX_HEAD1_DATA,
+        TX_HEAD2_DATA,
+    },
+    2,
+    {
+        0,
+        0
+    },
+    0,
+    TX_LENGTH_DATA,
+    gTxFrameArray,
+    NULL
+};
+
+SCI_APP_PROTOCOL_TX* pSciAppProtocolTx_J150 = NULL;
+SCI_APP_PROTOCOL_TX gSciAppProtocolTx_J150 =
+{
+    0
+};
+
+static int J150_TransTxInit(void)
+{
+    return SUCCESS;
+}
+
+static int J150_TransTxConfig(void)
+{
+    return SUCCESS;
+}
+
+static int J150_TransTxStart(void)
+{
+    return SUCCESS;
+}
+
+static int J150_TransTxUpdatePayLoad(void)
+{
+    return SUCCESS;
+}
+
+static int J150_TransTxCalCheckSum(void)
+{
+    return SUCCESS;
+}
+
+static int J150_SCI_TX_PackOneFrame(void)
+{
+    return SUCCESS;
+}
+
+static int J150_TransTxEnQueOneFrame(SCITXQUE* txQue)
+{
+    int i;
+
+    for (i = 0; i < gSciTransTx_J150.mTxTotalLength; ++i)
+    {
+ 		if (SciTxEnQueue(gSciTransTx_J150.mTxTotalLength,txQue) == 0)
+        {
+            return FAIL;
+        }
+    }
+    return SUCCESS;
+}
+
+Uint16 J150_SCI_TX_CheckSum(Uint16* array, Uint16 len)
 {
     Uint16 i = 0;
     Uint16 checkSum = 0;
@@ -326,12 +407,10 @@ Uint16 SCI_TX_CheckSum(Uint16* array, Uint16 len)
         checkSum += array[i];
     }
 
-    //checkSum &= 0x00ff;
-
     return checkSum;
 }
 
-void SCI_TX_SendPacket(Uint16* txFrameArray, SCI_APP_PROTOCOL_TX* data, SCITXQUE* txQue)
+void J150_SCI_TX_SendPacket(Uint16* txFrameArray, SCI_APP_PROTOCOL_TX* data, SCITXQUE* txQue)
 {
     Uint16 i;
 
@@ -350,7 +429,7 @@ void SCI_TX_SendPacket(Uint16* txFrameArray, SCI_APP_PROTOCOL_TX* data, SCITXQUE
     txFrameArray[TX_WORK_MODE_POS] = data->workMode;
     U16_TO_U8(&txFrameArray[TX_RFU_POS], &data->RFU);
 
-    data->checkSum = SCI_TX_CheckSum(txFrameArray, data->txLength);
+    data->checkSum = J150_SCI_TX_CheckSum(txFrameArray, data->txLength);
     txFrameArray[TX_CHECK_SUM_POS] = data->checkSum;
 
     for (i = 0; i < txFrameArray[TX_LENGTH_POS]; ++i)
