@@ -1,7 +1,9 @@
 #ifndef SCI_J150_H
 #define SCI_J150_H
+
 #include "sci_adapt.h"
 #include "sys_state_service.h"
+
 /**************************************************************************************************************************
      ██  ██ ███████  ██████      ██████  ██   ██     ██████  ██████   ██████  ████████  ██████   ██████  ██████  ██      
      ██ ███ ██      ██  ████     ██   ██  ██ ██      ██   ██ ██   ██ ██    ██    ██    ██    ██ ██      ██    ██ ██      
@@ -9,15 +11,14 @@
 ██   ██  ██      ██ ████  ██     ██   ██  ██ ██      ██      ██   ██ ██    ██    ██    ██    ██ ██      ██    ██ ██      
  █████   ██ ███████  ██████      ██   ██ ██   ██     ██      ██   ██  ██████     ██     ██████   ██████  ██████  ███████ 
 ****************************************************************************************************************************/
-/******************Macro**************************/
-#define PTR_SCI_J150_TRANS  (&gSciJ150Trans)
 
+/******************Macro**************************/
 /* Head1    Head2   Length    Command    WorkMode   TargetSpeed     RFU     RFU     CheckSum */
 /* 1byte    1byte   1byte     2bytes     1byte       2bytes          4bytes  4bytes  1byte*/
-#define HEAD_LEN                (2)
 #define HEAD_1_DATA             (0x55)
 #define HEAD_2_DATA             (0xaa)
 #define TOTAL_LEN               (0x11)
+#define HEAD_LEN                (2)
 
 #define HEAD_1_POS              (0)
 #define HEAD_1_POS_LEN          (1)
@@ -95,7 +96,6 @@ typedef struct _SCI_APP_PROTOCOL_RX
 
 /******************Function***********************/
 extern void SCI_APP_PROTOCOL_RX_Init(SCI_APP_PROTOCOL_RX* rxAppProtocol);        
-extern void J150_SCI_UnpackData(SCIRXQUE* q);
 /***********Extern globale variable***************/
 extern SCI_TRANSPORT_RX    gSciTransRx_J150;
 extern SCI_APP_PROTOCOL_RX gSciAppProtocolRx_J150;
@@ -195,5 +195,6 @@ typedef struct _SCI_APP_PROTOCOL_TX
 extern SCI_TRANSPORT_TX gSciTransTx_J150;
 extern SCI_APP_PROTOCOL_TX gSciAppProtocolTx_J150;
 extern Uint16 gTxFrameArray[SCI_TX_ONE_FRAME_LENGTH];
+
 extern void SCI_APP_PROTOCOL_TX_Init(SCI_APP_PROTOCOL_TX* txAppProtocol);
 #endif

@@ -5,6 +5,7 @@
 
 #define LSB_FIRST_SEND              (1)
 #define MSB_FIRST_SEND              (0)
+
 /***********************************************************************************
 ███████  ██████ ██      █████  ██████   █████  ██████  ████████     ██████  ██   ██ 
 ██      ██      ██     ██   ██ ██   ██ ██   ██ ██   ██    ██        ██   ██  ██ ██  
@@ -59,6 +60,7 @@ typedef int(*ADAPT_TX_updatePayLoad)(void);
 typedef int(*ADAPT_TX_CalCheckSum)(void);
 typedef int(*ADAPT_TX_PackOneFrame)(void);
 typedef int(*ADAPT_TX_EnQueueOneFrame)(SCITXQUE* txQue);
+
 typedef struct _SCI_TRANSPORT_TX
 {
     ADAPT_TX_Init               init;
@@ -81,12 +83,10 @@ typedef struct _SCI_TRANSPORT_TX
 extern void U16_TO_U8(void* d, void* s);
 extern void U32_TO_U8(void* d, void* s);
 
-extern int SCI_Trans_AdaptRx_Config(void);
-extern int SCI_Trans_AdaptRx_Start(void);
 extern int SCI_Trans_AdaptRx_Init(SCI_TRANSPORT_RX* gpSciTransportRx);
-extern void SCI_RX_UnpackData(SCIRXQUE* q);
-
 extern int SCI_Trans_AdaptTx_Init(SCI_TRANSPORT_TX* gpSciTransportTx);
+
+extern void SCI_RX_UnpackData(SCIRXQUE* q);
 extern void SCI_TX_PackData(SCITXQUE* txQue);
 
 #endif

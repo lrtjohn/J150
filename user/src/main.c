@@ -84,7 +84,6 @@ void main(void)
 #if(SYS_DEBUG == INCLUDE_FEATURE)
 		PF_ProcessSciRxPacket(gScibRxQue);
 #elif(J150_SCI_PROTOCOL_RX == INCLUDE_FEATURE)
-		//J150_SCI_UnpackData(gScibRxQue);
 		SCI_RX_UnpackData(gScibRxQue);
 #else
         ProcessSciRxPacket(gScibRxQue);

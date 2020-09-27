@@ -8,6 +8,7 @@ static Uint16 J150_APP_RX_PROTOCOL_GetCommand(unsigned char* data);
 static Uint16 J150_APP_RX_PROTOCOL_GetWorkMode(unsigned char* data);
 static Uint16 J150_APP_RX_PROTOCOL_GetTargetSpeed(unsigned char* data);
 Uint16 J150_APP_RX_PROTOCOL_UnpackPayLoad(void);
+
 /*
 * J150 transport layer API
 */

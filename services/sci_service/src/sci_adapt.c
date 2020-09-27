@@ -52,6 +52,13 @@ void U32_TO_U8(void* d, void* s)
      ██ ██      ██     ██   ██ ██   ██ ██   ██ ██         ██        ██   ██  ██ ██  
 ███████  ██████ ██     ██   ██ ██████  ██   ██ ██         ██        ██   ██ ██   ██ 
 ************************************************************************************/
+int SCI_Trans_AdaptRx_Init(SCI_TRANSPORT_RX* gpSciTransportRx)
+{
+    pSciTransportRx = gpSciTransportRx;
+    pSciTransportRx->init();
+    return 0;
+}
+
 int SCI_Trans_AdaptRx_Config(void)
 {
     return pSciTransportRx->config();
@@ -92,13 +99,6 @@ inline int SCI_Trans_AdaptRx_SaveGoodPacket(int len, SCIRXQUE* q)
     return pSciTransportRx->saveGoodPacket(len, q);
 }
 
-int SCI_Trans_AdaptRx_Init(SCI_TRANSPORT_RX* gpSciTransportRx)
-{
-    pSciTransportRx = gpSciTransportRx;
-    pSciTransportRx->init();
-    return 0;
-}
-
 inline Uint16 SCI_Trans_AdaptRx_GetLength()
 {
     return pSciTransportRx->mRxTotalLength;
@@ -135,6 +135,7 @@ void SCI_RX_UnpackData(SCIRXQUE* q)
         SCI_Trans_AdaptRx_UpdateHeadPos(q);
     }
 }
+
 /***********************************************************************************
 ███████  ██████ ██      █████  ██████   █████  ██████  ████████     ████████ ██   ██ 
 ██      ██      ██     ██   ██ ██   ██ ██   ██ ██   ██    ██           ██     ██ ██  
