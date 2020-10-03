@@ -3,8 +3,9 @@
 #include "main.h"
 #include <stdlib.h>
 #include "pf_isr.h"
+#ifdef FLASH_PROGRAM
 #include "flash_hal.h"
-
+#endif
 /*
  *******
  * main.c
