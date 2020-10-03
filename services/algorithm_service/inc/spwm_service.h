@@ -26,9 +26,11 @@ typedef struct _SPWM_PARA
     int16 Ddtmax;
     int16 ThresholdDutyP;
     int16 ThresholdDutyN;
+    Uint16 CurrentHallPosition;
+    Uint16 LastHalllPosition;
 }SPWM_PARA;
 
-
+Uint16 GetCurrentHallValue(void);
 void Spwm_Output(SPWM_PARA* spwmPara);
 void Init_Spwm_Service(void);
 extern SPWM_PARA gSpwmPara;
