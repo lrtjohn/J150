@@ -182,6 +182,7 @@ void Spwm_Output(SPWM_PARA* spwmPara)
     spwmPara->Duty = spwmPara->TargetDuty;
 #endif
 
+#if(PF_PWM_RVDT == INCLUDE_FEATURE)
     spwmPara->Rvdt_Current_Pos = Get_RVDT_Position(SDB_RVDT_Read_Addr);
 
     spwmPara->Rvdt_Pos = spwmPara->Rvdt_Current_Pos - spwmPara->Rvdt_Zero;
@@ -207,7 +208,215 @@ void Spwm_Output(SPWM_PARA* spwmPara)
 	{
 		Disable_All_Epwms();
 	}
-	
+#endif
+
+
+//#if(PF_PWM_ECAP == INCLUDE_FEATURE)
+//	void SwitchDirection(void){
+//	    gSysInfo.lastTimeHalllPosition = gSysInfo.currentHallPosition;
+//	    gSysInfo.currentHallPosition = GetCurrentHallValue();
+//	    //1:A 2:B 3:C
+//	    switch (gSysInfo.currentHallPosition) {
+//	        case 3://B+ --------------->C-
+//	            if(2 == gSysInfo.lastTimeHalllPosition){
+//	                EPwm3Regs.CMPA.half.CMPA = EPWM1_TIMER_HALF_TBPRD + gSysInfo.duty;
+//	                EPwm1Regs.CMPA.half.CMPA = EPWM1_TIMER_HALF_TBPRD - gSysInfo.duty;
+//	#if SPECIAL_MOTOR_REVERSE_ROTATION
+//	                                closeCH();
+//	                                closeAL();
+//	                                closeBL();
+//	                                openBH();
+//	                                openAH();
+//	                                openCL();
+//	#else
+//	                                closeBH();
+//	                                closeAH();
+//	                                closeCL();
+//	                                openCH();
+//	                                openAL();
+//	                                openBL();
+//	#endif
+//
+//	            }
+//	            else if(3 == gSysInfo.lastTimeHalllPosition){
+//	#if SPECIAL_MOTOR_REVERSE_ROTATION
+//	                APositiveToCNegtive();
+//	#else
+//	                CPositiveToANegtive();
+//	#endif
+//	            }
+//	            else{
+//	            	Disable_All_Epwms();
+//	                gSysInfo.hallErrorCount++;
+//	            }
+//	            break;
+//	        case 1://A+ --------------->C-
+//	            if(3 == gSysInfo.lastTimeHalllPosition){
+//	                EPwm3Regs.CMPA.half.CMPA = EPWM1_TIMER_HALF_TBPRD + gSysInfo.duty;
+//	                EPwm2Regs.CMPA.half.CMPA = EPWM1_TIMER_HALF_TBPRD - gSysInfo.duty;
+//	#if SPECIAL_MOTOR_REVERSE_ROTATION
+//	                closeCH();
+//	                closeBL();
+//	                closeAH();
+//	                openAL();
+//	                openBH();
+//	                openCL();
+//	#else
+//	                closeAL();
+//	                closeBH();
+//	                closeCL();
+//	                openCH();
+//	                openBL();
+//	                openAH();
+//	#endif
+//	            }
+//	            else if(1 == gSysInfo.lastTimeHalllPosition){
+//	#if SPECIAL_MOTOR_REVERSE_ROTATION
+//	                BPositiveToCNegtive();
+//	#else
+//	                CPositiveToBNegtive();
+//	#endif
+//	            }
+//	            else{
+//	            	Disable_All_Epwms();
+//	                gSysInfo.hallErrorCount++;
+//	            }
+//	            break;
+//	        case 5://A+ --------------->B-
+//	            if(1 == gSysInfo.lastTimeHalllPosition){
+//	                EPwm1Regs.CMPA.half.CMPA = EPWM1_TIMER_HALF_TBPRD + gSysInfo.duty;
+//	                EPwm2Regs.CMPA.half.CMPA = EPWM1_TIMER_HALF_TBPRD - gSysInfo.duty;
+//	#if SPECIAL_MOTOR_REVERSE_ROTATION
+//	                closeAH();
+//	                closeBL();
+//	                closeCL();
+//	                openCH();
+//	                openBH();
+//	                openAL();
+//	#else
+//	                closeCH();
+//	                closeBH();
+//	                closeAL();
+//	                openAH();
+//	                openBL();
+//	                openCL();
+//	#endif
+//	            }
+//	            else if(5 == gSysInfo.lastTimeHalllPosition){
+//	#if SPECIAL_MOTOR_REVERSE_ROTATION
+//	                BPositiveToANegtive();
+//	#else
+//	                APositiveToBNegtive();
+//	#endif
+//	            }
+//	            else{
+//	            	Disable_All_Epwms();
+//	                gSysInfo.hallErrorCount++;
+//	            }
+//	            break;
+//	        case 4://C+ --------------->B-
+//	            if(5 == gSysInfo.lastTimeHalllPosition){
+//	                EPwm1Regs.CMPA.half.CMPA = EPWM1_TIMER_HALF_TBPRD + gSysInfo.duty;
+//	                EPwm3Regs.CMPA.half.CMPA = EPWM1_TIMER_HALF_TBPRD - gSysInfo.duty;
+//	#if SPECIAL_MOTOR_REVERSE_ROTATION
+//	                closeAH();
+//	                closeCL();
+//	                closeBH();
+//	                openBL();
+//	                openCH();
+//	                openAL();
+//	#else
+//	                closeBL();
+//	                closeCH();
+//	                closeAL();
+//	                openAH();
+//	                openCL();
+//	                openBH();
+//	#endif
+//	            }
+//	            else if(4 == gSysInfo.lastTimeHalllPosition){
+//	#if SPECIAL_MOTOR_REVERSE_ROTATION
+//	                CPositiveToANegtive();
+//	#else
+//	                APositiveToCNegtive();
+//	#endif
+//	            }
+//	            else{
+//	            	Disable_All_Epwms();
+//	                gSysInfo.hallErrorCount++;
+//	            }
+//	            break;
+//	        case 6://C+ --------------->A-
+//	            if(4 == gSysInfo.lastTimeHalllPosition){
+//	                EPwm2Regs.CMPA.half.CMPA = EPWM1_TIMER_HALF_TBPRD + gSysInfo.duty;
+//	                EPwm3Regs.CMPA.half.CMPA = EPWM1_TIMER_HALF_TBPRD - gSysInfo.duty;
+//	#if SPECIAL_MOTOR_REVERSE_ROTATION
+//	                closeBH();
+//	                closeCL();
+//	                closeAL();
+//	                openAH();
+//	                openBL();
+//	                openCH();
+//	#else
+//	                closeAH();
+//	                closeBL();
+//	                closeCH();
+//	                openBH();
+//	                openCL();
+//	                openAL();
+//	#endif
+//	            }
+//	            else if(6 == gSysInfo.lastTimeHalllPosition){
+//	#if SPECIAL_MOTOR_REVERSE_ROTATION
+//	                CPositiveToBNegtive();
+//	#else
+//	                BPositiveToCNegtive();
+//	#endif
+//	            }
+//	            else{
+//	            	Disable_All_Epwms();
+//	                gSysInfo.hallErrorCount++;
+//	            }
+//	            break;
+//	        case 2://B+ --------------->A-
+//	            if(6 == gSysInfo.lastTimeHalllPosition){
+//	                EPwm2Regs.CMPA.half.CMPA = EPWM1_TIMER_HALF_TBPRD + gSysInfo.duty;
+//	                EPwm1Regs.CMPA.half.CMPA = EPWM1_TIMER_HALF_TBPRD - gSysInfo.duty;
+//	#if SPECIAL_MOTOR_REVERSE_ROTATION
+//	                closeBH();
+//	                closeAL();
+//	                closeCH();
+//	                openCL();
+//	                openAH();
+//	                openBL();
+//	#else
+//	                closeCL();
+//	                closeAH();
+//	                closeBL();
+//	                openBH();
+//	                openAL();
+//	                openCH();
+//	#endif
+//	            }
+//	            else if(2 == gSysInfo.lastTimeHalllPosition){
+//	#if SPECIAL_MOTOR_REVERSE_ROTATION
+//	                APositiveToBNegtive();
+//	#else
+//	                BPositiveToANegtive();
+//	#endif
+//	            }
+//	            else{
+//	            	Disable_All_Epwms();
+//	                gSysInfo.hallErrorCount++;
+//	            }
+//	            break;
+//	        default:
+//	        	Disable_All_Epwms();
+//	            break;
+//	    }
+//	}
+//#endif
+
 
 
 //    EPMW2_OUTPUT_DUAL_PLOARITY(750, spwmPara->Phase_Duty_W);
