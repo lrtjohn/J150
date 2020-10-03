@@ -446,6 +446,7 @@ void Init_Spwm_Service(void)
 	gSpwmPara.Ddtmax = 1;
 	gSpwmPara.ThresholdDutyP = 600;
 	gSpwmPara.ThresholdDutyN = -600;
-
+	gSpwmPara.CurrentHallPosition = 0;
+	gSpwmPara.LastHalllPosition = 0;
 	gSpwmPara.TargetDuty = 600;
 }
