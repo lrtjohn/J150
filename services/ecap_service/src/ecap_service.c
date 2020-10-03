@@ -36,6 +36,32 @@ double CalculateSpeed(Uint32 capCount){
 //	}
 }
 
+/**************************************************************
+ *Name:						GetCurrentHallValue
+ *Function:
+ *Input:					none
+ *Output:					none
+ *Author:					Simon
+ *Date:						2018.10.31
+ **************************************************************/
+Uint16 GetCurrentHallValue(void){
+
+	Uint16 temp;
+	Uint16 a;
+	Uint16 b;
+	Uint16 c;
+
+	a = GpioDataRegs.GPADAT.bit.GPIO24;
+	b = GpioDataRegs.GPADAT.bit.GPIO25;
+	c = GpioDataRegs.GPADAT.bit.GPIO26;
+
+	temp = ((a << 2) + (b << 1) + c);
+
+	if(temp < 1 || temp >6){
+//		gSysState.erro.bit.software = 1;
+	}
+	return temp;
+}
 
 /**************************************************************
  *Name:		   GetECap4Count
