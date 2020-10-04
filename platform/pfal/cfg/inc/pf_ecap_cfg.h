@@ -8,6 +8,13 @@
 
 #define TOTAL_ECAP 6
 
+typedef struct
+{
+	int ecapModule;
+
+}CFG_ECAP_TBL;
+
+typedef void (*CFG_ECAP_HDL_TBL)();
 
 void PFAL_ECAP_CFG(CFG_ECAP_TBL* cfgECapTbl, int len);
 
