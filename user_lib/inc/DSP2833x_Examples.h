@@ -28,9 +28,9 @@ extern "C" {
 #define DSP28_DIVSEL     2 // Enable /2 for SYSCLKOUT
 //#define DSP28_DIVSEL     3 // Enable /1 for SYSCLKOUT
 
-//#define DSP28_PLLCR   10
+#define DSP28_PLLCR   10
 //#define DSP28_PLLCR    9
-#define DSP28_PLLCR    8
+//#define DSP28_PLLCR    8
 //#define DSP28_PLLCR    7
 //#define DSP28_PLLCR    6
 //#define DSP28_PLLCR    5
