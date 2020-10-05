@@ -13,6 +13,9 @@ typedef struct _ECAP_PARA
 
 }ECAP_PARA;
 
+void GetECap1Count(void);
+void GetECap2Count(void);
+void GetECap3Count(void);
 void GetECap4Count(void);
 void GetECap5Count(void);
 void GetECap6Count(void);
