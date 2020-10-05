@@ -46,16 +46,16 @@ CFG_GPIO_TBL CfgGpioTbl_User[] =
 CFG_ECAP_TBL CfgECapTbl_User[] =
 {
  {
-  ECAP_1,
-  24
- },
- {
-  ECAP_2,
-  25
+  ECAP_4,
+  27
  },
  {
   ECAP_3,
   26
+ },
+ {
+  ECAP_2,
+  25
  }
 };
 
@@ -259,9 +259,9 @@ CFG_INTERRUPT_TBL CfgInterruptTbl_User[] =
     EPWM1,
     SCIBRX,
     SCIBTX,
-    ECAP1,
     ECAP2,
     ECAP3,
+    ECAP4,
     // SCICRX,
     // SCICTX
 };
