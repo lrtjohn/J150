@@ -45,9 +45,18 @@ CFG_GPIO_TBL CfgGpioTbl_User[] =
 
 CFG_ECAP_TBL CfgECapTbl_User[] =
 {
- 	 1,
-	 2,
-	 3
+ {
+  ECAP_1,
+  24
+ },
+ {
+  ECAP_2,
+  25
+ },
+ {
+  ECAP_3,
+  26
+ }
 };
 
 #define EPWM_PERIOD_K 40
@@ -250,9 +259,9 @@ CFG_INTERRUPT_TBL CfgInterruptTbl_User[] =
     EPWM1,
     SCIBRX,
     SCIBTX,
-    ECAP4,
-    ECAP5,
-    ECAP6,
+    ECAP1,
+    ECAP2,
+    ECAP3,
     // SCICRX,
     // SCICTX
 };

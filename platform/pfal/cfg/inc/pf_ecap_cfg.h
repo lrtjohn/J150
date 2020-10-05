@@ -8,13 +8,29 @@
 
 #define TOTAL_ECAP 6
 
+typedef enum
+{
+    ECAP_1,
+	ECAP_2,
+	ECAP_3,
+	ECAP_4,
+	ECAP_5,
+	ECAP_6
+}ECAP_ENABLE;
+
 typedef struct
 {
-	int ecapModule;
+    ECAP_ENABLE ecapModule;
+    int ecapGPIOindex;
+}CFG_ECAP_GPIO;
+
+typedef struct
+{
+	CFG_ECAP_GPIO cfgECapGpio;
 
 }CFG_ECAP_TBL;
 
-typedef void (*CFG_ECAP_HDL_TBL)();
+typedef void (*CFG_ECAP_HDL_TBL)(CFG_ECAP_TBL cfgECapTblElement);
 
 void PFAL_ECAP_CFG(CFG_ECAP_TBL* cfgECapTbl, int len);
 

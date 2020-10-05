@@ -3,9 +3,39 @@
 #include "prod.h"
 #include "ecap_isr.h"
 
-//volatile Uint64  gECapCount = 0;
-//volatile double gMotorSpeedEcap = 0;
-
+/**************************************************************
+ *Name:		   ECap1_Isr
+ *Comment:
+ *Input:	   void
+ *Output:	   void
+ *Author:	   Simon
+ *Date:		   2018��11��12������10:24:47
+ **************************************************************/
+void ECap1_Isr(void){
+	GetECap1Count();
+}
+/**************************************************************
+ *Name:		   ECap2_Isr
+ *Comment:
+ *Input:	   void
+ *Output:	   void
+ *Author:	   Simon
+ *Date:		   2018��11��12������10:24:47
+ **************************************************************/
+void ECap2_Isr(void){
+	GetECap2Count();
+}
+/**************************************************************
+ *Name:		   ECap3_Isr
+ *Comment:
+ *Input:	   void
+ *Output:	   void
+ *Author:	   Simon
+ *Date:		   2018��11��12������10:24:47
+ **************************************************************/
+void ECap3_Isr(void){
+	GetECap3Count();
+}
 /**************************************************************
  *Name:		   ECap4_Isr
  *Comment:
