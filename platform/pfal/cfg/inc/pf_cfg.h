@@ -223,14 +223,14 @@ CFG_XINTF_TBL CfgXintfTbl_User[] =
 CFG_TIMER_TBL CfgTimerTbl_User[] =
 {
     {
-        TIMER0,       //Timer moudule, timer0 timer1
-        5000,         //timer period, unit:us
-        120          //system frequency
+        TIMER0,             //Timer moudule, timer0 timer1
+        5000,               //timer period, unit:us
+        CPU_FREQUENCY       //system frequency
     },
     {
         TIMER1, 
         20000,
-        120
+        CPU_FREQUENCY       //system frequency
     }
 };
 

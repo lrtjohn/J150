@@ -56,7 +56,7 @@ const CFG_PWM_TBL CfgPwmTbl[] =
 void CFG_PWM_1A(CFG_PWM_TBL cfgPwmTblElement)
 {
 	Uint16 epwmPeriod;
-	epwmPeriod = (Uint16)(120000/cfgPwmTblElement.cfgPwmParam.Frequency/2);
+	epwmPeriod = (Uint16)((CPU_FREQUENCY * 1000) / cfgPwmTblElement.cfgPwmParam.Frequency / 2);
     EALLOW;
     GpioCtrlRegs.GPAPUD.bit.GPIO0 = 0;    // Enable pull-up on GPIO0 (EPWM1A)
     GpioCtrlRegs.GPAMUX1.bit.GPIO0 = 1;   // Configure GPIO0 as EPWM1A
@@ -107,7 +107,7 @@ void CFG_PWM_1B(CFG_PWM_TBL cfgPwmTblElement)
 void CFG_PWM_2A(CFG_PWM_TBL cfgPwmTblElement)
 {
 	Uint16 epwmPeriod;
-	epwmPeriod = (Uint16)(120000/cfgPwmTblElement.cfgPwmParam.Frequency/2);
+	epwmPeriod = (Uint16)((CPU_FREQUENCY * 1000) / cfgPwmTblElement.cfgPwmParam.Frequency / 2);
     EALLOW;
     GpioCtrlRegs.GPAPUD.bit.GPIO2 = 0;    // Enable pull-up on GPIO2 (EPWM2A)
     GpioCtrlRegs.GPAMUX1.bit.GPIO2 = 1;   // Configure GPIO2 as EPWM2A
@@ -151,7 +151,7 @@ void CFG_PWM_2B(CFG_PWM_TBL cfgPwmTblElement)
 void CFG_PWM_3A(CFG_PWM_TBL cfgPwmTblElement)
 {
 	Uint16 epwmPeriod;
-	epwmPeriod = (Uint16)(120000/cfgPwmTblElement.cfgPwmParam.Frequency/2);
+	epwmPeriod = (Uint16)((CPU_FREQUENCY * 1000) / cfgPwmTblElement.cfgPwmParam.Frequency / 2);
     EALLOW;
     GpioCtrlRegs.GPAPUD.bit.GPIO4 = 0;    // Enable pull-up on GPIO4 (EPWM3A)
     GpioCtrlRegs.GPAMUX1.bit.GPIO4 = 1;   // Configure GPIO4 as EPWM3A
@@ -195,7 +195,7 @@ void CFG_PWM_3B(CFG_PWM_TBL cfgPwmTblElement)
 void CFG_PWM_4A(CFG_PWM_TBL cfgPwmTblElement)
 {
 	Uint16 epwmPeriod;
-	epwmPeriod = (Uint16)(120000/cfgPwmTblElement.cfgPwmParam.Frequency/2);
+	epwmPeriod = (Uint16)((CPU_FREQUENCY * 1000) / cfgPwmTblElement.cfgPwmParam.Frequency / 2);
     EALLOW;
     GpioCtrlRegs.GPAPUD.bit.GPIO6 = 0;    // Enable pull-up on GPIO6 (EPWM4A)
     GpioCtrlRegs.GPAMUX1.bit.GPIO6 = 1;   // Configure GPIO6 as EPWM4A
@@ -239,7 +239,7 @@ void CFG_PWM_4B(CFG_PWM_TBL cfgPwmTblElement)
 void CFG_PWM_5A(CFG_PWM_TBL cfgPwmTblElement)
 {
 	Uint16 epwmPeriod;
-	epwmPeriod = (Uint16)(120000/cfgPwmTblElement.cfgPwmParam.Frequency/2);
+	epwmPeriod = (Uint16)((CPU_FREQUENCY * 1000) / cfgPwmTblElement.cfgPwmParam.Frequency / 2);
     EALLOW;
     GpioCtrlRegs.GPAPUD.bit.GPIO8 = 0;    // Enable pull-up on GPIO8 (EPWM5A)
     GpioCtrlRegs.GPAMUX1.bit.GPIO8 = 1;   // Configure GPIO8 as EPWM5A
@@ -283,7 +283,7 @@ void CFG_PWM_5B(CFG_PWM_TBL cfgPwmTblElement)
 void CFG_PWM_6A(CFG_PWM_TBL cfgPwmTblElement)
 {
 	Uint16 epwmPeriod;
-	epwmPeriod = (Uint16)(120000/cfgPwmTblElement.cfgPwmParam.Frequency/2);
+	epwmPeriod = (Uint16)((CPU_FREQUENCY * 1000) / cfgPwmTblElement.cfgPwmParam.Frequency / 2);
     EALLOW;
     GpioCtrlRegs.GPAPUD.bit.GPIO10 = 0;    // Enable pull-up on GPIO10 (EPWM6A)
     GpioCtrlRegs.GPAMUX1.bit.GPIO10 = 1;   // Configure GPIO10 as EPWM6A
