@@ -32,11 +32,12 @@ void main(void)
 	Init_Spwm_Service();
     Init_Sci_Service();
 	Init_Adc_Service();
-	Init_ECap_Service();
+//	Init_ECap_Service();
 
 	PFAL_ADC_CFG(CfgAdcTbl_User,sizeof(CfgAdcTbl_User)/sizeof(CfgAdcTbl_User[0]));		        			// pass the test
 	PFAL_GPIO_CFG(CfgGpioTbl_User,sizeof(CfgGpioTbl_User)/sizeof(CfgGpioTbl_User[0]));	        			// pass the test
 	PFAL_PWM_CFG(CfgPwmTbl_User,sizeof(CfgPwmTbl_User)/sizeof(CfgPwmTbl_User[0]));		        			// pass the test
+	PFAL_ECAP_CFG(CfgECapTbl_User, sizeof(CfgECapTbl_User)/sizeof(CfgECapTbl_User[0]));
 	PFAL_SCI_CFG(CfgSciTbl_User,sizeof(CfgSciTbl_User)/sizeof(CfgSciTbl_User[0]));		        			// pass the test
 	PFAL_SPI_CFG(CfgSpiTbl_User,sizeof(CfgSpiTbl_User)/sizeof(CfgSpiTbl_User[0]));              			// pass the test
 	PFAL_XINTF_CFG(CfgXintfTbl_User,sizeof(CfgXintfTbl_User)/sizeof(CfgXintfTbl_User[0]));  				// pass the test

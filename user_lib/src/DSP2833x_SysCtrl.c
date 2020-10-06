@@ -18,7 +18,7 @@
 
 #include "DSP2833x_Device.h"     // Headerfile Include File
 #include "DSP2833x_Examples.h"   // Examples Include File
-#define FLASH_PROGRAM
+//#define FLASH_PROGRAM
 #ifdef FLASH_PROGRAM
 #include "flash_hal.h"
 #include "Flash2833x_API_Library.h"
@@ -254,8 +254,8 @@ void InitPeripheralClocks(void)
    EALLOW;
 
 // HISPCP/LOSPCP prescale register settings, normally it will be set to default values
-   SysCtrlRegs.HISPCP.all = 0x0000;//120M
-   SysCtrlRegs.LOSPCP.all = 0x0002;//30M
+   SysCtrlRegs.HISPCP.all = 0x0000;
+   SysCtrlRegs.LOSPCP.all = 0x0002;
 
 // XCLKOUT to SYSCLKOUT ratio.  By default XCLKOUT = 1/4 SYSCLKOUT
    // XTIMCLK = SYSCLKOUT/2

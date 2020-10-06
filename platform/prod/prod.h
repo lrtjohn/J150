@@ -20,6 +20,7 @@
 #define PF_SCI                              INCLUDE_FEATURE
 #define PF_XINTF                            INCLUDE_FEATURE
 #define PF_FLASH                            INCLUDE_FEATURE
+#define PF_ECAP								INCLUDE_FEATURE
 
 #define PF_PWM_1A							INCLUDE_FEATURE
 #define PF_PWM_1B							INCLUDE_FEATURE

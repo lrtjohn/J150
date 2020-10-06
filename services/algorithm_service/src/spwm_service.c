@@ -47,6 +47,33 @@ inline void closeCL(void){
 	EPwm2Regs.AQCSFRC.bit.CSFB = 2;
 }
 
+/**************************************************************
+ *Name:						GetCurrentHallValue
+ *Function:
+ *Input:					none
+ *Output:					none
+ *Author:					Simon
+ *Date:						2018.10.31
+ **************************************************************/
+Uint16 GetCurrentHallValue(void){
+
+	Uint16 temp;
+	Uint16 a;
+	Uint16 b;
+	Uint16 c;
+
+	a = GpioDataRegs.GPADAT.bit.GPIO27;
+	b = GpioDataRegs.GPADAT.bit.GPIO26;
+	c = GpioDataRegs.GPADAT.bit.GPIO25;
+
+	temp = ((a << 2) + (b << 1) + c);
+
+	if(temp < 1 || temp >6){
+//		gSysState.erro.bit.software = 1;
+	}
+	return temp;
+}
+
 
 static void FindSinTbl(int16 ct,int16 *psinvalue)
 {
@@ -139,13 +166,190 @@ void Calculate_Three_Phase_Duty(SPWM_PARA* spwmPara)
 	   }
 //	   ful = (long)pa * (long)spwmPara->Duty;
 //	   spwmPara->Phase_Duty_U = (int16)(ful/32000);
-
-
-
 }
 
 
-int gSwitch = 0;
+
+void SwitchDirection(SPWM_PARA* spwmPara){
+	spwmPara->LastHalllPosition = spwmPara->CurrentHallPosition;
+	spwmPara->CurrentHallPosition = GetCurrentHallValue();
+    //1:A 2:B 3:C
+    switch (spwmPara->CurrentHallPosition) {
+        case 3://B+ --------------->C-
+            if(2 == spwmPara->LastHalllPosition){
+            	EPMW3_OUTPUT_UP(750, spwmPara->Duty);
+            	EPMW1_OUTPUT_DOWN(750, spwmPara->Duty);
+
+            	closeBH();
+                closeAH();
+                closeCL();
+                openCH();
+                openAL();
+                openBL();
+            }
+            else if(3 == spwmPara->LastHalllPosition){
+            	EPMW3_OUTPUT_UP(750, spwmPara->Duty);
+            	EPMW1_OUTPUT_DOWN(750, spwmPara->Duty);
+
+            	closeBH();
+                closeAH();
+                closeCL();
+                openCH();
+                openAL();
+                openBL();
+            }
+            else{
+            	Disable_All_Epwms();
+//	                gSysInfo.hallErrorCount++;
+            }
+            break;
+        case 1://A+ --------------->C-
+            if(3 == spwmPara->LastHalllPosition){
+            	EPMW3_OUTPUT_UP(750, spwmPara->Duty);
+            	EPMW2_OUTPUT_DOWN(750, spwmPara->Duty);
+
+                closeAL();
+                closeBH();
+                closeCL();
+                openCH();
+                openBL();
+                openAH();
+            }
+            else if(1 == spwmPara->LastHalllPosition){
+            	EPMW3_OUTPUT_UP(750, spwmPara->Duty);
+            	EPMW2_OUTPUT_DOWN(750, spwmPara->Duty);
+
+                closeAL();
+                closeBH();
+                closeCL();
+                openCH();
+                openBL();
+                openAH();
+            }
+            else{
+            	Disable_All_Epwms();
+//	                gSysInfo.hallErrorCount++;
+            }
+            break;
+        case 5://A+ --------------->B-
+            if(1 == spwmPara->LastHalllPosition){
+            	EPMW1_OUTPUT_UP(750, spwmPara->Duty);
+            	EPMW2_OUTPUT_DOWN(750, spwmPara->Duty);
+
+                closeCH();
+                closeBH();
+                closeAL();
+                openAH();
+                openBL();
+                openCL();
+            }
+            else if(5 == spwmPara->LastHalllPosition){
+            	EPMW1_OUTPUT_UP(750, spwmPara->Duty);
+            	EPMW2_OUTPUT_DOWN(750, spwmPara->Duty);
+
+                closeCH();
+                closeBH();
+                closeAL();
+                openAH();
+                openBL();
+                openCL();
+            }
+            else{
+            	Disable_All_Epwms();
+//                gSysInfo.hallErrorCount++;
+            }
+            break;
+        case 4://C+ --------------->B-
+            if(5 == spwmPara->LastHalllPosition){
+            	EPMW1_OUTPUT_UP(750, spwmPara->Duty);
+            	EPMW3_OUTPUT_DOWN(750, spwmPara->Duty);
+
+                closeBL();
+                closeCH();
+                closeAL();
+                openAH();
+                openCL();
+                openBH();
+            }
+            else if(4 == spwmPara->LastHalllPosition){
+            	EPMW1_OUTPUT_UP(750, spwmPara->Duty);
+            	EPMW3_OUTPUT_DOWN(750, spwmPara->Duty);
+
+                closeBL();
+                closeCH();
+                closeAL();
+                openAH();
+                openCL();
+                openBH();
+            }
+            else{
+            	Disable_All_Epwms();
+//	                gSysInfo.hallErrorCount++;
+            }
+            break;
+        case 6://C+ --------------->A-
+            if(4 == spwmPara->LastHalllPosition){
+            	EPMW2_OUTPUT_UP(750, spwmPara->Duty);
+            	EPMW3_OUTPUT_DOWN(750, spwmPara->Duty);
+
+                closeAH();
+                closeBL();
+                closeCH();
+                openBH();
+                openCL();
+                openAL();
+            }
+            else if(6 == spwmPara->LastHalllPosition){
+            	EPMW2_OUTPUT_UP(750, spwmPara->Duty);
+            	EPMW3_OUTPUT_DOWN(750, spwmPara->Duty);
+
+                closeAH();
+                closeBL();
+                closeCH();
+                openBH();
+                openCL();
+                openAL();
+            }
+            else{
+            	Disable_All_Epwms();
+//	                gSysInfo.hallErrorCount++;
+            }
+            break;
+        case 2://B+ --------------->A-
+            if(6 == spwmPara->LastHalllPosition){
+            	EPMW2_OUTPUT_UP(750, spwmPara->Duty);
+            	EPMW1_OUTPUT_DOWN(750, spwmPara->Duty);
+
+                closeCL();
+                closeAH();
+                closeBL();
+                openBH();
+                openAL();
+                openCH();
+            }
+            else if(2 == spwmPara->LastHalllPosition){
+            	EPMW2_OUTPUT_UP(750, spwmPara->Duty);
+            	EPMW1_OUTPUT_DOWN(750, spwmPara->Duty);
+
+                closeCL();
+                closeAH();
+                closeBL();
+                openBH();
+                openAL();
+                openCH();
+            }
+            else{
+            	Disable_All_Epwms();
+//	                gSysInfo.hallErrorCount++;
+            }
+            break;
+        default:
+        	Disable_All_Epwms();
+            break;
+    }
+}
+
+
 
 void Spwm_Output(SPWM_PARA* spwmPara)
 {
@@ -211,211 +415,9 @@ void Spwm_Output(SPWM_PARA* spwmPara)
 #endif
 
 
-//#if(PF_PWM_ECAP == INCLUDE_FEATURE)
-//	void SwitchDirection(void){
-//	    gSysInfo.lastTimeHalllPosition = gSysInfo.currentHallPosition;
-//	    gSysInfo.currentHallPosition = GetCurrentHallValue();
-//	    //1:A 2:B 3:C
-//	    switch (gSysInfo.currentHallPosition) {
-//	        case 3://B+ --------------->C-
-//	            if(2 == gSysInfo.lastTimeHalllPosition){
-//	                EPwm3Regs.CMPA.half.CMPA = EPWM1_TIMER_HALF_TBPRD + gSysInfo.duty;
-//	                EPwm1Regs.CMPA.half.CMPA = EPWM1_TIMER_HALF_TBPRD - gSysInfo.duty;
-//	#if SPECIAL_MOTOR_REVERSE_ROTATION
-//	                                closeCH();
-//	                                closeAL();
-//	                                closeBL();
-//	                                openBH();
-//	                                openAH();
-//	                                openCL();
-//	#else
-//	                                closeBH();
-//	                                closeAH();
-//	                                closeCL();
-//	                                openCH();
-//	                                openAL();
-//	                                openBL();
-//	#endif
-//
-//	            }
-//	            else if(3 == gSysInfo.lastTimeHalllPosition){
-//	#if SPECIAL_MOTOR_REVERSE_ROTATION
-//	                APositiveToCNegtive();
-//	#else
-//	                CPositiveToANegtive();
-//	#endif
-//	            }
-//	            else{
-//	            	Disable_All_Epwms();
-//	                gSysInfo.hallErrorCount++;
-//	            }
-//	            break;
-//	        case 1://A+ --------------->C-
-//	            if(3 == gSysInfo.lastTimeHalllPosition){
-//	                EPwm3Regs.CMPA.half.CMPA = EPWM1_TIMER_HALF_TBPRD + gSysInfo.duty;
-//	                EPwm2Regs.CMPA.half.CMPA = EPWM1_TIMER_HALF_TBPRD - gSysInfo.duty;
-//	#if SPECIAL_MOTOR_REVERSE_ROTATION
-//	                closeCH();
-//	                closeBL();
-//	                closeAH();
-//	                openAL();
-//	                openBH();
-//	                openCL();
-//	#else
-//	                closeAL();
-//	                closeBH();
-//	                closeCL();
-//	                openCH();
-//	                openBL();
-//	                openAH();
-//	#endif
-//	            }
-//	            else if(1 == gSysInfo.lastTimeHalllPosition){
-//	#if SPECIAL_MOTOR_REVERSE_ROTATION
-//	                BPositiveToCNegtive();
-//	#else
-//	                CPositiveToBNegtive();
-//	#endif
-//	            }
-//	            else{
-//	            	Disable_All_Epwms();
-//	                gSysInfo.hallErrorCount++;
-//	            }
-//	            break;
-//	        case 5://A+ --------------->B-
-//	            if(1 == gSysInfo.lastTimeHalllPosition){
-//	                EPwm1Regs.CMPA.half.CMPA = EPWM1_TIMER_HALF_TBPRD + gSysInfo.duty;
-//	                EPwm2Regs.CMPA.half.CMPA = EPWM1_TIMER_HALF_TBPRD - gSysInfo.duty;
-//	#if SPECIAL_MOTOR_REVERSE_ROTATION
-//	                closeAH();
-//	                closeBL();
-//	                closeCL();
-//	                openCH();
-//	                openBH();
-//	                openAL();
-//	#else
-//	                closeCH();
-//	                closeBH();
-//	                closeAL();
-//	                openAH();
-//	                openBL();
-//	                openCL();
-//	#endif
-//	            }
-//	            else if(5 == gSysInfo.lastTimeHalllPosition){
-//	#if SPECIAL_MOTOR_REVERSE_ROTATION
-//	                BPositiveToANegtive();
-//	#else
-//	                APositiveToBNegtive();
-//	#endif
-//	            }
-//	            else{
-//	            	Disable_All_Epwms();
-//	                gSysInfo.hallErrorCount++;
-//	            }
-//	            break;
-//	        case 4://C+ --------------->B-
-//	            if(5 == gSysInfo.lastTimeHalllPosition){
-//	                EPwm1Regs.CMPA.half.CMPA = EPWM1_TIMER_HALF_TBPRD + gSysInfo.duty;
-//	                EPwm3Regs.CMPA.half.CMPA = EPWM1_TIMER_HALF_TBPRD - gSysInfo.duty;
-//	#if SPECIAL_MOTOR_REVERSE_ROTATION
-//	                closeAH();
-//	                closeCL();
-//	                closeBH();
-//	                openBL();
-//	                openCH();
-//	                openAL();
-//	#else
-//	                closeBL();
-//	                closeCH();
-//	                closeAL();
-//	                openAH();
-//	                openCL();
-//	                openBH();
-//	#endif
-//	            }
-//	            else if(4 == gSysInfo.lastTimeHalllPosition){
-//	#if SPECIAL_MOTOR_REVERSE_ROTATION
-//	                CPositiveToANegtive();
-//	#else
-//	                APositiveToCNegtive();
-//	#endif
-//	            }
-//	            else{
-//	            	Disable_All_Epwms();
-//	                gSysInfo.hallErrorCount++;
-//	            }
-//	            break;
-//	        case 6://C+ --------------->A-
-//	            if(4 == gSysInfo.lastTimeHalllPosition){
-//	                EPwm2Regs.CMPA.half.CMPA = EPWM1_TIMER_HALF_TBPRD + gSysInfo.duty;
-//	                EPwm3Regs.CMPA.half.CMPA = EPWM1_TIMER_HALF_TBPRD - gSysInfo.duty;
-//	#if SPECIAL_MOTOR_REVERSE_ROTATION
-//	                closeBH();
-//	                closeCL();
-//	                closeAL();
-//	                openAH();
-//	                openBL();
-//	                openCH();
-//	#else
-//	                closeAH();
-//	                closeBL();
-//	                closeCH();
-//	                openBH();
-//	                openCL();
-//	                openAL();
-//	#endif
-//	            }
-//	            else if(6 == gSysInfo.lastTimeHalllPosition){
-//	#if SPECIAL_MOTOR_REVERSE_ROTATION
-//	                CPositiveToBNegtive();
-//	#else
-//	                BPositiveToCNegtive();
-//	#endif
-//	            }
-//	            else{
-//	            	Disable_All_Epwms();
-//	                gSysInfo.hallErrorCount++;
-//	            }
-//	            break;
-//	        case 2://B+ --------------->A-
-//	            if(6 == gSysInfo.lastTimeHalllPosition){
-//	                EPwm2Regs.CMPA.half.CMPA = EPWM1_TIMER_HALF_TBPRD + gSysInfo.duty;
-//	                EPwm1Regs.CMPA.half.CMPA = EPWM1_TIMER_HALF_TBPRD - gSysInfo.duty;
-//	#if SPECIAL_MOTOR_REVERSE_ROTATION
-//	                closeBH();
-//	                closeAL();
-//	                closeCH();
-//	                openCL();
-//	                openAH();
-//	                openBL();
-//	#else
-//	                closeCL();
-//	                closeAH();
-//	                closeBL();
-//	                openBH();
-//	                openAL();
-//	                openCH();
-//	#endif
-//	            }
-//	            else if(2 == gSysInfo.lastTimeHalllPosition){
-//	#if SPECIAL_MOTOR_REVERSE_ROTATION
-//	                APositiveToBNegtive();
-//	#else
-//	                BPositiveToANegtive();
-//	#endif
-//	            }
-//	            else{
-//	            	Disable_All_Epwms();
-//	                gSysInfo.hallErrorCount++;
-//	            }
-//	            break;
-//	        default:
-//	        	Disable_All_Epwms();
-//	            break;
-//	    }
-//	}
-//#endif
+#if(PF_PWM_ECAP == INCLUDE_FEATURE)
+	SwitchDirection(spwmPara);
+#endif
 
 
 
@@ -444,6 +446,7 @@ void Init_Spwm_Service(void)
 	gSpwmPara.Ddtmax = 1;
 	gSpwmPara.ThresholdDutyP = 600;
 	gSpwmPara.ThresholdDutyN = -600;
-
+	gSpwmPara.CurrentHallPosition = 0;
+	gSpwmPara.LastHalllPosition = 0;
 	gSpwmPara.TargetDuty = 600;
 }

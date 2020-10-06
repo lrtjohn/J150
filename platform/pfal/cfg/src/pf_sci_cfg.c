@@ -55,12 +55,12 @@ void CFG_SCI_A(CFG_SCI_TBL cfgSciTblElement)
     switch(cfgSciTblElement.cfgSciParam.sciBaudRate)
     {
         case BAUD_RATE_115200:
-            baudrate = (Uint16)((30000000/115200/8) - 1);
+            baudrate = (Uint16)(((CPU_FREQUENCY * 1000000 / 4) / 115200 / 8) - 1);
             SciaRegs.SCIHBAUD = (baudrate & 0xff00) >> 8;
             SciaRegs.SCILBAUD = baudrate & 0x00ff;
             break;
         case BAUD_RATE_9600:
-            baudrate = (Uint16)((30000000/9600/8) - 1);
+            baudrate = (Uint16)(((CPU_FREQUENCY * 1000000 / 4) / 9600 / 8) - 1);
             SciaRegs.SCIHBAUD = (baudrate & 0xff00) >> 8;
             SciaRegs.SCILBAUD = baudrate & 0x00ff;
             break;
@@ -152,12 +152,12 @@ void CFG_SCI_B(CFG_SCI_TBL cfgSciTblElement)
     switch(cfgSciTblElement.cfgSciParam.sciBaudRate)
     {
         case BAUD_RATE_115200:
-            baudrate = (Uint16)((30000000/115200/8) - 1);
+            baudrate = (Uint16)(((CPU_FREQUENCY * 1000000 / 4) / 115200 / 8) - 1);
             ScibRegs.SCIHBAUD = (baudrate & 0xff00) >> 8;
             ScibRegs.SCILBAUD = baudrate & 0x00ff;
             break;
         case BAUD_RATE_9600:
-            baudrate = (Uint16)((30000000/9600/8) - 1);
+            baudrate = (Uint16)(((CPU_FREQUENCY * 1000000 / 4) / 9600 / 8) - 1);
             ScibRegs.SCIHBAUD = (baudrate & 0xff00) >> 8;
             ScibRegs.SCILBAUD = baudrate & 0x00ff;
             break;
@@ -204,12 +204,12 @@ void CFG_SCI_C(CFG_SCI_TBL cfgSciTblElement)
     switch(cfgSciTblElement.cfgSciParam.sciBaudRate)
     {
         case BAUD_RATE_115200:
-            baudrate = (Uint16)((30000000/115200/8) - 1);
+            baudrate = (Uint16)(((CPU_FREQUENCY * 1000000 / 4) / 115200 / 8) - 1);
             ScicRegs.SCIHBAUD = (baudrate & 0xff00) >> 8;
             ScicRegs.SCILBAUD = baudrate & 0x00ff;
             break;
         case BAUD_RATE_9600:
-            baudrate = (Uint16)((30000000/9600/8) - 1);
+            baudrate = (Uint16)(((CPU_FREQUENCY * 1000000 / 4) / 9600 / 8) - 1);
             ScicRegs.SCIHBAUD = (baudrate & 0xff00) >> 8;
             ScicRegs.SCILBAUD = baudrate & 0x00ff;
             break;
