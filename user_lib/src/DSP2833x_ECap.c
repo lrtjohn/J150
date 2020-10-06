@@ -248,6 +248,114 @@ void InitECap6Gpio(void)
 }
 #endif // endif DSP28_ECAP6
 
+void ECap1Config(void){
+	 EALLOW;
+	 SysCtrlRegs.PCLKCR1.bit.ECAP1ENCLK = 1;
+	 EDIS;
+	 /* Initialize eCAP1/2/3 */
+	 ECap1Regs.ECEINT.all = 0x0000;             /* Disable all capture interrupts */
+	 ECap1Regs.ECCLR.all = 0xFFFF;              /* Clear all CAP interrupt flags  */
+	 ECap1Regs.ECCTL1.bit.CAPLDEN = 0;          /* disable CAP1-CAP4 register loads*/
+	 ECap1Regs.ECCTL2.bit.TSCTRSTOP = 0;        /* Make sure the counter is stopped*/
+
+	 /* Configure peripheral registers*/
+	 ECap1Regs.ECCTL2.bit.CONT_ONESHT = 0;
+
+	 ECap1Regs.ECCTL1.bit.CAP1POL = 0;
+	 ECap1Regs.ECCTL1.bit.CAP2POL = 0;
+	 ECap1Regs.ECCTL1.bit.CAP3POL = 0;
+	 ECap1Regs.ECCTL1.bit.CAP4POL = 0;
+
+	 ECap1Regs.ECCTL1.bit.CTRRST1 = 0;
+	 ECap1Regs.ECCTL1.bit.CTRRST2 = 0;
+	 ECap1Regs.ECCTL1.bit.CTRRST3 = 0;
+	 ECap1Regs.ECCTL1.bit.CTRRST4 = 0;
+
+	 ECap1Regs.ECCTL2.bit.SYNCI_EN = 0;
+	 ECap1Regs.ECCTL2.bit.SYNCO_SEL = 3;
+	 ECap1Regs.ECCTL1.bit.PRESCALE =0;
+
+	 ECap1Regs.ECEINT.bit.CEVT1 = 1;            // 2 events = interrupt
+	 ECap1Regs.ECEINT.bit.CEVT2 = 1;
+	 ECap1Regs.ECEINT.bit.CEVT3 = 1;
+	 ECap1Regs.ECEINT.bit.CEVT4 = 1;
+
+	 ECap1Regs.ECCTL1.bit.CAPLDEN = 1;          // Enable CAP1-CAP4 register loads
+	 ECap1Regs.ECCTL2.bit.TSCTRSTOP = 1;        /* Start Counter*/
+}
+
+void ECap2Config(void){
+	 EALLOW;
+	 SysCtrlRegs.PCLKCR1.bit.ECAP1ENCLK = 1;
+	 EDIS;
+	 /* Initialize eCAP1/2/3 */
+	 ECap2Regs.ECEINT.all = 0x0000;             /* Disable all capture interrupts */
+	 ECap2Regs.ECCLR.all = 0xFFFF;              /* Clear all CAP interrupt flags  */
+	 ECap2Regs.ECCTL1.bit.CAPLDEN = 0;          /* disable CAP1-CAP4 register loads*/
+	 ECap2Regs.ECCTL2.bit.TSCTRSTOP = 0;        /* Make sure the counter is stopped*/
+
+	 /* Configure peripheral registers*/
+	 ECap2Regs.ECCTL2.bit.CONT_ONESHT = 0;
+
+	 ECap2Regs.ECCTL1.bit.CAP1POL = 0;
+	 ECap2Regs.ECCTL1.bit.CAP2POL = 0;
+	 ECap2Regs.ECCTL1.bit.CAP3POL = 0;
+	 ECap2Regs.ECCTL1.bit.CAP4POL = 0;
+
+	 ECap2Regs.ECCTL1.bit.CTRRST1 = 0;
+	 ECap2Regs.ECCTL1.bit.CTRRST2 = 0;
+	 ECap2Regs.ECCTL1.bit.CTRRST3 = 0;
+	 ECap2Regs.ECCTL1.bit.CTRRST4 = 0;
+
+	 ECap2Regs.ECCTL2.bit.SYNCI_EN = 0;
+	 ECap2Regs.ECCTL2.bit.SYNCO_SEL = 3;
+	 ECap2Regs.ECCTL1.bit.PRESCALE =0;
+
+	 ECap2Regs.ECEINT.bit.CEVT1 = 1;            // 2 events = interrupt
+	 ECap2Regs.ECEINT.bit.CEVT2 = 1;
+	 ECap2Regs.ECEINT.bit.CEVT3 = 1;
+	 ECap2Regs.ECEINT.bit.CEVT4 = 1;
+
+	 ECap2Regs.ECCTL1.bit.CAPLDEN = 1;          // Enable CAP1-CAP4 register loads
+	 ECap2Regs.ECCTL2.bit.TSCTRSTOP = 1;        /* Start Counter*/
+}
+
+void ECap3Config(void){
+	 EALLOW;
+	 SysCtrlRegs.PCLKCR1.bit.ECAP1ENCLK = 1;
+	 EDIS;
+	 /* Initialize eCAP1/2/3 */
+	 ECap3Regs.ECEINT.all = 0x0000;             /* Disable all capture interrupts */
+	 ECap3Regs.ECCLR.all = 0xFFFF;              /* Clear all CAP interrupt flags  */
+	 ECap3Regs.ECCTL1.bit.CAPLDEN = 0;          /* disable CAP1-CAP4 register loads*/
+	 ECap3Regs.ECCTL2.bit.TSCTRSTOP = 0;        /* Make sure the counter is stopped*/
+
+	 /* Configure peripheral registers*/
+	 ECap3Regs.ECCTL2.bit.CONT_ONESHT = 0;
+
+	 ECap3Regs.ECCTL1.bit.CAP1POL = 0;
+	 ECap3Regs.ECCTL1.bit.CAP2POL = 0;
+	 ECap3Regs.ECCTL1.bit.CAP3POL = 0;
+	 ECap3Regs.ECCTL1.bit.CAP4POL = 0;
+
+	 ECap3Regs.ECCTL1.bit.CTRRST1 = 0;
+	 ECap3Regs.ECCTL1.bit.CTRRST2 = 0;
+	 ECap3Regs.ECCTL1.bit.CTRRST3 = 0;
+	 ECap3Regs.ECCTL1.bit.CTRRST4 = 0;
+
+	 ECap3Regs.ECCTL2.bit.SYNCI_EN = 0;
+	 ECap3Regs.ECCTL2.bit.SYNCO_SEL = 3;
+	 ECap3Regs.ECCTL1.bit.PRESCALE =0;
+
+	 ECap3Regs.ECEINT.bit.CEVT1 = 1;            // 2 events = interrupt
+	 ECap3Regs.ECEINT.bit.CEVT2 = 1;
+	 ECap3Regs.ECEINT.bit.CEVT3 = 1;
+	 ECap3Regs.ECEINT.bit.CEVT4 = 1;
+
+	 ECap3Regs.ECCTL1.bit.CAPLDEN = 1;          // Enable CAP1-CAP4 register loads
+	 ECap3Regs.ECCTL2.bit.TSCTRSTOP = 1;        /* Start Counter*/
+}
+
 void ECap4Config(void){
 	 EALLOW;
 	 SysCtrlRegs.PCLKCR1.bit.ECAP1ENCLK = 1;

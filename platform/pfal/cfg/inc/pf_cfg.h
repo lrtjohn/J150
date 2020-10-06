@@ -5,6 +5,7 @@
 #include "pf_adc_cfg.h"
 #include "pf_gpio_cfg.h"
 #include "pf_pwm_cfg.h"
+#include "pf_ecap_cfg.h"
 #include "pf_sci_cfg.h"
 #include "pf_spi_cfg.h"
 #include "pf_xintf_cfg.h"
@@ -40,6 +41,22 @@ CFG_GPIO_TBL CfgGpioTbl_User[] =
 	{68, GPIO_OUTPUT}, //ZDGC_OUT8
 	{77, GPIO_OUTPUT}, //RS422_DE
 	{78, GPIO_OUTPUT} //RS422_RE
+};
+
+CFG_ECAP_TBL CfgECapTbl_User[] =
+{
+ {
+  ECAP_4,
+  27
+ },
+ {
+  ECAP_3,
+  26
+ },
+ {
+  ECAP_2,
+  25
+ }
 };
 
 #define EPWM_PERIOD_K 40
@@ -242,9 +259,9 @@ CFG_INTERRUPT_TBL CfgInterruptTbl_User[] =
     EPWM1,
     SCIBRX,
     SCIBTX,
+    ECAP2,
+    ECAP3,
     ECAP4,
-    ECAP5,
-    ECAP6,
     // SCICRX,
     // SCICTX
 };
