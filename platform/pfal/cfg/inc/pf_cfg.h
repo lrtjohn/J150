@@ -59,7 +59,7 @@ CFG_ECAP_TBL CfgECapTbl_User[] =
  }
 };
 
-#define EPWM_PERIOD_K 40
+#define EPWM_PERIOD_K 50
 CFG_PWM_TBL CfgPwmTbl_User[] =
 {
 #if(PF_PWM_1A == INCLUDE_FEATURE)
