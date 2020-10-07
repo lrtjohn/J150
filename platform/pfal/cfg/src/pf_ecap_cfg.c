@@ -44,7 +44,7 @@
 	 ECap1Regs.ECCTL1.bit.CTRRST1 = 0;
 	 ECap1Regs.ECCTL1.bit.CTRRST2 = 0;
 	 ECap1Regs.ECCTL1.bit.CTRRST3 = 0;
-	 ECap1Regs.ECCTL1.bit.CTRRST4 = 0;
+	 ECap1Regs.ECCTL1.bit.CTRRST4 = 1;
 
 	 ECap1Regs.ECCTL2.bit.SYNCI_EN = 0;
 	 ECap1Regs.ECCTL2.bit.SYNCO_SEL = 3;
@@ -103,7 +103,7 @@
 	 ECap2Regs.ECCTL1.bit.CTRRST1 = 0;
 	 ECap2Regs.ECCTL1.bit.CTRRST2 = 0;
 	 ECap2Regs.ECCTL1.bit.CTRRST3 = 0;
-	 ECap2Regs.ECCTL1.bit.CTRRST4 = 0;
+	 ECap2Regs.ECCTL1.bit.CTRRST4 = 1;
 
 	 ECap2Regs.ECCTL2.bit.SYNCI_EN = 0;
 	 ECap2Regs.ECCTL2.bit.SYNCO_SEL = 3;
@@ -157,7 +157,7 @@
 	 ECap3Regs.ECCTL1.bit.CTRRST1 = 0;
 	 ECap3Regs.ECCTL1.bit.CTRRST2 = 0;
 	 ECap3Regs.ECCTL1.bit.CTRRST3 = 0;
-	 ECap3Regs.ECCTL1.bit.CTRRST4 = 0;
+	 ECap3Regs.ECCTL1.bit.CTRRST4 = 1;
 
 	 ECap3Regs.ECCTL2.bit.SYNCI_EN = 0;
 	 ECap3Regs.ECCTL2.bit.SYNCO_SEL = 3;
@@ -211,7 +211,7 @@
 	 ECap4Regs.ECCTL1.bit.CTRRST1 = 0;
 	 ECap4Regs.ECCTL1.bit.CTRRST2 = 0;
 	 ECap4Regs.ECCTL1.bit.CTRRST3 = 0;
-	 ECap4Regs.ECCTL1.bit.CTRRST4 = 0;
+	 ECap4Regs.ECCTL1.bit.CTRRST4 = 1;
 
 	 ECap4Regs.ECCTL2.bit.SYNCI_EN = 0;
 	 ECap4Regs.ECCTL2.bit.SYNCO_SEL = 3;
