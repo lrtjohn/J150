@@ -18,7 +18,7 @@
     GPIO16              EN_QD_3V3
 */
 #define TOOGLE_CTL_BOARD_WATCHDOG		(GpioDataRegs.GPBTOGGLE.bit.GPIO51 = 1)
-#define TOOGLE_DRIVE_BOARD_WATCHDOG		(GpioDataRegs.GPCTOGGLE.bit.GPIO85 = 1)
+//#define TOOGLE_DRIVE_BOARD_WATCHDOG		(GpioDataRegs.GPCTOGGLE.bit.GPIO85 = 1)
 #define ENABLE_GATE_DRIVER()                                            				\
                                         {                                           \
                                             GpioDataRegs.GPADAT.bit.GPIO16 = 1;     \
