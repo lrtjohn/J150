@@ -2,49 +2,49 @@
 SPWM_PARA gSpwmPara = {0};
 
 inline void openAH(void){
-	EPwm6Regs.AQCSFRC.bit.CSFA = 3;
+	EPwm1Regs.AQCSFRC.bit.CSFA = 3;
 }
 
 inline void closeAH(void){
-	EPwm6Regs.AQCSFRC.bit.CSFA = 1;
+	EPwm1Regs.AQCSFRC.bit.CSFA = 1;
 }
 
 inline void openAL(void){
-	EPwm6Regs.AQCSFRC.bit.CSFB = 3;
+	EPwm1Regs.AQCSFRC.bit.CSFB = 3;
 }
 
 inline void closeAL(void){
-	EPwm6Regs.AQCSFRC.bit.CSFB = 2;
+	EPwm1Regs.AQCSFRC.bit.CSFB = 2;
 }
 
 inline void openBH(void){
-	EPwm3Regs.AQCSFRC.bit.CSFA = 3;
-}
-
-inline void closeBH(void){
-	EPwm3Regs.AQCSFRC.bit.CSFA = 1;
-}
-inline void openBL(void){
-	EPwm3Regs.AQCSFRC.bit.CSFB = 3;
-}
-
-inline void closeBL(void){
-	EPwm3Regs.AQCSFRC.bit.CSFB = 2;
-}
-
-inline void openCH(void){
 	EPwm2Regs.AQCSFRC.bit.CSFA = 3;
 }
 
-inline void closeCH(void){
+inline void closeBH(void){
 	EPwm2Regs.AQCSFRC.bit.CSFA = 1;
 }
-inline void openCL(void){
+inline void openBL(void){
 	EPwm2Regs.AQCSFRC.bit.CSFB = 3;
 }
 
-inline void closeCL(void){
+inline void closeBL(void){
 	EPwm2Regs.AQCSFRC.bit.CSFB = 2;
+}
+
+inline void openCH(void){
+	EPwm3Regs.AQCSFRC.bit.CSFA = 3;
+}
+
+inline void closeCH(void){
+	EPwm3Regs.AQCSFRC.bit.CSFA = 1;
+}
+inline void openCL(void){
+	EPwm3Regs.AQCSFRC.bit.CSFB = 3;
+}
+
+inline void closeCL(void){
+	EPwm3Regs.AQCSFRC.bit.CSFB = 2;
 }
 
 /**************************************************************
@@ -175,10 +175,10 @@ void SwitchDirection(SPWM_PARA* spwmPara){
 	spwmPara->CurrentHallPosition = GetCurrentHallValue();
     //1:A 2:B 3:C
     switch (spwmPara->CurrentHallPosition) {
-        case 3://B+ --------------->C-
+        case 3://C+ --------------->A-
             if(2 == spwmPara->LastHalllPosition){
-            	EPMW3_OUTPUT_UP(750, spwmPara->Duty);
-            	EPMW1_OUTPUT_DOWN(750, spwmPara->Duty);
+            	EPMW3_OUTPUT_UP(PWM_DUTY_BASE, spwmPara->Duty);
+            	EPMW1_OUTPUT_DOWN(PWM_DUTY_BASE, spwmPara->Duty);
 
             	closeBH();
                 closeAH();
@@ -188,8 +188,8 @@ void SwitchDirection(SPWM_PARA* spwmPara){
                 openBL();
             }
             else if(3 == spwmPara->LastHalllPosition){
-            	EPMW3_OUTPUT_UP(750, spwmPara->Duty);
-            	EPMW1_OUTPUT_DOWN(750, spwmPara->Duty);
+            	EPMW3_OUTPUT_UP(PWM_DUTY_BASE, spwmPara->Duty);
+            	EPMW1_OUTPUT_DOWN(PWM_DUTY_BASE, spwmPara->Duty);
 
             	closeBH();
                 closeAH();
@@ -203,10 +203,10 @@ void SwitchDirection(SPWM_PARA* spwmPara){
 //	                gSysInfo.hallErrorCount++;
             }
             break;
-        case 1://A+ --------------->C-
+        case 1://C+ --------------->B-
             if(3 == spwmPara->LastHalllPosition){
-            	EPMW3_OUTPUT_UP(750, spwmPara->Duty);
-            	EPMW2_OUTPUT_DOWN(750, spwmPara->Duty);
+            	EPMW3_OUTPUT_UP(PWM_DUTY_BASE, spwmPara->Duty);
+            	EPMW2_OUTPUT_DOWN(PWM_DUTY_BASE, spwmPara->Duty);
 
                 closeAL();
                 closeBH();
@@ -216,8 +216,8 @@ void SwitchDirection(SPWM_PARA* spwmPara){
                 openAH();
             }
             else if(1 == spwmPara->LastHalllPosition){
-            	EPMW3_OUTPUT_UP(750, spwmPara->Duty);
-            	EPMW2_OUTPUT_DOWN(750, spwmPara->Duty);
+            	EPMW3_OUTPUT_UP(PWM_DUTY_BASE, spwmPara->Duty);
+            	EPMW2_OUTPUT_DOWN(PWM_DUTY_BASE, spwmPara->Duty);
 
                 closeAL();
                 closeBH();
@@ -233,8 +233,8 @@ void SwitchDirection(SPWM_PARA* spwmPara){
             break;
         case 5://A+ --------------->B-
             if(1 == spwmPara->LastHalllPosition){
-            	EPMW1_OUTPUT_UP(750, spwmPara->Duty);
-            	EPMW2_OUTPUT_DOWN(750, spwmPara->Duty);
+            	EPMW1_OUTPUT_UP(PWM_DUTY_BASE, spwmPara->Duty);
+            	EPMW2_OUTPUT_DOWN(PWM_DUTY_BASE, spwmPara->Duty);
 
                 closeCH();
                 closeBH();
@@ -244,8 +244,8 @@ void SwitchDirection(SPWM_PARA* spwmPara){
                 openCL();
             }
             else if(5 == spwmPara->LastHalllPosition){
-            	EPMW1_OUTPUT_UP(750, spwmPara->Duty);
-            	EPMW2_OUTPUT_DOWN(750, spwmPara->Duty);
+            	EPMW1_OUTPUT_UP(PWM_DUTY_BASE, spwmPara->Duty);
+            	EPMW2_OUTPUT_DOWN(PWM_DUTY_BASE, spwmPara->Duty);
 
                 closeCH();
                 closeBH();
@@ -259,10 +259,10 @@ void SwitchDirection(SPWM_PARA* spwmPara){
 //                gSysInfo.hallErrorCount++;
             }
             break;
-        case 4://C+ --------------->B-
+        case 4://A+ --------------->C-
             if(5 == spwmPara->LastHalllPosition){
-            	EPMW1_OUTPUT_UP(750, spwmPara->Duty);
-            	EPMW3_OUTPUT_DOWN(750, spwmPara->Duty);
+            	EPMW1_OUTPUT_UP(PWM_DUTY_BASE, spwmPara->Duty);
+            	EPMW3_OUTPUT_DOWN(PWM_DUTY_BASE, spwmPara->Duty);
 
                 closeBL();
                 closeCH();
@@ -272,8 +272,8 @@ void SwitchDirection(SPWM_PARA* spwmPara){
                 openBH();
             }
             else if(4 == spwmPara->LastHalllPosition){
-            	EPMW1_OUTPUT_UP(750, spwmPara->Duty);
-            	EPMW3_OUTPUT_DOWN(750, spwmPara->Duty);
+            	EPMW1_OUTPUT_UP(PWM_DUTY_BASE, spwmPara->Duty);
+            	EPMW3_OUTPUT_DOWN(PWM_DUTY_BASE, spwmPara->Duty);
 
                 closeBL();
                 closeCH();
@@ -287,10 +287,10 @@ void SwitchDirection(SPWM_PARA* spwmPara){
 //	                gSysInfo.hallErrorCount++;
             }
             break;
-        case 6://C+ --------------->A-
+        case 6://B+ --------------->C-
             if(4 == spwmPara->LastHalllPosition){
-            	EPMW2_OUTPUT_UP(750, spwmPara->Duty);
-            	EPMW3_OUTPUT_DOWN(750, spwmPara->Duty);
+            	EPMW2_OUTPUT_UP(PWM_DUTY_BASE, spwmPara->Duty);
+            	EPMW3_OUTPUT_DOWN(PWM_DUTY_BASE, spwmPara->Duty);
 
                 closeAH();
                 closeBL();
@@ -300,8 +300,8 @@ void SwitchDirection(SPWM_PARA* spwmPara){
                 openAL();
             }
             else if(6 == spwmPara->LastHalllPosition){
-            	EPMW2_OUTPUT_UP(750, spwmPara->Duty);
-            	EPMW3_OUTPUT_DOWN(750, spwmPara->Duty);
+            	EPMW2_OUTPUT_UP(PWM_DUTY_BASE, spwmPara->Duty);
+            	EPMW3_OUTPUT_DOWN(PWM_DUTY_BASE, spwmPara->Duty);
 
                 closeAH();
                 closeBL();
@@ -317,8 +317,8 @@ void SwitchDirection(SPWM_PARA* spwmPara){
             break;
         case 2://B+ --------------->A-
             if(6 == spwmPara->LastHalllPosition){
-            	EPMW2_OUTPUT_UP(750, spwmPara->Duty);
-            	EPMW1_OUTPUT_DOWN(750, spwmPara->Duty);
+            	EPMW2_OUTPUT_UP(PWM_DUTY_BASE, spwmPara->Duty);
+            	EPMW1_OUTPUT_DOWN(PWM_DUTY_BASE, spwmPara->Duty);
 
                 closeCL();
                 closeAH();
@@ -328,8 +328,8 @@ void SwitchDirection(SPWM_PARA* spwmPara){
                 openCH();
             }
             else if(2 == spwmPara->LastHalllPosition){
-            	EPMW2_OUTPUT_UP(750, spwmPara->Duty);
-            	EPMW1_OUTPUT_DOWN(750, spwmPara->Duty);
+            	EPMW2_OUTPUT_UP(PWM_DUTY_BASE, spwmPara->Duty);
+            	EPMW1_OUTPUT_DOWN(PWM_DUTY_BASE, spwmPara->Duty);
 
                 closeCL();
                 closeAH();
@@ -448,5 +448,5 @@ void Init_Spwm_Service(void)
 	gSpwmPara.ThresholdDutyN = -600;
 	gSpwmPara.CurrentHallPosition = 0;
 	gSpwmPara.LastHalllPosition = 0;
-	gSpwmPara.TargetDuty = 600;
+	gSpwmPara.TargetDuty = 300;
 }

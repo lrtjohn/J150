@@ -9,6 +9,8 @@
 #include "rvdt_service.h"
 #include "pwm_hal.h"
 
+#define PWM_DUTY_BASE 750
+
 
 typedef struct _SPWM_PARA
 {

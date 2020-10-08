@@ -24,6 +24,7 @@
                                             GpioDataRegs.GPADAT.bit.GPIO16 = 1;     \
                                             GpioDataRegs.GPACLEAR.bit.GPIO15 = 1;     \
                                         }
+#define ENABLE_BUSBAR_VOLTAGE			(GpioDataRegs.GPADAT.bit.GPIO7 = 1)
 
 #define IS_VCC3V3_PG                    (GpioDataRegs.GPBDAT.bit.GPIO43 == 1)
 #define IS_VCC1V9_PG                    (GpioDataRegs.GPBDAT.bit.GPIO45 == 1)
