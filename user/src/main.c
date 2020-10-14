@@ -41,7 +41,7 @@ void main(void)
 	PFAL_ECAP_CFG(CfgECapTbl_User, sizeof(CfgECapTbl_User)/sizeof(CfgECapTbl_User[0]));
 	PFAL_SCI_CFG(CfgSciTbl_User,sizeof(CfgSciTbl_User)/sizeof(CfgSciTbl_User[0]));		        			// pass the test
 	PFAL_SPI_CFG(CfgSpiTbl_User,sizeof(CfgSpiTbl_User)/sizeof(CfgSpiTbl_User[0]));              			// pass the test
-	PFAL_XINTF_CFG(CfgXintfTbl_User,sizeof(CfgXintfTbl_User)/sizeof(CfgXintfTbl_User[0]));  				// pass the test
+//	PFAL_XINTF_CFG(CfgXintfTbl_User,sizeof(CfgXintfTbl_User)/sizeof(CfgXintfTbl_User[0]));  				// pass the test
 	PFAL_TIMER_CFG(CfgTimerTbl_User,sizeof(CfgTimerTbl_User)/sizeof(CfgTimerTbl_User[0]));      			// pass the test
 	PFAL_INTERRUPT_CFG(CfgInterruptTbl_User,sizeof(CfgInterruptTbl_User)/sizeof(CfgInterruptTbl_User[0]));
 	Disable_All_Epwms();
@@ -49,6 +49,7 @@ void main(void)
 //	TURN_ON_PWM_VALVE;
 	ENABLE_GATE_DRIVER();
 	ENABLE_BUSBAR_VOLTAGE;
+	ENABLE_RS422_DRIVER();
 
 #if (ARINC429_FEATURE == INCLUDE_FEATURE)
 	Init_Arinc429_Service();

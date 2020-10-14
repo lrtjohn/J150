@@ -26,6 +26,12 @@
                                         }
 #define ENABLE_BUSBAR_VOLTAGE			(GpioDataRegs.GPADAT.bit.GPIO7 = 1)
 
+#define ENABLE_RS422_DRIVER()                                            			\
+                                        {                                           \
+                                            GpioDataRegs.GPCDAT.bit.GPIO77 = 1;     \
+                                            GpioDataRegs.GPCCLEAR.bit.GPIO78 = 1;     \
+                                        }
+
 #define IS_VCC3V3_PG                    (GpioDataRegs.GPBDAT.bit.GPIO43 == 1)
 #define IS_VCC1V9_PG                    (GpioDataRegs.GPBDAT.bit.GPIO45 == 1)
 #define IS_VCC5V_PG                     (GpioDataRegs.GPBDAT.bit.GPIO42 == 1)
