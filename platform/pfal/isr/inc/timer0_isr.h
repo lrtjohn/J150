@@ -15,5 +15,6 @@ typedef struct _TIMER_INTERVAL_CNT
     Uint16 sciTxCntTreshold;
 }TIMER_INTERVAL_CNT;
 
+void MotorSpeed();
 void PFAL_Timer0_ISR(void);
 #endif

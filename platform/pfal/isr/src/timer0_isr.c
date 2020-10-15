@@ -2,6 +2,8 @@
 #include "prod.h"
 #include "gpio_service.h"
 #include "sci_protocal.h"
+#include "ecap_service.h"
+#include "kalman_service.h"
 #include <string.h>
 
 #if(SYS_DEBUG == INCLUDE_FEATURE)
@@ -37,6 +39,29 @@ TIMER_INTERVAL_CNT gTimerCnt =
     4       // sci tx threshold
 };
 
+void MotorSpeed(){
+	static int count = 0;
+//	int calSpeed = -1;
+
+  	if (gEcapPara.isEcapRefresh == 1){
+
+  		gKF_Speed.currentData = CalculateSpeed(gEcapPara.gECapCount);
+		if(gKF_Speed.currentData != -1){
+			gEcapPara.gMotorSpeedEcap = KalmanVarFilter(&gKF_Speed);
+		}
+		gEcapPara.isEcapRefresh = 0;
+		count = 0;
+  	}
+  	else{
+		count++;
+		if(count > 5){
+			gKF_Speed.currentData = 0;
+			gEcapPara.gMotorSpeedEcap = KalmanVarFilter(&gKF_Speed);
+			count = 0;
+		}
+  	}
+}
+
 void PFAL_Timer0_ISR(void)
 {
 #if (SYS_DEBUG == INCLUDE_FEATURE)
@@ -48,6 +73,7 @@ void PFAL_Timer0_ISR(void)
     if (IS_CONTROL_TIMER_TIMER_EXPIRE)
     {
         RESET_CONTROL_TIMER_TIMER_CNT;
+        MotorSpeed();
     }
 
     if (IS_WATCH_DOG_TIMER_EXPIRE)
