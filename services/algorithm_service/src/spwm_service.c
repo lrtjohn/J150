@@ -394,7 +394,7 @@ void Spwm_Output(SPWM_PARA* spwmPara)
 
 void Init_Spwm_Service(void)
 {
-	gSpwmPara.Duty = 0;
+	gSpwmPara.Duty = 75;
 	gSpwmPara.Phase_Duty_U = 0;
 	gSpwmPara.Phase_Duty_V = 0;
 	gSpwmPara.Phase_Duty_W = 0;
@@ -402,7 +402,7 @@ void Init_Spwm_Service(void)
 	gSpwmPara.Rvdt_Pos = 0;
 	gSpwmPara.Rvdt_Zero = 1500;
 	gSpwmPara.Duty_Gradual = 0;
-	gSpwmPara.DutyAddInterval = 1;
+	gSpwmPara.DutyAddInterval = 1000;
 	gSpwmPara.DutyAddIntervalCnt = 0;
 	gSpwmPara.Ddtmax = 1;
 	gSpwmPara.ThresholdDutyP = 600;

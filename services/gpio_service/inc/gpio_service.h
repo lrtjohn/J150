@@ -54,20 +54,21 @@
 
 #define HARDWARE_OVER_CURRENT_CLEAR()                                             \
                                         {                                           \
-											DELAY_NOPS(0);						\
-                                            GpioDataRegs.GPADAT.bit.GPIO12 = 0;     \
-                                            DELAY_NOPS(30);                          \
+                                            GpioDataRegs.GPACLEAR.bit.GPIO12 = 1;     \
+                                            DELAY_NOPS(1000);                          \
                                             GpioDataRegs.GPADAT.bit.GPIO12 = 1;     \
-                                            DELAY_NOPS(30);                          \
-                                            GpioDataRegs.GPADAT.bit.GPIO12 = 0;     \
-                                            DELAY_NOPS(15);                          \
-                                            GpioDataRegs.GPADAT.bit.GPIO12 = 1;     \
-                                            DELAY_NOPS(30);                          \
-                                            GpioDataRegs.GPADAT.bit.GPIO12 = 0;		\
                                         }
 
-
-
+#define ENABLE_DRIVERS()										\
+						{										\
+							while(!IS_VDD5V_PG)					\
+							{									\
+							}									\
+							ENABLE_GATE_DRIVER();				\
+							ENABLE_BUSBAR_VOLTAGE;				\
+							ENABLE_RS422_DRIVER();				\
+							HARDWARE_OVER_CURRENT_CLEAR();		\
+						}
 
 #define DIGIT_SIG_ROUTING_INSPECTION()                                              \
                                         {                                           \
