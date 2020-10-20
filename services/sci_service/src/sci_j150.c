@@ -193,10 +193,10 @@ Uint16 J150_APP_RX_PROTOCOL_UnpackPayLoad(void)
             break;
 
         case COMMAND_DEBUG_DATA:
-            gDebugDataArray[0] = pSciRxAppProtocol->goodPacketArray[8]  << 8 + pSciRxAppProtocol->goodPacketArray[9];
-            gDebugDataArray[1] = pSciRxAppProtocol->goodPacketArray[10] << 8 + pSciRxAppProtocol->goodPacketArray[11];
-            gDebugDataArray[2] = pSciRxAppProtocol->goodPacketArray[12] << 8 + pSciRxAppProtocol->goodPacketArray[13];
-            gDebugDataArray[3] = pSciRxAppProtocol->goodPacketArray[14] << 8 + pSciRxAppProtocol->goodPacketArray[15];
+            gDebugDataArray[0] = (pSciRxAppProtocol->goodPacketArray[8]  << 8) + pSciRxAppProtocol->goodPacketArray[9];
+            gDebugDataArray[1] = (pSciRxAppProtocol->goodPacketArray[10] << 8) + pSciRxAppProtocol->goodPacketArray[11];
+            gDebugDataArray[2] = (pSciRxAppProtocol->goodPacketArray[12] << 8) + pSciRxAppProtocol->goodPacketArray[13];
+            gDebugDataArray[3] = (pSciRxAppProtocol->goodPacketArray[14] << 8) + pSciRxAppProtocol->goodPacketArray[15];
 
             break;
         default:
