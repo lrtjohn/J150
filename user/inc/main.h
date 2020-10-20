@@ -13,6 +13,7 @@
 #include "sci_adapt.h"
 #include "sci_j150.h"
 #include "kalman_service.h"
+#include "pid_service.h"
 
 
 

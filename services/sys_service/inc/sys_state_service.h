@@ -33,13 +33,13 @@ typedef struct _ALARM_16BIT
 	Uint16 software     : 1;
 	Uint16 init         : 1;
 	Uint16 temperature  : 1;
-	Uint16 busVoltage   : 1;
+	Uint16 busUV        : 1;
+	Uint16 busOV		: 1;
 	Uint16 busCurrent   : 1;
 	Uint16 hardware     : 1;
 	Uint16 pgVcc5V      : 1;
 	Uint16 pg1v9        : 1;
 	Uint16 pgVcc3V3     : 1;
-	Uint16 j            : 1;
 	Uint16 k            : 1;
 	Uint16 l            : 1;
 	Uint16 m            : 1;
@@ -215,9 +215,13 @@ typedef struct _SYS_STATE_FLAG
 #define CLEAR_SYS_TEMPERATURE_ALARM                     (gSysStateFlag.alarm.bit.temperature = 0)
 #define IS_SYS_TEMPERATURE_ALARM                        (gSysStateFlag.alarm.bit.temperature | TEMPERATURE_ALARM_MASK)
 
-#define SET_SYS_BUS_VOLTAGE_ALARM                       (gSysStateFlag.alarm.bit.busVoltage = 1)
-#define CLEAR_SYS_BUS_VOLTAGE_ALARM                     (gSysStateFlag.alarm.bit.busVoltage = 0)
-#define IS_SYS_BUS_VOLTAGE_ALARM                        (gSysStateFlag.alarm.bit.busVoltage | BUS_VOLTAGE_ALARM_MASK)
+#define SET_SYS_BUS_OVER_VOLTAGE_ALARM                       (gSysStateFlag.alarm.bit.busOV = 1)
+#define CLEAR_SYS_BUS_OVER_VOLTAGE_ALARM                     (gSysStateFlag.alarm.bit.busOV = 0)
+#define IS_SYS_BUS_OVER_VOLTAGE_ALARM                        (gSysStateFlag.alarm.bit.busOV | BUS_VOLTAGE_ALARM_MASK)
+
+#define SET_SYS_BUS_UNDER_VOLTAGE_ALARM                       (gSysStateFlag.alarm.bit.busUV = 1)
+#define CLEAR_SYS_BUS_UNDER_VOLTAGE_ALARM                     (gSysStateFlag.alarm.bit.busUV = 0)
+#define IS_SYS_BUS_UNDER_VOLTAGE_ALARM                        (gSysStateFlag.alarm.bit.busUV | BUS_VOLTAGE_ALARM_MASK)
 
 
 #define SET_SYS_BUS_CURRENT_ALARM                       (gSysStateFlag.alarm.bit.busCurrent = 1)

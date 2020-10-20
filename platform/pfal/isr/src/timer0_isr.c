@@ -4,6 +4,9 @@
 #include "sci_protocal.h"
 #include "ecap_service.h"
 #include "kalman_service.h"
+#include "spwm_service.h"
+#include "pid_service.h"
+#include "adc_service.h"
 #include <string.h>
 
 #if(SYS_DEBUG == INCLUDE_FEATURE)
@@ -74,6 +77,13 @@ void PFAL_Timer0_ISR(void)
     {
         RESET_CONTROL_TIMER_TIMER_CNT;
         MotorSpeed();
+        gPID_Speed_Para.currentVal = gEcapPara.gMotorSpeedEcap;
+        gPID_Speed_Para.targetVal = gSciAppProtocolRx_J150.targetSpeed;
+        gOpenLoop_Para.currentBusVoltage = gSysAnalogVar.single.var[updatePower270V_M].value;
+        gOpenLoop_Para.currentSpeed = gEcapPara.gMotorSpeedEcap;
+
+        gSpwmPara.CloseLoopDuty = Pid_Process(&gPID_Speed_Para);
+        gSpwmPara.OpenLoopDuty = OpenLoop_Process(&gOpenLoop_Para);
     }
 
     if (IS_WATCH_DOG_TIMER_EXPIRE)

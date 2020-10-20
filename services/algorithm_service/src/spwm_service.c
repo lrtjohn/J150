@@ -304,6 +304,8 @@ void SwitchDirection(SPWM_PARA* spwmPara){
 
 void Spwm_Output(SPWM_PARA* spwmPara)
 {
+	updateAndCheckVoltage();
+//	spwmPara->TargetDuty = spwmPara->CloseLoopDuty;
 #if(SPWM_DUTY_GRADUAL_CHANGE == INCLUDE_FEATURE)
 	++(spwmPara->DutyAddIntervalCnt);
 	if(spwmPara->DutyAddIntervalCnt >= spwmPara->DutyAddInterval){
@@ -394,7 +396,7 @@ void Spwm_Output(SPWM_PARA* spwmPara)
 
 void Init_Spwm_Service(void)
 {
-	gSpwmPara.Duty = 75;
+	gSpwmPara.Duty = 0;
 	gSpwmPara.Phase_Duty_U = 0;
 	gSpwmPara.Phase_Duty_V = 0;
 	gSpwmPara.Phase_Duty_W = 0;
@@ -407,7 +409,9 @@ void Init_Spwm_Service(void)
 	gSpwmPara.Ddtmax = 1;
 	gSpwmPara.ThresholdDutyP = 600;
 	gSpwmPara.ThresholdDutyN = -600;
+	gSpwmPara.OpenLoopDuty = 0;
+	gSpwmPara.CloseLoopDuty = 0;
 	gSpwmPara.CurrentHallPosition = 0;
 	gSpwmPara.LastHalllPosition = 0;
-	gSpwmPara.TargetDuty = 600;
+	gSpwmPara.TargetDuty = 0;
 }

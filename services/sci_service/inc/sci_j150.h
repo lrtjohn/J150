@@ -48,7 +48,7 @@
 #define CHECK_SUM_POS_LEN       (1)
 
 #define RX_MIN_TARGET_SPEED     (500)
-#define RX_MAX_TARGET_SPEED     (5000)
+#define RX_MAX_TARGET_SPEED     (11000)
 /******************Data structure*****************/
 typedef enum
 {
