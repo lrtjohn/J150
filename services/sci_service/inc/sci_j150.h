@@ -58,10 +58,11 @@ typedef enum
 
 typedef enum
 {
-    COMMAND_PARA_NONE = 0, 
-    COMMAND_PARA_CONFIG = 0x0C01,
-    COMMAND_MOTOR_START = 0x0C02,
-    COMMAND_MOTOR_STOP =0x0C03,
+    COMMAND_PARA_NONE       = 0, 
+    COMMAND_PARA_CONFIG     = 0x0C01,
+    COMMAND_MOTOR_START     = 0x0C02,
+    COMMAND_MOTOR_STOP      = 0x0C03,
+    COMMAND_DEBUG_DATA      = 0x0C04,
 }COMMAND_DEFINITION;
 
 typedef enum
@@ -197,4 +198,5 @@ extern SCI_APP_PROTOCOL_TX gSciAppProtocolTx_J150;
 extern Uint16 gTxFrameArray[SCI_TX_ONE_FRAME_LENGTH];
 
 extern void SCI_APP_PROTOCOL_TX_Init(SCI_APP_PROTOCOL_TX* txAppProtocol);
+extern Uint16 gDebugDataArray[4];
 #endif
