@@ -305,6 +305,8 @@ void SwitchDirection(SPWM_PARA* spwmPara){
 void Spwm_Output(SPWM_PARA* spwmPara)
 {
 	updateAndCheckVoltage();
+	spwmPara->TargetDuty = spwmPara->OpenLoopDuty;
+//	spwmPara->TargetDuty = gDebugDataArray[0];
 //	spwmPara->TargetDuty = spwmPara->CloseLoopDuty;
 #if(SPWM_DUTY_GRADUAL_CHANGE == INCLUDE_FEATURE)
 	++(spwmPara->DutyAddIntervalCnt);

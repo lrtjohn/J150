@@ -9,6 +9,7 @@
 #include "rvdt_service.h"
 #include "pwm_hal.h"
 #include "adc_service.h"
+#include "sci_j150.h"
 
 #define PWM_DUTY_BASE 750
 

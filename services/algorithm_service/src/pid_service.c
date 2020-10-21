@@ -6,7 +6,7 @@ OPENLOOP_VAR gOpenLoop_Para = {0};
 double OpenLoop_Process(OPENLOOP_VAR* openloopVar){
 	double openloop_Output = 0;
 
-	openloop_Output = (openloopVar->currentSpeed * openloopVar->openloop_K + openloopVar->openloop_B) * (openloopVar->nominalBusVoltage / openloopVar->currentBusVoltage);
+	openloop_Output = (openloopVar->targetSpeed * openloopVar->openloop_K + openloopVar->openloop_B) * (openloopVar->nominalBusVoltage / openloopVar->currentBusVoltage);
 
 	return openloop_Output;
 }
@@ -58,8 +58,8 @@ void Init_PID_Service(void)
 void Init_OpenLoop_Service(void)
 {
 	gOpenLoop_Para.currentBusVoltage = 0;
-	gOpenLoop_Para.nominalBusVoltage = 2585;
-	gOpenLoop_Para.currentSpeed = 0;
-	gOpenLoop_Para.openloop_K = 0;
-	gOpenLoop_Para.openloop_B = 0;
+	gOpenLoop_Para.nominalBusVoltage = 1729;
+	gOpenLoop_Para.targetSpeed = 0;
+	gOpenLoop_Para.openloop_K = 0.7286;
+	gOpenLoop_Para.openloop_B = -4396.3;
 }

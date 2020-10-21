@@ -80,7 +80,7 @@ void PFAL_Timer0_ISR(void)
         gPID_Speed_Para.currentVal = gEcapPara.gMotorSpeedEcap;
         gPID_Speed_Para.targetVal = gSciAppProtocolRx_J150.targetSpeed;
         gOpenLoop_Para.currentBusVoltage = gSysAnalogVar.single.var[updatePower270V_M].value;
-        gOpenLoop_Para.currentSpeed = gEcapPara.gMotorSpeedEcap;
+        gOpenLoop_Para.targetSpeed = gSciAppProtocolRx_J150.targetSpeed;
 
         gSpwmPara.CloseLoopDuty = Pid_Process(&gPID_Speed_Para);
         gSpwmPara.OpenLoopDuty = OpenLoop_Process(&gOpenLoop_Para);

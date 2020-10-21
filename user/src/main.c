@@ -34,6 +34,7 @@ void main(void)
 	Init_Adc_Service();
 	Init_gKF_Speed();
 	Init_PID_Service();
+	Init_OpenLoop_Service();
 //	Init_ECap_Service();
 
 	PFAL_ADC_CFG(CfgAdcTbl_User,sizeof(CfgAdcTbl_User)/sizeof(CfgAdcTbl_User[0]));		        			// pass the test

@@ -1,8 +1,6 @@
 #ifndef PID_SERVICE_H_
 #define PID_SERVICE_H_
 
-#include "DSP2833x_Device.h"     // DSP2833x Headerfile Include File
-
 typedef struct _PID_VAR
 {
     double targetVal;
@@ -18,9 +16,9 @@ typedef struct _PID_VAR
 
 typedef struct _OPENLOOP_VAR
 {
-    Uint16 currentBusVoltage;
-    Uint16 nominalBusVoltage;
-    double currentSpeed;
+    double currentBusVoltage;
+    double nominalBusVoltage;
+    double targetSpeed;
     double openloop_K;
     double openloop_B;
 }OPENLOOP_VAR;
