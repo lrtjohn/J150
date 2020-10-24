@@ -52,7 +52,7 @@ const Uint16 SDB_SingleAnologMaxMinInit[TOTAL_SNGL_ANAL_CHS][4] =
 	{0,0,0,0},            //3
 	{0,0,0,0},            //4
 	{0,0,0,0},      	  //5
-	{0,0,0,0},            //6
+	{3063,2968,1822,1917},            //6 320V, 310V, 190V, 200V
 	{0,0,0,0},            //7
 	{0,0,0,0}, 			  //8
 	{0,0,0,0},            //9
@@ -72,6 +72,62 @@ void UpdateSingleAnalog(SysAnalogVar* sysAnalogVar)
 	{
         sysAnalogVar->single.var[index].value = sysAnalogVar->single.var[index].updateValue();
 	}
+}
+
+void updateAndCheckVoltage(void){
+    static int count_max = 0;
+    static int count_min = 0;
+
+    gSysAnalogVar.single.var[updatePower270V_M].value = gSysAnalogVar.single.var[updatePower270V_M].updateValue();
+
+    if(IS_SYS_BUS_OVER_VOLTAGE_ALARM){
+        if((gSysAnalogVar.single.var[updatePower270V_M].value < gSysAnalogVar.single.var[updatePower270V_M].max2nd)){
+        	CLEAR_SYS_BUS_OVER_VOLTAGE_ALARM;
+        }
+        else{
+        	SET_SYS_BUS_OVER_VOLTAGE_ALARM;
+        }
+    }
+    else if(!IS_SYS_BUS_OVER_VOLTAGE_ALARM){
+        if((gSysAnalogVar.single.var[updatePower270V_M].value > gSysAnalogVar.single.var[updatePower270V_M].max)) {
+            ++count_max;
+            if(count_max > 10){
+                count_max = 0;
+                SET_SYS_BUS_OVER_VOLTAGE_ALARM;
+            }
+        }
+        else{
+            count_max = 0;
+        }
+    }
+    else{
+//        gSysSWAlarm.bit.updateAndCheckVoltage = 1;
+//        gSysAlarm.bit.softwareFault = 1;
+    }
+    if(IS_SYS_BUS_UNDER_VOLTAGE_ALARM){
+        if((gSysAnalogVar.single.var[updatePower270V_M].value > gSysAnalogVar.single.var[updatePower270V_M].min2nd)){
+        	CLEAR_SYS_BUS_UNDER_VOLTAGE_ALARM;
+        }
+        else{
+        	SET_SYS_BUS_UNDER_VOLTAGE_ALARM;
+        }
+    }
+    else if (!IS_SYS_BUS_UNDER_VOLTAGE_ALARM){
+        if((gSysAnalogVar.single.var[updatePower270V_M].value < gSysAnalogVar.single.var[updatePower270V_M].min)) {
+            ++count_min;
+            if(count_min > 10){
+                count_min = 0;
+                SET_SYS_BUS_UNDER_VOLTAGE_ALARM;
+            }
+        }
+        else{
+            count_min = 0;
+        }
+    }
+    else {
+//    	gSysSWAlarm.bit.updateAndCheckVoltage = 1;
+//        gSysAlarm.bit.softwareFault = 1;
+    }
 }
 
 int IsSingleAnalogValueAbnormal(SysAnalogVar* sysAnalogVar)

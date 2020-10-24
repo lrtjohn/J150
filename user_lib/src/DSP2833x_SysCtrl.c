@@ -18,7 +18,7 @@
 
 #include "DSP2833x_Device.h"     // Headerfile Include File
 #include "DSP2833x_Examples.h"   // Examples Include File
-//#define FLASH_PROGRAM
+#define FLASH_PROGRAM
 #ifdef FLASH_PROGRAM
 #include "flash_hal.h"
 #include "Flash2833x_API_Library.h"

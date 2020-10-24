@@ -23,12 +23,12 @@
 #define EPMW5_OUTPUT_UP(halfperiod, duty)  (EPwm5Regs.CMPA.half.CMPA = halfperiod + duty)
 #define EPMW6_OUTPUT_UP(halfperiod, duty)  (EPwm6Regs.CMPA.half.CMPA = halfperiod + duty)
 
-#define EPMW1_OUTPUT_DOWN(halfperiod, duty)  (EPwm1Regs.CMPA.half.CMPA = halfperiod + duty)
-#define EPMW2_OUTPUT_DOWN(halfperiod, duty)  (EPwm2Regs.CMPA.half.CMPA = halfperiod + duty)
-#define EPMW3_OUTPUT_DOWN(halfperiod, duty)  (EPwm3Regs.CMPA.half.CMPA = halfperiod + duty)
-#define EPMW4_OUTPUT_DOWN(halfperiod, duty)  (EPwm4Regs.CMPA.half.CMPA = halfperiod + duty)
-#define EPMW5_OUTPUT_DOWN(halfperiod, duty)  (EPwm5Regs.CMPA.half.CMPA = halfperiod + duty)
-#define EPMW6_OUTPUT_DOWN(halfperiod, duty)  (EPwm6Regs.CMPA.half.CMPA = halfperiod + duty)
+#define EPMW1_OUTPUT_DOWN(halfperiod, duty)  (EPwm1Regs.CMPA.half.CMPA = halfperiod - duty)
+#define EPMW2_OUTPUT_DOWN(halfperiod, duty)  (EPwm2Regs.CMPA.half.CMPA = halfperiod - duty)
+#define EPMW3_OUTPUT_DOWN(halfperiod, duty)  (EPwm3Regs.CMPA.half.CMPA = halfperiod - duty)
+#define EPMW4_OUTPUT_DOWN(halfperiod, duty)  (EPwm4Regs.CMPA.half.CMPA = halfperiod - duty)
+#define EPMW5_OUTPUT_DOWN(halfperiod, duty)  (EPwm5Regs.CMPA.half.CMPA = halfperiod - duty)
+#define EPMW6_OUTPUT_DOWN(halfperiod, duty)  (EPwm6Regs.CMPA.half.CMPA = halfperiod - duty)
 
 
 #define Disable_Epwm1() EPwm1Regs.AQCSFRC.all = 0x0009

@@ -4,6 +4,7 @@
 #include "DSP2833x_Device.h"     // DSP2833x Headerfile Include File
 #include "DSP2833x_Examples.h"   // DSP2833x Examples Include File
 #include "adc_hal.h"
+#include "sys_state_service.h"
 //single ADC channel
 enum SNGL_ANAL_IDX
 {
@@ -75,5 +76,6 @@ typedef struct _SysAnalogVar{
 
 void Init_Adc_Service_Ptr(SysAnalogVar* sysAnalogVar);
 void Init_Adc_Service(void);
+void updateAndCheckVoltage(void);
 extern SysAnalogVar gSysAnalogVar;
 #endif

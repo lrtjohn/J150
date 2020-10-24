@@ -8,6 +8,10 @@
 #include "sin_table.h"
 #include "rvdt_service.h"
 #include "pwm_hal.h"
+#include "adc_service.h"
+#include "sci_j150.h"
+
+#define PWM_DUTY_BASE 750
 
 
 typedef struct _SPWM_PARA
@@ -26,6 +30,8 @@ typedef struct _SPWM_PARA
     int16 Ddtmax;
     int16 ThresholdDutyP;
     int16 ThresholdDutyN;
+    int16 OpenLoopDuty;
+    int16 CloseLoopDuty;
     Uint16 CurrentHallPosition;
     Uint16 LastHalllPosition;
 }SPWM_PARA;
