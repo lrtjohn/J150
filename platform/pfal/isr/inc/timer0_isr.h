@@ -13,6 +13,8 @@ typedef struct _TIMER_INTERVAL_CNT
     Uint16 controlCntTreshold;
     Uint16 sciTxCnt;
     Uint16 sciTxCntTreshold;
+    Uint16 count_200ms;
+    Uint16 count_200msThreshold;
 }TIMER_INTERVAL_CNT;
 
 void MotorSpeed();

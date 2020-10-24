@@ -91,7 +91,6 @@ void main(void)
 #else
 		SCI_RX_UnpackData(gScibRxQue);
 #endif
-		SYS_STATE_MACHINE;
 
 #if(J150_SCI_PROTOCOL_TX == NOT_INCLUDE_FEATURE)
         PackSciTxPacket(gScibTxQue,gSciTxVar);

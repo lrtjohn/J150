@@ -68,6 +68,26 @@ typedef struct _WARINING_16BIT
 	Uint16 p : 1;
 }WARINING_16BIT;
 
+typedef struct _SYS_STATUS_16BIT
+{
+	Uint16 BIT_CMPLT	: 1;
+	Uint16 POWER_BUS    : 1;
+	Uint16 FAULT_EXT	: 1;
+	Uint16 MOTOR_STA    : 1;
+	Uint16 e			: 1;
+	Uint16 f   			: 1;
+	Uint16 g     		: 1;
+	Uint16 h      		: 1;
+	Uint16 i       		: 1;
+	Uint16 j     		: 1;
+	Uint16 k            : 1;
+	Uint16 l            : 1;
+	Uint16 m            : 1;
+	Uint16 n            : 1;
+	Uint16 o            : 1;
+	Uint16 p            : 1;
+}SYS_STATUS_16BIT;
+
 typedef union
 {
 	Uint16          all;
@@ -110,20 +130,11 @@ typedef enum _SYS_RUNNING_STATE
 }SYS_RUNNING_STATE;
 
 
-typedef enum
+typedef union
 {
-	BIT_ING,
-	BIT_NORMAL,
-	BIT_ABNORMAL,
-	CONFIG_PARA_ING,
-	CONFIG_PARA_NORMAL,
-	CONFIG_PARA_ABNORMAL,
-	MOTOR_RUN_ING,
-	MOTOR_RUN_NORMAL,
-	MOTOR_RUN_ABNORMAL,
-	MOTOR_STOP_ING,
-	MOTOR_STOP_NORMAL,
-	MOTOR_STOP_ABNORMAL
+	Uint16          	all;
+	VAR16BIT        	data;
+	SYS_STATUS_16BIT    bit;
 }J150_SYS_STATUS;
 
 typedef struct _J150_SYS_INFO
@@ -149,32 +160,19 @@ typedef struct _SYS_STATE_FLAG
 #define SET_SYS_RUNNING_STATE_ALARM                     (gSysStateFlag.sysRunningState = SYS_ALARM)
 #define SET_SYS_RUNNING_STATE_WARNING                   (gSysStateFlag.sysRunningState = SYS_WARNING)
 
-#define SET_J150_BIT_ING								(gSysStateFlag.j150SysStatus = BIT_ING)
-#define SET_J150_BIT_NORMAL								(gSysStateFlag.j150SysStatus = BIT_NORMAL)
-#define SET_J150_BIT_ABNORMAL							(gSysStateFlag.j150SysStatus = BIT_ABNORMAL)
-#define SET_J150_CONFIG_PARA_ING						(gSysStateFlag.j150SysStatus = CONFIG_PARA_ING)
-#define SET_J150_CONFIG_PARA_NORMAL						(gSysStateFlag.j150SysStatus = CONFIG_PARA_NORMAL)
-#define SET_J150_CONFIG_PARA_ABNORMAL					(gSysStateFlag.j150SysStatus = CONFIG_PARA_ABNORMAL)
-#define SET_J150_MORTOR_RUN_ING							(gSysStateFlag.j150SysStatus = MOTOR_RUN_ING)
-#define SET_J150_MORTOR_RUN_NORMAL						(gSysStateFlag.j150SysStatus = MOTOR_RUN_NORMAL)
-#define SET_J150_MORTOR_RUN_ABNORMAL					(gSysStateFlag.j150SysStatus = MOTOR_RUN_ABNORMAL)
-#define SET_J150_MORTOR_STOP_ING						(gSysStateFlag.j150SysStatus = MOTOR_STOP_ING)
-#define SET_J150_MORTOR_STOP_NORMAL						(gSysStateFlag.j150SysStatus = MOTOR_STOP_NORMAL)
-#define SET_J150_MORTOR_STOP_ABNORMAL					(gSysStateFlag.j150SysStatus = MOTOR_STOP_ABNORMAL)
+#define SET_J150_BIT_CMPLT								(gSysStateFlag.j150SysStatus.bit.BIT_CMPLT = 1)
+#define CLR_J150_BIT_CMPLT								(gSysStateFlag.j150SysStatus.bit.BIT_CMPLT = 0)
+#define SET_J150_POWER_BUS								(gSysStateFlag.j150SysStatus.bit.POWER_BUS = 1)
+#define CLR_J150_POWER_BUS								(gSysStateFlag.j150SysStatus.bit.POWER_BUS = 0)
+#define SET_J150_FAULT_EXT								(gSysStateFlag.j150SysStatus.bit.FAULT_EXT = 1)
+#define CLR_J150_FAULT_EXT								(gSysStateFlag.j150SysStatus.bit.FAULT_EXT = 0)
+#define SET_J150_MOTOR_STA								(gSysStateFlag.j150SysStatus.bit.MOTOR_STA = 1)
+#define CLR_J150_MOTOR_STA								(gSysStateFlag.j150SysStatus.bit.MOTOR_STA = 0)
 
-#define IS_J150_BIT_ING									(gSysStateFlag.j150SysStatus == BIT_ING)
-#define IS_J150_BIT_NORMAL								(gSysStateFlag.j150SysStatus == BIT_NORMAL)
-#define IS_J150_BIT_ABNORMAL							(gSysStateFlag.j150SysStatus == BIT_ABNORMAL)
-#define IS_J150_CONFIG_PARA_ING							(gSysStateFlag.j150SysStatus == CONFIG_PARA_ING)
-#define IS_J150_CONFIG_PARA_NORMAL						(gSysStateFlag.j150SysStatus == CONFIG_PARA_NORMAL)
-#define IS_J150_CONFIG_PARA_ABNORMAL					(gSysStateFlag.j150SysStatus == CONFIG_PARA_ABNORMAL)
-#define IS_J150_MORTOR_RUN_ING							(gSysStateFlag.j150SysStatus == MOTOR_RUN_ING)
-#define IS_J150_MORTOR_RUN_NORMAL						(gSysStateFlag.j150SysStatus == MOTOR_RUN_NORMAL)
-#define IS_J150_MORTOR_RUN_ABNORMAL						(gSysStateFlag.j150SysStatus == MOTOR_RUN_ABNORMAL)
-#define IS_J150_MORTOR_STOP_ING							(gSysStateFlag.j150SysStatus == MOTOR_STOP_ING)
-#define IS_J150_MORTOR_STOP_NORMAL						(gSysStateFlag.j150SysStatus == MOTOR_STOP_NORMAL)
-#define IS_J150_MORTOR_STOP_ABNORMAL					(gSysStateFlag.j150SysStatus == MOTOR_STOP_ABNORMAL)
-
+#define IS_J150_BIT_CMPLT								(gSysStateFlag.j150SysStatus.bit.BIT_CMPLT == 1)
+#define IS_J150_POWER_NOR								(gSysStateFlag.j150SysStatus.bit.POWER_BUS == 1)
+#define IS_J150_FAULT_EXT								(gSysStateFlag.j150SysStatus.bit.FAULT_EXT == 1)
+#define IS_J150_MOTOR_RUN								(gSysStateFlag.j150SysStatus.bit.MOTOR_STA == 1)
 
 #define SOFTWARE_ALARM_MASK                             BIT0
 #define INIT_ALARM_MASK                                 BIT1
@@ -187,7 +185,7 @@ typedef struct _SYS_STATE_FLAG
 #define POWER_GOOD_VCC3V3_MASK                          BIT8
 
 
-
+#define IS_SYS_ENABLE_STOP_ROTATE                   	(gSysStateFlag.rotateDirectoin == STOP)
 #define IS_SYS_ENABLE_FORWARD_ROTATE                    (gSysStateFlag.rotateDirectoin == FORWARD)
 #define IS_SYS_ENABLE_BACKWARD_ROTATE                   (gSysStateFlag.rotateDirectoin == BACKWARD)
 #define IS_SYS_ALARM                                    (gSysStateFlag.alarm.all)

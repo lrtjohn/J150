@@ -305,7 +305,7 @@ void SwitchDirection(SPWM_PARA* spwmPara){
 void Spwm_Output(SPWM_PARA* spwmPara)
 {
 	updateAndCheckVoltage();
-	spwmPara->TargetDuty = spwmPara->OpenLoopDuty;
+//	spwmPara->TargetDuty = spwmPara->OpenLoopDuty;
 //	spwmPara->TargetDuty = gDebugDataArray[0];
 //	spwmPara->TargetDuty = spwmPara->CloseLoopDuty;
 #if(SPWM_DUTY_GRADUAL_CHANGE == INCLUDE_FEATURE)
@@ -346,6 +346,14 @@ void Spwm_Output(SPWM_PARA* spwmPara)
 	spwmPara->Duty = spwmPara->Duty_Gradual;
 	}
 #endif
+
+	if(gSysStateFlag.sysRunningState != SYS_FORWARD_RUN)
+	{
+		spwmPara->TargetDuty = 0;
+		spwmPara->Duty = 0;
+		Disable_All_Epwms();
+
+	}
 
 #if(SPWM_DUTY_GRADUAL_CHANGE == EXCLUDE_FEATURE)
     spwmPara->Duty = spwmPara->TargetDuty;
@@ -415,5 +423,5 @@ void Init_Spwm_Service(void)
 	gSpwmPara.CloseLoopDuty = 0;
 	gSpwmPara.CurrentHallPosition = 0;
 	gSpwmPara.LastHalllPosition = 0;
-	gSpwmPara.TargetDuty = 0;
+	gSpwmPara.TargetDuty = 100;
 }

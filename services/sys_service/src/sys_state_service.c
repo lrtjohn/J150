@@ -36,11 +36,11 @@ void Sys_hlstInit(void)
         return;
     }
 
-    if(IS_SYS_WARNING)
-    {
-        Sys_chstWarning();
-        return;
-    }
+//    if(IS_SYS_WARNING)
+//    {
+//        Sys_chstWarning();
+//        return;
+//    }
 
     Sys_chstStop();
 }
@@ -53,11 +53,11 @@ void Sys_hlsStop(void)
         return;
     }
 
-    if(IS_SYS_WARNING)
-    {
-        Sys_chstWarning();
-        return;
-    }
+//    if(IS_SYS_WARNING)
+//    {
+//        Sys_chstWarning();
+//        return;
+//    }
 
     if(IS_SYS_ENABLE_FORWARD_ROTATE)
     {
@@ -65,11 +65,11 @@ void Sys_hlsStop(void)
         return;
     }
 
-    if(IS_SYS_ENABLE_BACKWARD_ROTATE)
-    {
-        Sys_chstBackwardRotate();
-        return;
-    }
+//    if(IS_SYS_ENABLE_BACKWARD_ROTATE)
+//    {
+//        Sys_chstBackwardRotate();
+//        return;
+//    }
 }
 
 void Sys_hlstForwardRotate(void)
@@ -80,10 +80,16 @@ void Sys_hlstForwardRotate(void)
         return;
     }
 
-    if(IS_SYS_WARNING)
+//    if(IS_SYS_WARNING)
+//    {
+//        Sys_chstWarning();
+//        return;
+//    }
+
+    if(IS_SYS_ENABLE_STOP_ROTATE)
     {
-        Sys_chstWarning();
-        return;
+    	Sys_chstStop();
+    	return;
     }
 }
 
@@ -129,11 +135,11 @@ void Sys_hlsAlarm(void)
         return;
     }
 
-    if(IS_SYS_WARNING)
-    {
-        Sys_chstWarning();
-        return;
-    }
+//    if(IS_SYS_WARNING)
+//    {
+//        Sys_chstWarning();
+//        return;
+//    }
 
     Sys_chstStop();
 }
@@ -146,6 +152,6 @@ void Init_Sys_State_Service(void)
     INIT_SYS_RUNNING_STATE;            
     INIT_SYS_ROTATE_DIRECTION;
     SYS_STATE_MACHINE_INIT;
-    SET_J150_BIT_ING;
+//    SET_J150_BIT_ING;
     gSysVersionNum = 0;
 }

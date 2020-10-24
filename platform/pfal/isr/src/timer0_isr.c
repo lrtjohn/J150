@@ -22,11 +22,14 @@ int gtimertest = 0;
                                 gTimerCnt.controlCnt++;             \
                                 gTimerCnt.sciTxCnt++;               \
                                 gTimerCnt.watchDogCnt++;            \
+                                gTimerCnt.count_200ms++;			\
                             }
 
 #define IS_WATCH_DOG_TIMER_EXPIRE       (gTimerCnt.watchDogCnt >= gTimerCnt.WatchDogCntThreshold)
 #define IS_SCI_TX_TIMER_EXPIRE          (gTimerCnt.sciTxCnt >= gTimerCnt.sciTxCntTreshold)
 #define IS_CONTROL_TIMER_TIMER_EXPIRE   (gTimerCnt.controlCnt >= gTimerCnt.controlCntTreshold)
+#define IS_200MILISEC_TIMER_TIMER_EXPIRE   (gTimerCnt.count_200ms >= gTimerCnt.count_200msThreshold)
+
 
 #define RESET_WATCH_DOG_TIMER_CNT       (gTimerCnt.watchDogCnt = 0)
 #define RESET_SCI_TX_TIMER_CNT          (gTimerCnt.sciTxCnt  = 0)
@@ -39,7 +42,9 @@ TIMER_INTERVAL_CNT gTimerCnt =
     0,      // control 
     1,      // control threshold
     0,      // sci tx 
-    4       // sci tx threshold
+    4,       // sci tx threshold
+	0,
+	40
 };
 
 void MotorSpeed(){
@@ -67,6 +72,7 @@ void MotorSpeed(){
 
 void PFAL_Timer0_ISR(void)
 {
+	static int count_voltage_stable = 0;
 #if (SYS_DEBUG == INCLUDE_FEATURE)
     gtimertest++;
 #endif
@@ -76,11 +82,27 @@ void PFAL_Timer0_ISR(void)
     if (IS_CONTROL_TIMER_TIMER_EXPIRE)
     {
         RESET_CONTROL_TIMER_TIMER_CNT;
+
+        if(gSysAnalogVar.single.var[updatePower270V_M].value > 2090)
+        {
+        	++count_voltage_stable;
+        	if(count_voltage_stable > 20)
+        	{
+        		if(gSysStateFlag.rotateDirectoin == FORWARD)
+        		{
+        			ENABLE_BUSBAR_VOLTAGE;
+        		}
+        	}
+        }
+        else{
+        	count_voltage_stable = 0;
+        	DISABLE_BUSBAR_VOLTAGE;
+        }
+
+        SYS_STATE_MACHINE;
         MotorSpeed();
         gPID_Speed_Para.currentVal = gEcapPara.gMotorSpeedEcap;
-        gPID_Speed_Para.targetVal = gSciAppProtocolRx_J150.targetSpeed;
         gOpenLoop_Para.currentBusVoltage = gSysAnalogVar.single.var[updatePower270V_M].value;
-        gOpenLoop_Para.targetSpeed = gSciAppProtocolRx_J150.targetSpeed;
 
         gSpwmPara.CloseLoopDuty = Pid_Process(&gPID_Speed_Para);
         gSpwmPara.OpenLoopDuty = OpenLoop_Process(&gOpenLoop_Para);
