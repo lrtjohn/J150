@@ -5,3 +5,13 @@ Author:Simon
 
 What new: 
 	1. Basic function of J150 SCI protocol RX and TX 
+
+/***************************0.0.2*******************************/
+Version Number: 0.0.2
+Date: 2020/10/24
+Author:Runtian
+
+Whats new: 
+	1. ECAP, speed calculate function added
+	2. ADC and open loop algorithm verified
+	3. Change System CLK to 150MHz
