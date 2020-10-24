@@ -11,4 +11,11 @@ void PFAL_Timer1_ISR(void)
 #if(SYS_DEBUG == INCLUDE_FEATURE)
     gtimer1test++;
 #endif
+
+//  	if (gEcapPara.isEcapRefresh == 1){
+//
+//		gEcapPara.gMotorSpeedEcap = CalculateSpeed(gEcapPara.gECapCount);
+//		gEcapPara.isEcapRefresh = 0;
+//  	}
+
 }

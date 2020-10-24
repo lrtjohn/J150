@@ -5,6 +5,7 @@
 #include "pf_adc_cfg.h"
 #include "pf_gpio_cfg.h"
 #include "pf_pwm_cfg.h"
+#include "pf_ecap_cfg.h"
 #include "pf_sci_cfg.h"
 #include "pf_spi_cfg.h"
 #include "pf_xintf_cfg.h"
@@ -42,7 +43,23 @@ CFG_GPIO_TBL CfgGpioTbl_User[] =
 	{78, GPIO_OUTPUT} //RS422_RE
 };
 
-#define EPWM_PERIOD_K 40
+CFG_ECAP_TBL CfgECapTbl_User[] =
+{
+ {
+  ECAP_4,
+  27
+ },
+ {
+  ECAP_3,
+  26
+ },
+ {
+  ECAP_2,
+  25
+ }
+};
+
+#define EPWM_PERIOD_K 50
 CFG_PWM_TBL CfgPwmTbl_User[] =
 {
 #if(PF_PWM_1A == INCLUDE_FEATURE)
@@ -223,14 +240,14 @@ CFG_XINTF_TBL CfgXintfTbl_User[] =
 CFG_TIMER_TBL CfgTimerTbl_User[] =
 {
     {
-        TIMER0,       //Timer moudule, timer0 timer1
-        5000,         //timer period, unit:us
-        120          //system frequency
+        TIMER0,             //Timer moudule, timer0 timer1
+        5000,               //timer period, unit:us
+        CPU_FREQUENCY       //system frequency
     },
     {
         TIMER1, 
         20000,
-        120
+        CPU_FREQUENCY       //system frequency
     }
 };
 
@@ -242,9 +259,9 @@ CFG_INTERRUPT_TBL CfgInterruptTbl_User[] =
     EPWM1,
     SCIBRX,
     SCIBTX,
+    ECAP2,
+    ECAP3,
     ECAP4,
-    ECAP5,
-    ECAP6,
     // SCICRX,
     // SCICTX
 };

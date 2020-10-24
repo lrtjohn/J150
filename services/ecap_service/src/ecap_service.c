@@ -26,7 +26,7 @@ double CalculateSpeed(Uint32 capCount){
 	//unit of speed32 = degree/sec
 	//6171428571.42857
 	//1436156.641641
-	speed32 = ((201061.9298297)/(float)capCount);//17142857.142857 = 120000000/7 120000000=120MHz clk, 7=the nunber of pairs of poles of the motor
+	speed32 = ((1800000000)/(float)capCount);//1800000000 = 150000000*60/5 150000000=150MHz pwm clk, 5=the nunber of pairs of poles of the motor
 	return speed32;
 //	if(speed32 < 19200){
 //		return speed32;
@@ -36,6 +36,98 @@ double CalculateSpeed(Uint32 capCount){
 //	}
 }
 
+/**************************************************************
+ *Name:		   GetECap1Count
+ *Comment:
+ *Input:	   void
+ *Output:	   motor speed(int)
+ *Author:	   Simon
+ *Date:		   2018.11.14
+ **************************************************************/
+void GetECap1Count(void){
+
+	if(ECap1Regs.ECFLG.bit.CEVT1){
+		gEcapPara.isEcapRefresh = 1;
+	    gEcapPara.gECapCount = ECap1Regs.CAP1;
+	}
+	else if(ECap1Regs.ECFLG.bit.CEVT2){
+		gEcapPara.isEcapRefresh = 1;
+	    gEcapPara.gECapCount = ECap1Regs.CAP2 - ECap1Regs.CAP1;
+	}
+	else if(ECap1Regs.ECFLG.bit.CEVT3){
+		gEcapPara.isEcapRefresh = 1;
+	    gEcapPara.gECapCount = ECap1Regs.CAP3 - ECap1Regs.CAP2;
+	}
+	else if(ECap1Regs.ECFLG.bit.CEVT4){
+		gEcapPara.isEcapRefresh = 1;
+	    gEcapPara.gECapCount = ECap1Regs.CAP4 - ECap1Regs.CAP3;
+	}
+	else{
+
+	}
+}
+
+/**************************************************************
+ *Name:		   GetECap2Count
+ *Comment:
+ *Input:	   void
+ *Output:	   motor speed(int)
+ *Author:	   Simon
+ *Date:		   2018.11.14
+ **************************************************************/
+void GetECap2Count(void){
+
+	if(ECap2Regs.ECFLG.bit.CEVT1){
+		gEcapPara.isEcapRefresh = 1;
+	    gEcapPara.gECapCount = ECap2Regs.CAP1;
+	}
+	else if(ECap2Regs.ECFLG.bit.CEVT2){
+		gEcapPara.isEcapRefresh = 1;
+	    gEcapPara.gECapCount = ECap2Regs.CAP2 - ECap2Regs.CAP1;
+	}
+	else if(ECap2Regs.ECFLG.bit.CEVT3){
+		gEcapPara.isEcapRefresh = 1;
+	    gEcapPara.gECapCount = ECap2Regs.CAP3 - ECap2Regs.CAP2;
+	}
+	else if(ECap2Regs.ECFLG.bit.CEVT4){
+		gEcapPara.isEcapRefresh = 1;
+	    gEcapPara.gECapCount = ECap2Regs.CAP4 - ECap2Regs.CAP3;
+	}
+	else{
+
+	}
+}
+
+/**************************************************************
+ *Name:		   GetECap4Count
+ *Comment:
+ *Input:	   void
+ *Output:	   motor speed(int)
+ *Author:	   Simon
+ *Date:		   2018.11.14
+ **************************************************************/
+void GetECap3Count(void){
+
+	if(ECap3Regs.ECFLG.bit.CEVT1){
+		gEcapPara.isEcapRefresh = 1;
+	    gEcapPara.gECapCount = ECap3Regs.CAP1;
+	}
+	else if(ECap3Regs.ECFLG.bit.CEVT2){
+		gEcapPara.isEcapRefresh = 1;
+	    gEcapPara.gECapCount = ECap3Regs.CAP2 - ECap3Regs.CAP1;
+	}
+	else if(ECap3Regs.ECFLG.bit.CEVT3){
+		gEcapPara.isEcapRefresh = 1;
+	    gEcapPara.gECapCount = ECap3Regs.CAP3 - ECap3Regs.CAP2;
+	}
+	else if(ECap3Regs.ECFLG.bit.CEVT4){
+		gEcapPara.isEcapRefresh = 1;
+	    gEcapPara.gECapCount = ECap3Regs.CAP4 - ECap3Regs.CAP3;
+	}
+	else{
+
+	}
+}
 
 /**************************************************************
  *Name:		   GetECap4Count

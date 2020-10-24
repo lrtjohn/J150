@@ -1,6 +1,7 @@
 #ifndef PROD_DEFS_H_
 #define PROD_DEFS_H_
 
+#define CPU_FREQUENCY (150UL)
 
 #define INCLUDE_FEATURE     0x01
 #define NOT_INCLUDE_FEATURE 0x00
@@ -43,7 +44,5 @@
 #define BIT_29 (0x20000000)
 #define BIT_30 (0x40000000)
 #define BIT_31 (0x80000000)
-
-
 
 #endif

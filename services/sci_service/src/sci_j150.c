@@ -135,6 +135,8 @@ static Uint16 J150_APP_RX_PROTOCOL_GetTargetSpeed(unsigned char* data)
     return targetSpeed;
 }
 
+Uint16 gDebugDataArray[4] = {0,0,0,0};
+
 Uint16 J150_APP_RX_PROTOCOL_UnpackPayLoad(void)
 {
     Uint16 command;
@@ -153,11 +155,13 @@ Uint16 J150_APP_RX_PROTOCOL_UnpackPayLoad(void)
     }
 #endif
 
+#if (0)
     if (!IS_COMMAND_GOOD(command))
     {
         //TODO rx command is invalid
         return 0;
     }
+#endif
 
     pSciRxAppProtocol->command = (COMMAND_DEFINITION)command;
 
@@ -187,7 +191,14 @@ Uint16 J150_APP_RX_PROTOCOL_UnpackPayLoad(void)
         case COMMAND_MOTOR_STOP:
             pSciRxAppProtocol->command = (COMMAND_DEFINITION)command;
             break;
-        
+
+        case COMMAND_DEBUG_DATA:
+            gDebugDataArray[0] = (pSciRxAppProtocol->goodPacketArray[8]  << 8) + pSciRxAppProtocol->goodPacketArray[9];
+            gDebugDataArray[1] = (pSciRxAppProtocol->goodPacketArray[10] << 8) + pSciRxAppProtocol->goodPacketArray[11];
+            gDebugDataArray[2] = (pSciRxAppProtocol->goodPacketArray[12] << 8) + pSciRxAppProtocol->goodPacketArray[13];
+            gDebugDataArray[3] = (pSciRxAppProtocol->goodPacketArray[14] << 8) + pSciRxAppProtocol->goodPacketArray[15];
+
+            break;
         default:
             break;
     }
