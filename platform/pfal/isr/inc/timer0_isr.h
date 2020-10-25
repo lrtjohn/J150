@@ -13,10 +13,21 @@ typedef struct _TIMER_INTERVAL_CNT
     Uint16 controlCntTreshold;
     Uint16 sciTxCnt;
     Uint16 sciTxCntTreshold;
-    Uint16 count_200ms;
-    Uint16 count_200msThreshold;
 }TIMER_INTERVAL_CNT;
 
-void MotorSpeed();
+#define PWRBUS_BUILTUP_TIMES (20)
+#define PWRBUS_FULCHGR_TIMES (10)
+#define PWRBUS_UNDERVL_TIMES (5)
+#define PWRBUS_VOLTAGE_DELTA (100)
+
+typedef PF_RING_BUFFER PWRBUS_VLTGE_QUE;
+extern PWRBUS_VLTGE_QUE* pwrBus_Vltge_Que;
+
+void Init_Timer0_Buf(void);
+int PwrBusVotlageEnQueue(Uint16 e, PWRBUS_VLTGE_QUE *PWRBUSVoltageQue);
+void PwrBusVotlageClrQueue(PWRBUS_VLTGE_QUE *PWRBUSVoltageQue);
+void MotorSpeed(void);
+void updateCtrlStrategyParameters(void);
+void CtrlStrategyCalculation(void);
 void PFAL_Timer0_ISR(void);
 #endif

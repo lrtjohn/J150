@@ -22,13 +22,11 @@ int gtimertest = 0;
                                 gTimerCnt.controlCnt++;             \
                                 gTimerCnt.sciTxCnt++;               \
                                 gTimerCnt.watchDogCnt++;            \
-                                gTimerCnt.count_200ms++;			\
                             }
 
 #define IS_WATCH_DOG_TIMER_EXPIRE       (gTimerCnt.watchDogCnt >= gTimerCnt.WatchDogCntThreshold)
 #define IS_SCI_TX_TIMER_EXPIRE          (gTimerCnt.sciTxCnt >= gTimerCnt.sciTxCntTreshold)
 #define IS_CONTROL_TIMER_TIMER_EXPIRE   (gTimerCnt.controlCnt >= gTimerCnt.controlCntTreshold)
-#define IS_200MILISEC_TIMER_TIMER_EXPIRE   (gTimerCnt.count_200ms >= gTimerCnt.count_200msThreshold)
 
 
 #define RESET_WATCH_DOG_TIMER_CNT       (gTimerCnt.watchDogCnt = 0)
@@ -42,12 +40,112 @@ TIMER_INTERVAL_CNT gTimerCnt =
     0,      // control 
     1,      // control threshold
     0,      // sci tx 
-    4,       // sci tx threshold
-	0,
-	40
+    20       // sci tx threshold
 };
 
-void MotorSpeed(){
+PWRBUS_VLTGE_QUE* pwrBus_Vltge_Que = NULL;
+
+void Init_Timer0_Buf(void)
+{
+	if(pwrBus_Vltge_Que == NULL)
+	{
+		pwrBus_Vltge_Que = (PWRBUS_VLTGE_QUE*)malloc(sizeof(PWRBUS_VLTGE_QUE));
+		if(pwrBus_Vltge_Que == NULL)
+		{
+			//TODO generate alarm
+			SET_SYS_MEMORY_MOLLOC_ERROR;
+			return;
+		}
+		pwrBus_Vltge_Que->front = 0;
+		pwrBus_Vltge_Que->rear = 0;
+		pwrBus_Vltge_Que->bufferLen = 10;
+		pwrBus_Vltge_Que->buffer = (Uint16*)malloc(sizeof(Uint16) * pwrBus_Vltge_Que->bufferLen);
+		if(pwrBus_Vltge_Que->buffer == NULL)
+		{
+			SET_SYS_MEMORY_MOLLOC_ERROR;
+			return;
+		}
+		memset(pwrBus_Vltge_Que->buffer, 0 , sizeof(pwrBus_Vltge_Que->buffer));
+	}
+}
+
+int PwrBusVotlageEnQueue(Uint16 e, PWRBUS_VLTGE_QUE *PWRBUSVoltageQue)
+{
+	static int isfull = 0;
+	if((PWRBUSVoltageQue->rear + 1) % (PWRBUSVoltageQue->bufferLen) == PWRBUSVoltageQue->front)
+	{
+		PWRBUSVoltageQue->front = (PWRBUSVoltageQue->front + 1) % (PWRBUSVoltageQue->bufferLen);
+		isfull = 1;
+	}
+	else{
+		isfull = 0;
+	}
+
+	PWRBUSVoltageQue->buffer[PWRBUSVoltageQue->rear] = e;
+	PWRBUSVoltageQue->rear = (PWRBUSVoltageQue->rear + 1) % (PWRBUSVoltageQue->bufferLen);
+	return isfull;
+}
+
+void PwrBusVotlageClrQueue(PWRBUS_VLTGE_QUE *PWRBUSVoltageQue)
+{
+	PWRBUSVoltageQue->rear = 0;
+	PWRBUSVoltageQue->front = 0;
+}
+
+void PwrBusVoltageMonitor(void)
+{
+	static int cnt_UnderVoltage = 0;
+	static int cnt_NormalVoltage = 0;
+	static int cnt_VoltageDelta = 0;
+	static int pwrbus_buildup = 0;
+	static int pwrbus_delta = 0;
+
+	if(gSysAnalogVar.single.var[updatePower270V_M].value > gSysAnalogVar.single.var[updatePower270V_M].min2nd){
+		cnt_UnderVoltage = 0;
+		if(pwrbus_buildup == 0){
+			++cnt_NormalVoltage;
+			PwrBusVotlageEnQueue(gSysAnalogVar.single.var[updatePower270V_M].value, pwrBus_Vltge_Que);
+			if(cnt_NormalVoltage > PWRBUS_BUILTUP_TIMES){
+				pwrbus_buildup = 1;
+				CLR_J150_POWER_BUS;
+			}
+		}
+		else{
+			if(!IS_J150_POWER_NOR){
+				if(PwrBusVotlageEnQueue(gSysAnalogVar.single.var[updatePower270V_M].value, pwrBus_Vltge_Que)){
+					pwrbus_delta = (pwrBus_Vltge_Que->buffer[pwrBus_Vltge_Que->rear])-(pwrBus_Vltge_Que->buffer[pwrBus_Vltge_Que->front]);
+					if(pwrbus_delta < 0) pwrbus_delta = -pwrbus_delta;
+					if(pwrbus_delta > PWRBUS_VOLTAGE_DELTA) cnt_VoltageDelta = 0;
+					else{
+						if(cnt_VoltageDelta > PWRBUS_FULCHGR_TIMES){
+							SET_J150_POWER_BUS;
+							CLEAR_SYS_BUS_UNDER_VOLTAGE_ALARM;
+						}
+						else ++cnt_VoltageDelta;
+					}
+				}
+				else cnt_VoltageDelta = 0;
+			}
+		}
+	}
+	else if(gSysAnalogVar.single.var[updatePower270V_M].value < gSysAnalogVar.single.var[updatePower270V_M].min){
+		++cnt_UnderVoltage;
+		cnt_NormalVoltage = 0;
+		cnt_VoltageDelta = 0;
+		if(cnt_UnderVoltage > PWRBUS_UNDERVL_TIMES){
+			pwrbus_buildup = 0;
+			CLR_J150_POWER_BUS;
+			PwrBusVotlageClrQueue(pwrBus_Vltge_Que);
+			SET_SYS_BUS_UNDER_VOLTAGE_ALARM;
+		}
+	}
+	else{
+		cnt_NormalVoltage = 0;
+		cnt_VoltageDelta = 0;
+	}
+}
+
+void MotorSpeed(void){
 	static int count = 0;
 //	int calSpeed = -1;
 
@@ -70,9 +168,20 @@ void MotorSpeed(){
   	}
 }
 
+void updateCtrlStrategyParameters(void)
+{
+	gPID_Speed_Para.currentVal = gEcapPara.gMotorSpeedEcap;
+	gOpenLoop_Para.currentBusVoltage = gSysAnalogVar.single.var[updatePower270V_M].value;
+}
+
+void CtrlStrategyCalculation(void)
+{
+	gSpwmPara.CloseLoopDuty = Pid_Process(&gPID_Speed_Para);
+	gSpwmPara.OpenLoopDuty = OpenLoop_Process(&gOpenLoop_Para);
+}
+
 void PFAL_Timer0_ISR(void)
 {
-	static int count_voltage_stable = 0;
 #if (SYS_DEBUG == INCLUDE_FEATURE)
     gtimertest++;
 #endif
@@ -83,29 +192,21 @@ void PFAL_Timer0_ISR(void)
     {
         RESET_CONTROL_TIMER_TIMER_CNT;
 
-        if(gSysAnalogVar.single.var[updatePower270V_M].value > 2090)
-        {
-        	++count_voltage_stable;
-        	if(count_voltage_stable > 20)
-        	{
-        		if(gSysStateFlag.rotateDirectoin == FORWARD)
-        		{
-        			ENABLE_BUSBAR_VOLTAGE;
-        		}
-        	}
+        PwrBusVoltageMonitor();
+        if(IS_SYS_ENABLE_FORWARD_ROTATE && IS_J150_POWER_NOR){
+        	ENABLE_BUSBAR_VOLTAGE;
+
         }
         else{
-        	count_voltage_stable = 0;
         	DISABLE_BUSBAR_VOLTAGE;
         }
-
+        gSciAppProtocolTx_J150.RFU = GpioDataRegs.GPADAT.bit.GPIO7;
         SYS_STATE_MACHINE;
         MotorSpeed();
-        gPID_Speed_Para.currentVal = gEcapPara.gMotorSpeedEcap;
-        gOpenLoop_Para.currentBusVoltage = gSysAnalogVar.single.var[updatePower270V_M].value;
+//        gSciAppProtocolTx_J150.currentSpeed = gEcapPara.gMotorSpeedEcap;
+        updateCtrlStrategyParameters();
+        CtrlStrategyCalculation();
 
-        gSpwmPara.CloseLoopDuty = Pid_Process(&gPID_Speed_Para);
-        gSpwmPara.OpenLoopDuty = OpenLoop_Process(&gOpenLoop_Para);
     }
 
     if (IS_WATCH_DOG_TIMER_EXPIRE)
