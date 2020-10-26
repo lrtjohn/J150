@@ -347,14 +347,6 @@ void Spwm_Output(SPWM_PARA* spwmPara)
 	}
 #endif
 
-	if(gSysStateFlag.sysRunningState != SYS_FORWARD_RUN)
-	{
-		spwmPara->TargetDuty = 0;
-		spwmPara->Duty = 0;
-		Disable_All_Epwms();
-
-	}
-
 #if(SPWM_DUTY_GRADUAL_CHANGE == EXCLUDE_FEATURE)
     spwmPara->Duty = spwmPara->TargetDuty;
 #endif
@@ -387,11 +379,21 @@ void Spwm_Output(SPWM_PARA* spwmPara)
 	}
 #endif
 
+//	gSciAppProtocolTx_J150.RFU = spwmPara->Duty;
+//	gSciAppProtocolTx_J150.RFU = gSysStateFlag.sysRunningState;
+	gSciAppProtocolTx_J150.RFU = gSysStateFlag.alarm.all;
 
+
+	if(IS_SYS_RUNNING_STATE_FORWARD_RUN)
+	{
 #if(PF_PWM_ECAP == INCLUDE_FEATURE)
 	SwitchDirection(spwmPara);
 #endif
-
+	}
+	else{
+		DISABLE_GATE_DRIVER();
+		Disable_All_Epwms();
+	}
 
 
 //    EPMW2_OUTPUT_DUAL_PLOARITY(750, spwmPara->Phase_Duty_W);
@@ -423,5 +425,5 @@ void Init_Spwm_Service(void)
 	gSpwmPara.CloseLoopDuty = 0;
 	gSpwmPara.CurrentHallPosition = 0;
 	gSpwmPara.LastHalllPosition = 0;
-	gSpwmPara.TargetDuty = 100;
+	gSpwmPara.TargetDuty = 0;
 }

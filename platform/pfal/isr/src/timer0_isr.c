@@ -193,15 +193,16 @@ void PFAL_Timer0_ISR(void)
         RESET_CONTROL_TIMER_TIMER_CNT;
 
         PwrBusVoltageMonitor();
-        if(IS_SYS_ENABLE_FORWARD_ROTATE && IS_J150_POWER_NOR){
-        	ENABLE_BUSBAR_VOLTAGE;
 
+        SYS_STATE_MACHINE;
+
+        if(IS_SYS_RUNNING_STATE_FORWARD_RUN && IS_J150_POWER_NOR){
+        	ENABLE_BUSBAR_VOLTAGE;
         }
         else{
         	DISABLE_BUSBAR_VOLTAGE;
         }
-        gSciAppProtocolTx_J150.RFU = GpioDataRegs.GPADAT.bit.GPIO7;
-        SYS_STATE_MACHINE;
+
         MotorSpeed();
 //        gSciAppProtocolTx_J150.currentSpeed = gEcapPara.gMotorSpeedEcap;
         updateCtrlStrategyParameters();

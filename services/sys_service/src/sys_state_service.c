@@ -1,4 +1,6 @@
 #include "sys_state_service.h"
+#include "pwm_hal.h"
+#include "gpio_service.h"
 
 
 SYS_STATE_FLAG gSysStateFlag = 
@@ -30,6 +32,9 @@ void Sys_hlsAlarm(void);
 #define SYS_STATE_MACHINE_INIT        Sys_chstInit()  
 void Sys_hlstInit(void)
 {
+	DISABLE_BUSBAR_VOLTAGE;
+	DISABLE_GATE_DRIVER();
+	Disable_All_Epwms();
     if(IS_SYS_ALARM)
     {
         Sys_chstAlarm();
@@ -47,6 +52,9 @@ void Sys_hlstInit(void)
 
 void Sys_hlsStop(void)
 {
+	DISABLE_BUSBAR_VOLTAGE;
+	DISABLE_GATE_DRIVER();
+	Disable_All_Epwms();
     if(IS_SYS_ALARM)
     {
         Sys_chstAlarm();
@@ -61,7 +69,14 @@ void Sys_hlsStop(void)
 
     if(IS_SYS_ENABLE_FORWARD_ROTATE)
     {
+        if(IS_J150_POWER_NOR){
+        	ENABLE_BUSBAR_VOLTAGE;
+        }
+        else{
+        	DISABLE_BUSBAR_VOLTAGE;
+        }
         Sys_chstForwardRotate();
+
         return;
     }
 
@@ -76,6 +91,8 @@ void Sys_hlstForwardRotate(void)
 {
     if(IS_SYS_ALARM)
     {
+    	DISABLE_GATE_DRIVER();
+    	Disable_All_Epwms();
         Sys_chstAlarm();
         return;
     }
@@ -88,9 +105,13 @@ void Sys_hlstForwardRotate(void)
 
     if(IS_SYS_ENABLE_STOP_ROTATE)
     {
+    	DISABLE_GATE_DRIVER();
+    	Disable_All_Epwms();
     	Sys_chstStop();
     	return;
     }
+    ENABLE_GATE_DRIVER();
+    Enable_All_Epwms();
 }
 
 void Sys_hlstBackwardRotate(void)
@@ -112,6 +133,9 @@ void Sys_hlstBackwardRotate(void)
 
 void Sys_hlsWarning(void)
 {
+	DISABLE_BUSBAR_VOLTAGE;
+	DISABLE_GATE_DRIVER();
+	Disable_All_Epwms();
     if(IS_SYS_ALARM)
     {
         Sys_chstAlarm();
@@ -129,6 +153,9 @@ void Sys_hlsWarning(void)
 
 void Sys_hlsAlarm(void)
 {
+	DISABLE_BUSBAR_VOLTAGE;
+	DISABLE_GATE_DRIVER();
+	Disable_All_Epwms();
     if(IS_SYS_ALARM)
     {
         Sys_chstAlarm();

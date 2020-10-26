@@ -58,7 +58,7 @@ void Init_PID_Service(void)
 void Init_OpenLoop_Service(void)
 {
 	gOpenLoop_Para.currentBusVoltage = 0;
-	gOpenLoop_Para.nominalBusVoltage = 1729;
+	gOpenLoop_Para.nominalBusVoltage = 2585;
 	gOpenLoop_Para.targetSpeed = 0;
 	gOpenLoop_Para.openloop_K = 0.7286;
 	gOpenLoop_Para.openloop_B = -4396.3;

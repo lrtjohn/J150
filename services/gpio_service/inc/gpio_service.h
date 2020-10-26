@@ -24,6 +24,11 @@
                                             GpioDataRegs.GPADAT.bit.GPIO16 = 1;     \
                                             GpioDataRegs.GPACLEAR.bit.GPIO15 = 1;     \
                                         }
+#define DISABLE_GATE_DRIVER()                                            				\
+                                        {                                           \
+                                            GpioDataRegs.GPACLEAR.bit.GPIO16 = 1;     \
+                                            GpioDataRegs.GPADAT.bit.GPIO15 = 1;     \
+                                        }
 #define ENABLE_BUSBAR_VOLTAGE			(GpioDataRegs.GPADAT.bit.GPIO7 = 1)
 #define DISABLE_BUSBAR_VOLTAGE			(GpioDataRegs.GPACLEAR.bit.GPIO7 = 1)
 
@@ -65,7 +70,6 @@
 							while(!IS_VDD5V_PG)					\
 							{									\
 							}									\
-							ENABLE_GATE_DRIVER();				\
 							ENABLE_RS422_DRIVER();				\
 							HARDWARE_OVER_CURRENT_CLEAR();		\
 						}

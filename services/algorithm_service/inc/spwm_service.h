@@ -10,6 +10,7 @@
 #include "pwm_hal.h"
 #include "adc_service.h"
 #include "sci_j150.h"
+#include "gpio_service.h"
 
 #define PWM_DUTY_BASE 750
 

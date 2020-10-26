@@ -160,6 +160,8 @@ typedef struct _SYS_STATE_FLAG
 #define SET_SYS_RUNNING_STATE_ALARM                     (gSysStateFlag.sysRunningState = SYS_ALARM)
 #define SET_SYS_RUNNING_STATE_WARNING                   (gSysStateFlag.sysRunningState = SYS_WARNING)
 
+#define IS_SYS_RUNNING_STATE_FORWARD_RUN               (gSysStateFlag.sysRunningState == SYS_FORWARD_RUN)
+
 #define SET_J150_BIT_CMPLT								(gSysStateFlag.j150SysStatus.bit.BIT_CMPLT = 1)
 #define CLR_J150_BIT_CMPLT								(gSysStateFlag.j150SysStatus.bit.BIT_CMPLT = 0)
 #define SET_J150_POWER_BUS								(gSysStateFlag.j150SysStatus.bit.POWER_BUS = 1)

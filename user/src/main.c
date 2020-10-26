@@ -83,7 +83,7 @@ void main(void)
 //				gTestcount = 0;
 //			}
 //		}
-
+//		gSciAppProtocolTx_J150.currentSpeed = gIsOcCnt;
 		DIGIT_SIG_ROUTING_INSPECTION();
 
 #if(SYS_DEBUG == INCLUDE_FEATURE)
