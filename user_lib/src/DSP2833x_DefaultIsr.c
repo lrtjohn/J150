@@ -28,10 +28,24 @@
 
 interrupt void  TINT0_ISR(void)
 {
+	Uint16 TempPIEIER;//enable pwm interrupt this isr
+	TempPIEIER = PieCtrlRegs.PIEIER3.all;
+	  IER |= 0x004;
+	  IER |= 0x004;
+	  PieCtrlRegs.PIEIER3.all &= 0x0001;
+	  PieCtrlRegs.PIEACK.all = 0xffff;
+	  asm(" NOP");
+	  EINT;
+
+
   PFAL_Timer0_ISR();
 	PieCtrlRegs.PIEACK.all = PIEACK_GROUP1;
 	//CpuTimer0Regs.TCR.bit.TIF = 1;
 	//CpuTimer0Regs.TCR.bit.TRB = 1;
+
+
+	  DINT;
+	  PieCtrlRegs.PIEIER3.all = TempPIEIER;
 }
 // Connected to INT13 of CPU (use MINT13 mask):
 // Note CPU-Timer1 is reserved for TI use, however XINT13
