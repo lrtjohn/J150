@@ -5,6 +5,8 @@
 #include "DSP2833x_Examples.h"   // DSP2833x Examples Include File
 #include "prod.h"
 
+#define MOTOR_POLES (5)
+
 typedef struct _ECAP_PARA
 {
     Uint32 gECapCount;
