@@ -182,6 +182,7 @@ void CtrlStrategyCalculation(void)
 
 void PFAL_Timer0_ISR(void)
 {
+	GpioDataRegs.GPBDAT.bit.GPIO49 = 1;
 #if (SYS_DEBUG == INCLUDE_FEATURE)
     gtimertest++;
 #endif
@@ -195,13 +196,6 @@ void PFAL_Timer0_ISR(void)
         PwrBusVoltageMonitor();
 
         SYS_STATE_MACHINE;
-
-        if(IS_SYS_RUNNING_STATE_FORWARD_RUN && IS_J150_POWER_NOR){
-        	ENABLE_BUSBAR_VOLTAGE;
-        }
-        else{
-        	DISABLE_BUSBAR_VOLTAGE;
-        }
 
         MotorSpeed();
 //        gSciAppProtocolTx_J150.currentSpeed = gEcapPara.gMotorSpeedEcap;
@@ -224,4 +218,6 @@ void PFAL_Timer0_ISR(void)
 
         SCI_TX_PackData(gScibTxQue);
     }
+
+    GpioDataRegs.GPBCLEAR.bit.GPIO49 = 1;
 }

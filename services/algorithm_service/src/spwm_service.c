@@ -304,6 +304,7 @@ void SwitchDirection(SPWM_PARA* spwmPara){
 
 void Spwm_Output(SPWM_PARA* spwmPara)
 {
+	GpioDataRegs.GPBDAT.bit.GPIO50 = 1;
 	updateAndCheckVoltage();
 //	spwmPara->TargetDuty = spwmPara->OpenLoopDuty;
 //	spwmPara->TargetDuty = gDebugDataArray[0];
@@ -403,7 +404,7 @@ void Spwm_Output(SPWM_PARA* spwmPara)
 //    EPMW1_OUTPUT_DUAL_PLOARITY(750, gtest2[0]);
 //    EPMW4_OUTPUT_DUAL_PLOARITY(750, gtest2[1]);
 //    EPMW5_OUTPUT_DUAL_PLOARITY(750, gtest2[2]);
-
+	GpioDataRegs.GPBCLEAR.bit.GPIO50 = 1;
 }
 
 void Init_Spwm_Service(void)

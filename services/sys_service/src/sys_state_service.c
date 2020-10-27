@@ -111,7 +111,6 @@ void Sys_hlstForwardRotate(void)
     	return;
     }
     ENABLE_GATE_DRIVER();
-    Enable_All_Epwms();
 }
 
 void Sys_hlstBackwardRotate(void)
