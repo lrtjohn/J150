@@ -199,6 +199,7 @@ void PFAL_Timer0_ISR(void)
 
         MotorSpeed();
 //        gSciAppProtocolTx_J150.currentSpeed = gEcapPara.gMotorSpeedEcap;
+//        gSciAppProtocolTx_J150.currentSpeed = gSysAnalogVar.single.var[updatePower270V_M].value;
         updateCtrlStrategyParameters();
         CtrlStrategyCalculation();
 
@@ -212,12 +213,12 @@ void PFAL_Timer0_ISR(void)
 //	    TOOGLE_DRIVE_BOARD_WATCHDOG;
     }
 
-    if (IS_SCI_TX_TIMER_EXPIRE)
-    {
-        RESET_SCI_TX_TIMER_CNT;
-
-        SCI_TX_PackData(gScibTxQue);
-    }
+//    if (IS_SCI_TX_TIMER_EXPIRE)
+//    {
+//        RESET_SCI_TX_TIMER_CNT;
+//
+//        SCI_TX_PackData(gScibTxQue);
+//    }
 
     GpioDataRegs.GPBCLEAR.bit.GPIO49 = 1;
 }

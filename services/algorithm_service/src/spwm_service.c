@@ -384,7 +384,6 @@ void Spwm_Output(SPWM_PARA* spwmPara)
 //	gSciAppProtocolTx_J150.RFU = gSysStateFlag.sysRunningState;
 	gSciAppProtocolTx_J150.RFU = gSysStateFlag.alarm.all;
 
-
 	if(IS_SYS_RUNNING_STATE_FORWARD_RUN)
 	{
 #if(PF_PWM_ECAP == INCLUDE_FEATURE)

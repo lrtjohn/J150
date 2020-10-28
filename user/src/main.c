@@ -107,6 +107,5 @@ void main(void)
 		}
 #endif
 
-        CheckEnableScibTx(gScibTxQue);
 	}
 }
