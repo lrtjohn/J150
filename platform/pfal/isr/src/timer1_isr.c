@@ -10,9 +10,16 @@ int gtimer1test = 0;
 
 void PFAL_Timer1_ISR(void)
 {
+	GpioDataRegs.GPBDAT.bit.GPIO59 = 1;
 #if(SYS_DEBUG == INCLUDE_FEATURE)
     gtimer1test++;
 #endif
+
+	/*DEBUG START*/
+//	gSciAppProtocolTx_J150.RFU = spwmPara->Duty;
+//	gSciAppProtocolTx_J150.RFU = gSysStateFlag.sysRunningState;
+    gSciAppProtocolTx_J150.RFU = gSysStateFlag.alarm.all;
+	/*DEBUG END*/
 
     SCI_TX_PackData(gScibTxQue);
 
@@ -22,5 +29,5 @@ void PFAL_Timer1_ISR(void)
 //		gEcapPara.gMotorSpeedEcap = CalculateSpeed(gEcapPara.gECapCount);
 //		gEcapPara.isEcapRefresh = 0;
 //  	}
-
+    GpioDataRegs.GPBCLEAR.bit.GPIO59 = 1;
 }

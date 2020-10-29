@@ -29,10 +29,14 @@
 interrupt void  TINT0_ISR(void)
 {
 	Uint16 TempPIEIER;//enable pwm interrupt this isr
+	Uint16 TempPIEIER2;//enable ecap interrupt this isr
 	TempPIEIER = PieCtrlRegs.PIEIER3.all;
-	  IER |= 0x004;
-	  IER |= 0x004;
-	  PieCtrlRegs.PIEIER3.all &= 0x0001;
+	TempPIEIER2 = PieCtrlRegs.PIEIER4.all;
+	IER |= 0x00C;
+	IER &= 0x00C;
+	PieCtrlRegs.PIEIER3.all &= 0x0001;
+	PieCtrlRegs.PIEIER4.all &= 0x000E;
+
 	  PieCtrlRegs.PIEACK.all = 0xffff;
 	  asm(" NOP");
 	  EINT;
@@ -46,13 +50,39 @@ interrupt void  TINT0_ISR(void)
 
 	  DINT;
 	  PieCtrlRegs.PIEIER3.all = TempPIEIER;
+	  PieCtrlRegs.PIEIER4.all = TempPIEIER2;
 }
 // Connected to INT13 of CPU (use MINT13 mask):
 // Note CPU-Timer1 is reserved for TI use, however XINT13
 // ISR can be used by the user.
 interrupt void INT13_ISR(void)     // INT13 or CPU-Timer1
 {
+	Uint16 TempPIEIER;//enable pwm interrupt this isr
+	Uint16 TempPIEIER2;//enable ecap interrupt this isr
+	Uint16 TempPIEIER3;//enable 5ms timer0 interrupt this isr
+	Uint16 TempPIEIER4;//enable scirx interrupt this isr
+	TempPIEIER = PieCtrlRegs.PIEIER3.all;
+	TempPIEIER2 = PieCtrlRegs.PIEIER4.all;
+	TempPIEIER3 = PieCtrlRegs.PIEIER1.all;
+	TempPIEIER4 = PieCtrlRegs.PIEIER9.all;
+	IER |= 0x10D;
+	IER &= 0x10D;
+	PieCtrlRegs.PIEIER3.all &= 0x0001;
+	PieCtrlRegs.PIEIER4.all &= 0x000E;
+	PieCtrlRegs.PIEIER1.all &= 0x0040;
+	PieCtrlRegs.PIEIER9.all &= 0x0004;
+
+	  PieCtrlRegs.PIEACK.all = 0xffff;
+	  asm(" NOP");
+	  EINT;
+
   PFAL_Timer1_ISR();
+
+  DINT;
+  PieCtrlRegs.PIEIER3.all = TempPIEIER;
+  PieCtrlRegs.PIEIER4.all = TempPIEIER2;
+  PieCtrlRegs.PIEIER1.all = TempPIEIER3;
+  PieCtrlRegs.PIEIER9.all = TempPIEIER4;
 }
 
 // Note CPU-Timer2 is reserved for TI use.
@@ -443,9 +473,22 @@ interrupt void EPWM6_TZINT_ISR(void)   // EPWM-6
 // INT 3.1
 interrupt void EPWM1_INT_ISR(void)     // EPWM-1
 {
+	Uint16 TempPIEIER;//enable ecap interrupt this isr
+	TempPIEIER = PieCtrlRegs.PIEIER4.all;
+	IER |= 0x008;
+	IER &= 0x008;
+	PieCtrlRegs.PIEIER4.all &= 0x000E;
+
+	  PieCtrlRegs.PIEACK.all = 0xffff;
+	  asm(" NOP");
+	  EINT;
+
   PFAL_PWM_ISR();
 	EPwm1Regs.ETCLR.bit.INT = 1;
 	PieCtrlRegs.PIEACK.all = PIEACK_GROUP3;
+
+	  DINT;
+	  PieCtrlRegs.PIEIER4.all = TempPIEIER;
 
 }
 
@@ -943,22 +986,67 @@ interrupt void SCITXINTA_ISR(void)     // SCI-A
 
 }
 
-
 // INT9.3
 interrupt void SCIRXINTB_ISR(void)
 {
+	Uint16 TempPIEIER;//enable pwm interrupt this isr
+	Uint16 TempPIEIER2;//enable ecap interrupt this isr
+	Uint16 TempPIEIER3;//enable 5ms timer0 interrupt this isr
+	TempPIEIER = PieCtrlRegs.PIEIER3.all;
+	TempPIEIER2 = PieCtrlRegs.PIEIER4.all;
+	TempPIEIER3 = PieCtrlRegs.PIEIER1.all;
+	IER |= 0x00D;
+	IER &= 0x00D;
+	PieCtrlRegs.PIEIER3.all &= 0x0001;
+	PieCtrlRegs.PIEIER4.all &= 0x000E;
+	PieCtrlRegs.PIEIER1.all &= 0x0040;
+
+	  PieCtrlRegs.PIEACK.all = 0xffff;
+	  asm(" NOP");
+	  EINT;
+
     PFAL_SCIB_RX_ISR();
 	ScibRegs.SCIFFRX.bit.RXFFINTCLR = 1;
 	PieCtrlRegs.PIEACK.all = PIEACK_GROUP9;
-}
 
+	  DINT;
+	  PieCtrlRegs.PIEIER3.all = TempPIEIER;
+	  PieCtrlRegs.PIEIER4.all = TempPIEIER2;
+	  PieCtrlRegs.PIEIER1.all = TempPIEIER3;
+}
 
 // INT9.4
 interrupt void SCITXINTB_ISR(void)     // SCI-B
 {
+	Uint16 TempPIEIER;//enable pwm interrupt this isr
+	Uint16 TempPIEIER2;//enable ecap interrupt this isr
+	Uint16 TempPIEIER3;//enable 5ms timer0 interrupt this isr
+	Uint16 TempPIEIER4;//enable scirx interrupt this isr
+
+	TempPIEIER = PieCtrlRegs.PIEIER3.all;
+	TempPIEIER2 = PieCtrlRegs.PIEIER4.all;
+	TempPIEIER3 = PieCtrlRegs.PIEIER1.all;
+	TempPIEIER4 = PieCtrlRegs.PIEIER9.all;
+	IER |= 0x10D;
+	IER &= 0x10D;
+	PieCtrlRegs.PIEIER3.all &= 0x0001;
+	PieCtrlRegs.PIEIER4.all &= 0x000E;
+	PieCtrlRegs.PIEIER1.all &= 0x0040;
+	PieCtrlRegs.PIEIER9.all &= 0x0004;
+
+	  PieCtrlRegs.PIEACK.all = 0xffff;
+	  asm(" NOP");
+	  EINT;
+
   PFAL_SCIB_TX_ISR();
 	ScibRegs.SCIFFTX.bit.TXFFINTCLR = 1;
 	PieCtrlRegs.PIEACK.all = PIEACK_GROUP9;
+
+	DINT;
+	PieCtrlRegs.PIEIER3.all = TempPIEIER;
+	PieCtrlRegs.PIEIER4.all = TempPIEIER2;
+	PieCtrlRegs.PIEIER1.all = TempPIEIER3;
+	PieCtrlRegs.PIEIER9.all = TempPIEIER4;
 }
 
 // INT9.5

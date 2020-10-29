@@ -300,28 +300,15 @@ void SwitchDirection(SPWM_PARA* spwmPara){
     }
 }
 
-
-
-void Spwm_Output(SPWM_PARA* spwmPara)
-{
-	GpioDataRegs.GPBDAT.bit.GPIO50 = 1;
-	updateAndCheckVoltage();
-//	spwmPara->TargetDuty = spwmPara->OpenLoopDuty;
-//	spwmPara->TargetDuty = gDebugDataArray[0];
-//	spwmPara->TargetDuty = spwmPara->CloseLoopDuty;
-#if(SPWM_DUTY_GRADUAL_CHANGE == INCLUDE_FEATURE)
-	++(spwmPara->DutyAddIntervalCnt);
+void Calculate_Duty (SPWM_PARA* spwmPara){
+	/*占空比缓变开始*/
+	++(spwmPara->DutyAddIntervalCnt); /*缓变频数计数*/
 	if(spwmPara->DutyAddIntervalCnt >= spwmPara->DutyAddInterval){
 
 	spwmPara->DutyAddIntervalCnt = 0;
 
 	if(spwmPara->Duty_Gradual > spwmPara->TargetDuty){
-		if((spwmPara->Duty_Gradual - spwmPara->Ddtmax) < spwmPara->TargetDuty){
 			spwmPara->Duty_Gradual = spwmPara->TargetDuty;
-		}
-		else{
-			spwmPara->Duty_Gradual = spwmPara->Duty_Gradual - spwmPara->Ddtmax;
-		}
     }
     else if(spwmPara->Duty_Gradual < spwmPara->TargetDuty){
     	if((spwmPara->Duty_Gradual + spwmPara->Ddtmax) > spwmPara->TargetDuty){
@@ -335,75 +322,48 @@ void Spwm_Output(SPWM_PARA* spwmPara)
            //nothing need change
     }
 
-   	if(spwmPara->Duty_Gradual > spwmPara->ThresholdDutyP)
-	{
-    	spwmPara->Duty_Gradual = spwmPara->ThresholdDutyP;
-   	}
-   	else if(spwmPara->Duty_Gradual < spwmPara->ThresholdDutyN)
-	{
-       	spwmPara->Duty_Gradual = spwmPara->ThresholdDutyN;
-   	}
+   	if(spwmPara->Duty_Gradual > spwmPara->ThresholdDutyP) spwmPara->Duty_Gradual = spwmPara->ThresholdDutyP;
+   	else if(spwmPara->Duty_Gradual < spwmPara->ThresholdDutyN) spwmPara->Duty_Gradual = spwmPara->ThresholdDutyN;
 
 	spwmPara->Duty = spwmPara->Duty_Gradual;
 	}
-#endif
+}
 
-#if(SPWM_DUTY_GRADUAL_CHANGE == EXCLUDE_FEATURE)
-    spwmPara->Duty = spwmPara->TargetDuty;
-#endif
+void Spwm_Output(SPWM_PARA* spwmPara) /*PWM中断函数*/
+{
+	spwmPara->pwmSM = (PWM_RUNNING_STATE)gSysStateFlag.sysRunningState;
+	GpioDataRegs.GPBDAT.bit.GPIO50 = 1; /*线程监视*/
+	updateAndCheckVoltage(); /*快速AD保护检测， 补电流是否报警修改状态*/
 
-#if(PF_PWM_RVDT == INCLUDE_FEATURE)
-    spwmPara->Rvdt_Current_Pos = Get_RVDT_Position(SDB_RVDT_Read_Addr);
+	switch(spwmPara->pwmSM){
+	case PWM_INIT:
 
-    spwmPara->Rvdt_Pos = spwmPara->Rvdt_Current_Pos - spwmPara->Rvdt_Zero;
-
-	if(spwmPara->Rvdt_Pos < 0)
-	{
-		spwmPara->Rvdt_Pos += 4096;
-	}
-	else if(spwmPara->Rvdt_Pos > 4095)
-	{
-		spwmPara->Rvdt_Pos -= 4096;
-	}
-	else
-	{
-        //TODO generate alarm
-    }
-
-	if(gSwitch)
-	{
-		Calculate_Three_Phase_Duty(spwmPara);
-	}
-	else
-	{
-		Disable_All_Epwms();
-	}
-#endif
-
-//	gSciAppProtocolTx_J150.RFU = spwmPara->Duty;
-//	gSciAppProtocolTx_J150.RFU = gSysStateFlag.sysRunningState;
-	gSciAppProtocolTx_J150.RFU = gSysStateFlag.alarm.all;
-
-	if(IS_SYS_RUNNING_STATE_FORWARD_RUN)
-	{
-#if(PF_PWM_ECAP == INCLUDE_FEATURE)
-	SwitchDirection(spwmPara);
-#endif
-	}
-	else{
+		break;
+	case PWM_FORWARD_RUN:
+		Calculate_Duty(spwmPara);
+		ENABLE_GATE_DRIVER();
+		SwitchDirection(spwmPara);
+		break;
+	case PWM_STOP:
 		DISABLE_GATE_DRIVER();
 		Disable_All_Epwms();
+		break;
+	case PWM_ALARM:
+		DISABLE_GATE_DRIVER();
+		Disable_All_Epwms();
+		break;
+	default:
+
+		break;
 	}
 
+	/*DEBUG START*/
+//	spwmPara->TargetDuty = spwmPara->OpenLoopDuty;
+//	spwmPara->TargetDuty = gDebugDataArray[0];
+//	spwmPara->TargetDuty = spwmPara->CloseLoopDuty;
+	/*DEBUG END*/
 
-//    EPMW2_OUTPUT_DUAL_PLOARITY(750, spwmPara->Phase_Duty_W);
-//    EPMW3_OUTPUT_DUAL_PLOARITY(750, spwmPara->Phase_Duty_V);
-//    EPMW6_OUTPUT_DUAL_PLOARITY(750, spwmPara->Phase_Duty_U);
-
-//    EPMW1_OUTPUT_DUAL_PLOARITY(750, gtest2[0]);
-//    EPMW4_OUTPUT_DUAL_PLOARITY(750, gtest2[1]);
-//    EPMW5_OUTPUT_DUAL_PLOARITY(750, gtest2[2]);
-	GpioDataRegs.GPBCLEAR.bit.GPIO50 = 1;
+	GpioDataRegs.GPBCLEAR.bit.GPIO50 = 1; /*线程监视*/
 }
 
 void Init_Spwm_Service(void)
@@ -426,4 +386,5 @@ void Init_Spwm_Service(void)
 	gSpwmPara.CurrentHallPosition = 0;
 	gSpwmPara.LastHalllPosition = 0;
 	gSpwmPara.TargetDuty = 0;
+	gSpwmPara.pwmSM = PWM_INIT;
 }

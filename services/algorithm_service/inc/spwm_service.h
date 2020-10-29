@@ -14,6 +14,13 @@
 
 #define PWM_DUTY_BASE 750
 
+typedef enum _PWM_RUNNING_STATE
+{
+    PWM_INIT,
+    PWM_FORWARD_RUN,
+    PWM_STOP,
+    PWM_ALARM
+}PWM_RUNNING_STATE;
 
 typedef struct _SPWM_PARA
 {
@@ -35,6 +42,7 @@ typedef struct _SPWM_PARA
     int16 CloseLoopDuty;
     Uint16 CurrentHallPosition;
     Uint16 LastHalllPosition;
+    PWM_RUNNING_STATE pwmSM;
 }SPWM_PARA;
 
 Uint16 GetCurrentHallValue(void);

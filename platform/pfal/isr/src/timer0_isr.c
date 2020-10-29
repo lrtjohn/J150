@@ -18,29 +18,16 @@ int gtimertest = 0;
 #define TIME_SCI_TX_INTERVAL            (20 / TIME_BASE_INTERVAL)
 #define TIME_FEED_WATCH_DOG_INTERVAL    (60 / TIME_BASE_INTERVAL)
 
-#define UPDATE_TIMER_COUNT(){                                       \
-                                gTimerCnt.controlCnt++;             \
-                                gTimerCnt.sciTxCnt++;               \
-                                gTimerCnt.watchDogCnt++;            \
-                            }
+#define UPDATE_WATCHDOG_TIMER_COUNT				(gTimerCnt.watchDogCnt++)
 
 #define IS_WATCH_DOG_TIMER_EXPIRE       (gTimerCnt.watchDogCnt >= gTimerCnt.WatchDogCntThreshold)
-#define IS_SCI_TX_TIMER_EXPIRE          (gTimerCnt.sciTxCnt >= gTimerCnt.sciTxCntTreshold)
-#define IS_CONTROL_TIMER_TIMER_EXPIRE   (gTimerCnt.controlCnt >= gTimerCnt.controlCntTreshold)
-
 
 #define RESET_WATCH_DOG_TIMER_CNT       (gTimerCnt.watchDogCnt = 0)
-#define RESET_SCI_TX_TIMER_CNT          (gTimerCnt.sciTxCnt  = 0)
-#define RESET_CONTROL_TIMER_TIMER_CNT   (gTimerCnt.controlCnt = 0)
 
 TIMER_INTERVAL_CNT gTimerCnt = 
 {
     0,      // watch dog
-    12,     // watch dog threshold
-    0,      // control 
-    1,      // control threshold
-    0,      // sci tx 
-    20       // sci tx threshold
+    12     // watch dog threshold
 };
 
 PWRBUS_VLTGE_QUE* pwrBus_Vltge_Que = NULL;
@@ -178,47 +165,37 @@ void CtrlStrategyCalculation(void)
 {
 	gSpwmPara.CloseLoopDuty = Pid_Process(&gPID_Speed_Para);
 	gSpwmPara.OpenLoopDuty = OpenLoop_Process(&gOpenLoop_Para);
+	gSpwmPara.TargetDuty = gSpwmPara.CloseLoopDuty + gSpwmPara.OpenLoopDuty;
 }
 
 void PFAL_Timer0_ISR(void)
 {
-	GpioDataRegs.GPBDAT.bit.GPIO49 = 1;
+	GpioDataRegs.GPBDAT.bit.GPIO49 = 1; /*进程监视用*/
 #if (SYS_DEBUG == INCLUDE_FEATURE)
     gtimertest++;
 #endif
 
-    UPDATE_TIMER_COUNT();
+    UPDATE_WATCHDOG_TIMER_COUNT; /*5ms中断内部看门狗喂狗计数器累加*/
 
-    if (IS_CONTROL_TIMER_TIMER_EXPIRE)
-    {
-        RESET_CONTROL_TIMER_TIMER_CNT;
+	PwrBusVoltageMonitor(); /*母线电压监控*/
 
-        PwrBusVoltageMonitor();
+	SYS_STATE_MACHINE; /*状态机管理*/
 
-        SYS_STATE_MACHINE;
+	MotorSpeed(); /*计算反馈转速并进行卡尔曼滤波*/
 
-        MotorSpeed();
+	/*DEBUG START*/
 //        gSciAppProtocolTx_J150.currentSpeed = gEcapPara.gMotorSpeedEcap;
 //        gSciAppProtocolTx_J150.currentSpeed = gSysAnalogVar.single.var[updatePower270V_M].value;
-        updateCtrlStrategyParameters();
-        CtrlStrategyCalculation();
-
-    }
+	/*DEBUG END*/
+	updateCtrlStrategyParameters(); /*开闭环用反馈转速，反馈电压更新*/
+	CtrlStrategyCalculation(); /*计算开环，闭环占空比，并赋值目标占空比*/
 
     if (IS_WATCH_DOG_TIMER_EXPIRE)
     {
         RESET_WATCH_DOG_TIMER_CNT;
 
         TOOGLE_CTL_BOARD_WATCHDOG;
-//	    TOOGLE_DRIVE_BOARD_WATCHDOG;
     }
 
-//    if (IS_SCI_TX_TIMER_EXPIRE)
-//    {
-//        RESET_SCI_TX_TIMER_CNT;
-//
-//        SCI_TX_PackData(gScibTxQue);
-//    }
-
-    GpioDataRegs.GPBCLEAR.bit.GPIO49 = 1;
+    GpioDataRegs.GPBCLEAR.bit.GPIO49 = 1; /*进程监视用*/
 }

@@ -9,10 +9,6 @@ typedef struct _TIMER_INTERVAL_CNT
 {
     Uint16 watchDogCnt;
     Uint16 WatchDogCntThreshold;
-    Uint16 controlCnt;
-    Uint16 controlCntTreshold;
-    Uint16 sciTxCnt;
-    Uint16 sciTxCntTreshold;
 }TIMER_INTERVAL_CNT;
 
 #define PWRBUS_BUILTUP_TIMES (20)

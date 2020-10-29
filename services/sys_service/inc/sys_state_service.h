@@ -109,26 +109,19 @@ typedef union
 	ALARM_16BIT     bit;
 }SYSALARM;
 
-
-
 typedef enum _ROTATE_DIRECTION
 {
     STOP,
-    FORWARD,
-    BACKWARD
+    FORWARD
 }ROTATE_DIRECTION;
 
 typedef enum _SYS_RUNNING_STATE
 {
     SYS_INIT,
     SYS_FORWARD_RUN,
-    SYS_BACKWARD_RUN,
     SYS_STOP,
-    SYS_ALARM,
-    SYS_WARNING
-    
+    SYS_ALARM
 }SYS_RUNNING_STATE;
-
 
 typedef union
 {
@@ -155,12 +148,10 @@ typedef struct _SYS_STATE_FLAG
 
 #define SET_SYS_RUNNING_STATE_INIT                      (gSysStateFlag.sysRunningState = SYS_INIT)
 #define SET_SYS_RUNNING_STATE_FORWARD_RUN               (gSysStateFlag.sysRunningState = SYS_FORWARD_RUN)
-#define SET_SYS_RUNNING_STATE_BACKWARD_RUN              (gSysStateFlag.sysRunningState = SYS_BACKWARD_RUN)
 #define SET_SYS_RUNNING_STATE_STOP                      (gSysStateFlag.sysRunningState = SYS_STOP)
 #define SET_SYS_RUNNING_STATE_ALARM                     (gSysStateFlag.sysRunningState = SYS_ALARM)
-#define SET_SYS_RUNNING_STATE_WARNING                   (gSysStateFlag.sysRunningState = SYS_WARNING)
 
-#define IS_SYS_RUNNING_STATE_FORWARD_RUN               (gSysStateFlag.sysRunningState == SYS_FORWARD_RUN)
+#define IS_SYS_RUNNING_STATE_FORWARD_RUN                (gSysStateFlag.sysRunningState == SYS_FORWARD_RUN)
 
 #define SET_J150_BIT_CMPLT								(gSysStateFlag.j150SysStatus.bit.BIT_CMPLT = 1)
 #define CLR_J150_BIT_CMPLT								(gSysStateFlag.j150SysStatus.bit.BIT_CMPLT = 0)
@@ -196,8 +187,8 @@ typedef struct _SYS_STATE_FLAG
 #define CLEAR_SYS_WARNING                               (gSysStateFlag.warning.all = 0)
 #define CLEAR_SYS_ERROR                                 (gSysStateFlag.error.all = 0)
 
-#define INIT_SYS_RUNNING_STATE                           (gSysStateFlag.sysRunningState = SYS_INIT)
-#define INIT_SYS_ROTATE_DIRECTION                        (gSysStateFlag.rotateDirectoin = STOP)
+#define INIT_SYS_RUNNING_STATE                          (gSysStateFlag.sysRunningState = SYS_INIT)
+#define INIT_SYS_ROTATE_DIRECTION                       (gSysStateFlag.rotateDirectoin = STOP)
 
 
 
@@ -215,13 +206,13 @@ typedef struct _SYS_STATE_FLAG
 #define CLEAR_SYS_TEMPERATURE_ALARM                     (gSysStateFlag.alarm.bit.temperature = 0)
 #define IS_SYS_TEMPERATURE_ALARM                        (gSysStateFlag.alarm.bit.temperature | TEMPERATURE_ALARM_MASK)
 
-#define SET_SYS_BUS_OVER_VOLTAGE_ALARM                       (gSysStateFlag.alarm.bit.busOV = 1)
-#define CLEAR_SYS_BUS_OVER_VOLTAGE_ALARM                     (gSysStateFlag.alarm.bit.busOV = 0)
-#define IS_SYS_BUS_OVER_VOLTAGE_ALARM                        (gSysStateFlag.alarm.bit.busOV | BUS_VOLTAGE_ALARM_MASK)
+#define SET_SYS_BUS_OVER_VOLTAGE_ALARM                  (gSysStateFlag.alarm.bit.busOV = 1)
+#define CLEAR_SYS_BUS_OVER_VOLTAGE_ALARM                (gSysStateFlag.alarm.bit.busOV = 0)
+#define IS_SYS_BUS_OVER_VOLTAGE_ALARM                   (gSysStateFlag.alarm.bit.busOV | BUS_VOLTAGE_ALARM_MASK)
 
-#define SET_SYS_BUS_UNDER_VOLTAGE_ALARM                       (gSysStateFlag.alarm.bit.busUV = 1)
-#define CLEAR_SYS_BUS_UNDER_VOLTAGE_ALARM                     (gSysStateFlag.alarm.bit.busUV = 0)
-#define IS_SYS_BUS_UNDER_VOLTAGE_ALARM                        (gSysStateFlag.alarm.bit.busUV | BUS_VOLTAGE_ALARM_MASK)
+#define SET_SYS_BUS_UNDER_VOLTAGE_ALARM                 (gSysStateFlag.alarm.bit.busUV = 1)
+#define CLEAR_SYS_BUS_UNDER_VOLTAGE_ALARM               (gSysStateFlag.alarm.bit.busUV = 0)
+#define IS_SYS_BUS_UNDER_VOLTAGE_ALARM                  (gSysStateFlag.alarm.bit.busUV | BUS_VOLTAGE_ALARM_MASK)
 
 
 #define SET_SYS_BUS_CURRENT_ALARM                       (gSysStateFlag.alarm.bit.busCurrent = 1)
@@ -233,9 +224,9 @@ typedef struct _SYS_STATE_FLAG
 #define CLEAR_SYS_HARDWARE_ALARM                        (gSysStateFlag.alarm.bit.hardware = 0)
 #define IS_SYS_HARDWARE_ALARM                           (gSysStateFlag.alarm.bit.hardware | HARDWARE_ALARM_MASK)
 
-#define SET_SYS_PG_VCC5V_ALARM                         (gSysStateFlag.alarm.bit.pgVcc5V = 1)
-#define CLEAR_SYS_PG_VCC5V_ALARM                       (gSysStateFlag.alarm.bit.pgVcc5V = 0)
-#define IS_SYS_PG_VCC5V_ALARM                          (gSysStateFlag.alarm.bit.pgVcc5V | POWER_GOOD_VCC5V_MASK)
+#define SET_SYS_PG_VCC5V_ALARM                          (gSysStateFlag.alarm.bit.pgVcc5V = 1)
+#define CLEAR_SYS_PG_VCC5V_ALARM                        (gSysStateFlag.alarm.bit.pgVcc5V = 0)
+#define IS_SYS_PG_VCC5V_ALARM                           (gSysStateFlag.alarm.bit.pgVcc5V | POWER_GOOD_VCC5V_MASK)
 
 #define SET_SYS_PG_1V9_ALARM                            (gSysStateFlag.alarm.bit.pg1v9 = 1)
 #define CLEAR_SYS_PG_1V9_ALARM                          (gSysStateFlag.alarm.bit.pg1v9 = 0)

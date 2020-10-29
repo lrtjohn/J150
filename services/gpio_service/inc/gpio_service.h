@@ -19,23 +19,25 @@
 */
 #define TOOGLE_CTL_BOARD_WATCHDOG		(GpioDataRegs.GPBTOGGLE.bit.GPIO51 = 1)
 //#define TOOGLE_DRIVE_BOARD_WATCHDOG		(GpioDataRegs.GPCTOGGLE.bit.GPIO85 = 1)
-#define ENABLE_GATE_DRIVER()                                            				\
+#define ENABLE_GATE_DRIVER()                                            		    \
                                         {                                           \
                                             GpioDataRegs.GPADAT.bit.GPIO16 = 1;     \
-                                            GpioDataRegs.GPACLEAR.bit.GPIO15 = 1;     \
+                                            GpioDataRegs.GPACLEAR.bit.GPIO15 = 1;   \
                                         }
-#define DISABLE_GATE_DRIVER()                                            				\
+#define DISABLE_GATE_DRIVER()                                            		    \
                                         {                                           \
-                                            GpioDataRegs.GPACLEAR.bit.GPIO16 = 1;     \
+                                            GpioDataRegs.GPACLEAR.bit.GPIO16 = 1;   \
                                             GpioDataRegs.GPADAT.bit.GPIO15 = 1;     \
                                         }
 #define ENABLE_BUSBAR_VOLTAGE			(GpioDataRegs.GPADAT.bit.GPIO7 = 1)
 #define DISABLE_BUSBAR_VOLTAGE			(GpioDataRegs.GPACLEAR.bit.GPIO7 = 1)
 
+#define DISABLE_SW_BREAK			(GpioDataRegs.GPACLEAR.bit.GPIO9 = 1)
+
 #define ENABLE_RS422_DRIVER()                                            			\
                                         {                                           \
                                             GpioDataRegs.GPCDAT.bit.GPIO77 = 1;     \
-                                            GpioDataRegs.GPCCLEAR.bit.GPIO78 = 1;     \
+                                            GpioDataRegs.GPCCLEAR.bit.GPIO78 = 1;   \
                                         }
 
 #define IS_VCC3V3_PG                    (GpioDataRegs.GPBDAT.bit.GPIO43 == 1)
@@ -58,10 +60,10 @@
                             }                           \
                         }
 
-#define HARDWARE_OVER_CURRENT_CLEAR()                                             \
+#define HARDWARE_OVER_CURRENT_CLEAR()                                               \
                                         {                                           \
-                                            GpioDataRegs.GPACLEAR.bit.GPIO12 = 1;     \
-                                            DELAY_NOPS(1000);                          \
+                                            GpioDataRegs.GPACLEAR.bit.GPIO12 = 1;   \
+                                            DELAY_NOPS(1000);                       \
                                             GpioDataRegs.GPADAT.bit.GPIO12 = 1;     \
                                         }
 
@@ -76,11 +78,11 @@
 
 #define DIGIT_SIG_ROUTING_INSPECTION()                                              \
                                         {                                           \
-                                            if(!IS_VCC5V_PG)                       \
+                                            if(!IS_VCC5V_PG)                        \
                                             {                                       \
-                                                SET_SYS_PG_VCC5V_ALARM;            \
+                                                SET_SYS_PG_VCC5V_ALARM;             \
                                             }                                       \
-                                            if(!IS_VCC1V9_PG)                          \
+                                            if(!IS_VCC1V9_PG)                       \
                                             {                                       \
                                                 SET_SYS_PG_1V9_ALARM;               \
                                             }                                       \
@@ -88,7 +90,7 @@
                                             {                                       \
                                                 SET_SYS_PG_VCC3V3_ALARM;            \
                                             }                                       \
-											if(!IS_HARDWARE_OC)                       		\
+											if(!IS_HARDWARE_OC)                     \
                                             {                                       \
                                                 SET_SYS_BUS_CURRENT_ALARM;          \
                                             }                                       \
