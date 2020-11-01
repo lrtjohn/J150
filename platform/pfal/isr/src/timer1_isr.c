@@ -18,7 +18,8 @@ void PFAL_Timer1_ISR(void)
 	/*DEBUG START*/
 //	gSciAppProtocolTx_J150.RFU = spwmPara->Duty;
 //	gSciAppProtocolTx_J150.RFU = gSysStateFlag.sysRunningState;
-    gSciAppProtocolTx_J150.RFU = gSysStateFlag.alarm.all;
+    //gSciAppProtocolTx_J150.RFU = gSysStateFlag.alarm.all;
+    gSciAppProtocolTx_J150.RFU = 88;
 	/*DEBUG END*/
 
     SCI_TX_PackData(gScibTxQue);
