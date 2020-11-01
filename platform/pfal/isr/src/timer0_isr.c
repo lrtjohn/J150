@@ -18,7 +18,7 @@ int gtimertest = 0;
 #define TIME_SCI_TX_INTERVAL            (20 / TIME_BASE_INTERVAL)
 #define TIME_FEED_WATCH_DOG_INTERVAL    (60 / TIME_BASE_INTERVAL)
 
-#define UPDATE_WATCHDOG_TIMER_COUNT				(gTimerCnt.watchDogCnt++)
+#define UPDATE_WATCHDOG_TIMER_COUNT		(gTimerCnt.watchDogCnt++)				
 
 #define IS_WATCH_DOG_TIMER_EXPIRE       (gTimerCnt.watchDogCnt >= gTimerCnt.WatchDogCntThreshold)
 
@@ -27,7 +27,10 @@ int gtimertest = 0;
 TIMER_INTERVAL_CNT gTimerCnt = 
 {
     0,      // watch dog
-    12     // watch dog threshold
+    12,     // watch dog threshold
+	0,
+	0,
+	0
 };
 
 PWRBUS_VLTGE_QUE* pwrBus_Vltge_Que = NULL;
@@ -188,7 +191,7 @@ void PFAL_Timer0_ISR(void)
 //        gSciAppProtocolTx_J150.currentSpeed = gSysAnalogVar.single.var[updatePower270V_M].value;
 	/*DEBUG END*/
 	updateCtrlStrategyParameters(); /*开闭环用反馈转速，反馈电压更新*/
-	CtrlStrategyCalculation(); /*计算开环，闭环占空比，并赋值目标占空比*/
+//	CtrlStrategyCalculation(); /*计算开环，闭环占空比，并赋值目标占空比*/
 
     if (IS_WATCH_DOG_TIMER_EXPIRE)
     {

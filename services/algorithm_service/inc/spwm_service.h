@@ -42,11 +42,17 @@ typedef struct _SPWM_PARA
     int16 CloseLoopDuty;
     Uint16 CurrentHallPosition;
     Uint16 LastHalllPosition;
-    PWM_RUNNING_STATE pwmSM;
+    SYS_RUNNING_STATE pwmSM;
+    Uint16 restrictduty;
+    Uint16 Cnt_PWM_Init_BIT;
 }SPWM_PARA;
 
 Uint16 GetCurrentHallValue(void);
 void Spwm_Output(SPWM_PARA* spwmPara);
 void Init_Spwm_Service(void);
+void Spwm_HighSpeed_BIT(SPWM_PARA* spwmPara);
+void Pwm_Init_BIT(SPWM_PARA* spwmPara);
+void Duty_Gradual_Change (SPWM_PARA* spwmPara);
+void OverCurrentSoftProtect(SPWM_PARA* spwmPara);
 extern SPWM_PARA gSpwmPara;
 #endif

@@ -1,10 +1,13 @@
 #include "ecap_service.h"
+#include "sys_state_service.h"
 ECAP_PARA gEcapPara = {0};
 
 void InitEcapVar(void){
 	gEcapPara.gMotorSpeedEcap = 0;
 	gEcapPara.isEcapRefresh = 0;
 	gEcapPara.gECapCount = 0;
+	gEcapPara.SpeedUpperLimit = 7200;
+	gEcapPara.SpeedLowerLimit = 6600;
 //    gECapCount = 0;
 }
 
@@ -34,6 +37,45 @@ double CalculateSpeed(Uint32 capCount){
 //	else{
 //		return -1;
 //	}
+}
+
+void checkMotorSpeed (void){
+    static int cnt_alarm_max = 0;
+    static int cnt_alarm_max2nd = 0;
+    static int over_alarm_limit_lasttime = 0;
+
+    if(over_alarm_limit_lasttime == 1){
+        if(gEcapPara.gMotorSpeedEcap < gEcapPara.SpeedLowerLimit){
+            ++cnt_alarm_max2nd;
+            if(cnt_alarm_max2nd >300){
+            	CLEAR_MOTOR_OVER_SPEED_ALARM;
+            	over_alarm_limit_lasttime = 0;
+            }
+        }
+        else{
+        	cnt_alarm_max2nd = 0;
+            over_alarm_limit_lasttime = 1;
+            SET_MOTOR_OVER_SPEED_ALARM;
+        }
+    }
+    else if (over_alarm_limit_lasttime == 0){
+        if(gEcapPara.gMotorSpeedEcap > gEcapPara.SpeedUpperLimit) {
+            ++cnt_alarm_max;
+            if(cnt_alarm_max > 300){
+                cnt_alarm_max = 0;
+                SET_MOTOR_OVER_SPEED_ALARM;
+                over_alarm_limit_lasttime = 1;
+            }
+        }
+        else{
+            if(cnt_alarm_max >= 1) --cnt_alarm_max;
+            else cnt_alarm_max = 0;
+        }
+    }
+    else{
+//    	gSysSWAlarm.bit.updateAndCheckTemperature = 1;
+//    	gSysAlarm.bit.softwareFault = 1;
+    }
 }
 
 /**************************************************************

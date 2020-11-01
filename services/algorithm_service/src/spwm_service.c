@@ -1,6 +1,9 @@
 #include "spwm_service.h"
 SPWM_PARA gSpwmPara = {0};
 
+#define ZERO_MAX (2100)
+#define ZERO_MIN (1900)
+
 inline void openAH(void){
 	EPwm1Regs.AQCSFRC.bit.CSFA = 3;
 }
@@ -169,7 +172,7 @@ void Calculate_Three_Phase_Duty(SPWM_PARA* spwmPara)
 }
 
 
-
+#pragma CODE_SECTION(SwitchDirection, "ramfuncs")
 void SwitchDirection(SPWM_PARA* spwmPara){
 	int16 middleDuty;
 
@@ -300,7 +303,17 @@ void SwitchDirection(SPWM_PARA* spwmPara){
     }
 }
 
-void Calculate_Duty (SPWM_PARA* spwmPara){
+void OverCurrentSoftProtect(SPWM_PARA* spwmPara){
+	if(1 == spwmPara->restrictduty){
+		spwmPara->Duty_Gradual = spwmPara->Duty_Gradual - 7;
+	}
+	else{
+		spwmPara->Duty_Gradual = spwmPara->Duty_Gradual;
+	}
+}
+
+#pragma CODE_SECTION(Duty_Gradual_Change, "ramfuncs")
+void Duty_Gradual_Change (SPWM_PARA* spwmPara){
 	/*占空比缓变开始*/
 	++(spwmPara->DutyAddIntervalCnt); /*缓变频数计数*/
 	if(spwmPara->DutyAddIntervalCnt >= spwmPara->DutyAddInterval){
@@ -322,6 +335,8 @@ void Calculate_Duty (SPWM_PARA* spwmPara){
            //nothing need change
     }
 
+	OverCurrentSoftProtect(spwmPara);
+
    	if(spwmPara->Duty_Gradual > spwmPara->ThresholdDutyP) spwmPara->Duty_Gradual = spwmPara->ThresholdDutyP;
    	else if(spwmPara->Duty_Gradual < spwmPara->ThresholdDutyN) spwmPara->Duty_Gradual = spwmPara->ThresholdDutyN;
 
@@ -329,40 +344,99 @@ void Calculate_Duty (SPWM_PARA* spwmPara){
 	}
 }
 
-void Spwm_Output(SPWM_PARA* spwmPara) /*PWM中断函数*/
-{
-	spwmPara->pwmSM = (PWM_RUNNING_STATE)gSysStateFlag.sysRunningState;
-	GpioDataRegs.GPBDAT.bit.GPIO50 = 1; /*线程监视*/
-	updateAndCheckVoltage(); /*快速AD保护检测， 补电流是否报警修改状态*/
-
-	switch(spwmPara->pwmSM){
-	case PWM_INIT:
-
-		break;
-	case PWM_FORWARD_RUN:
-		Calculate_Duty(spwmPara);
-		ENABLE_GATE_DRIVER();
-		SwitchDirection(spwmPara);
-		break;
-	case PWM_STOP:
-		DISABLE_GATE_DRIVER();
-		Disable_All_Epwms();
-		break;
-	case PWM_ALARM:
-		DISABLE_GATE_DRIVER();
-		Disable_All_Epwms();
-		break;
-	default:
-
-		break;
+#pragma CODE_SECTION(Pwm_Init_BIT, "ramfuncs")
+void Pwm_Init_BIT(SPWM_PARA* spwmPara){
+	if(spwmPara->Cnt_PWM_Init_BIT <= (CNT_INIT_END + 10)) ++spwmPara->Cnt_PWM_Init_BIT;
+	if(spwmPara->Cnt_PWM_Init_BIT <= 60){
+		/*DO NOTHING*/
+	}
+	else if(spwmPara->Cnt_PWM_Init_BIT <= 124){
+		gCurrent_Struct.zerosum_IABC[0] = gSysAnalogVar.single.var[updateBridgeCurrentA].value + gCurrent_Struct.zerosum_IABC[0];
+		gCurrent_Struct.zerosum_IABC[1] = gSysAnalogVar.single.var[updateBridgeCurrentB].value + gCurrent_Struct.zerosum_IABC[1];
+		gCurrent_Struct.zerosum_IABC[2] = gSysAnalogVar.single.var[updateBridgeCurrentC].value + gCurrent_Struct.zerosum_IABC[2];
+	}
+	else if(spwmPara->Cnt_PWM_Init_BIT == 125){
+		gCurrent_Struct.zero_IABC[0] = gCurrent_Struct.zerosum_IABC[0] >> 6;
+		gCurrent_Struct.zero_IABC[1] = gCurrent_Struct.zerosum_IABC[1] >> 6;
+		gCurrent_Struct.zero_IABC[2] = gCurrent_Struct.zerosum_IABC[2] >> 6;
+	}
+	else if(spwmPara->Cnt_PWM_Init_BIT == 126){
+		if((gCurrent_Struct.zero_IABC[0] > ZERO_MAX) || (gCurrent_Struct.zero_IABC[0] < ZERO_MIN) ||
+		   (gCurrent_Struct.zero_IABC[1] > ZERO_MAX) || (gCurrent_Struct.zero_IABC[1] < ZERO_MIN) ||
+		   (gCurrent_Struct.zero_IABC[2] > ZERO_MAX) || (gCurrent_Struct.zero_IABC[2] < ZERO_MIN))
+		{
+			SET_HW_CURRENT_ZERO_ALARM;/*改报警位*/
+		}
+	}
+	else if(spwmPara->Cnt_PWM_Init_BIT <= CNT_INIT_END){
+		BridgeABC_Current_Monitor_BIT();
+		PwrBus_OverVoltage_BIT();
+	}
+	else{
+		/*no use*/
 	}
 
-	/*DEBUG START*/
-//	spwmPara->TargetDuty = spwmPara->OpenLoopDuty;
-//	spwmPara->TargetDuty = gDebugDataArray[0];
-//	spwmPara->TargetDuty = spwmPara->CloseLoopDuty;
-	/*DEBUG END*/
+}
 
+#pragma CODE_SECTION(Spwm_HighSpeed_BIT, "ramfuncs")
+void Spwm_HighSpeed_BIT(SPWM_PARA* spwmPara){
+	switch(spwmPara->pwmSM){
+	case SYS_INIT:
+		DIABLE_ALL();
+		CLEAR_SW_PWM_ISR_ALARM;
+		Pwm_Init_BIT(spwmPara);
+		break;
+	case SYS_FORWARD_RUN:
+		BridgeABC_Current_Monitor_BIT();
+		PwrBus_OverVoltage_BIT();
+		CLEAR_SW_PWM_ISR_ALARM;
+		break;
+	case SYS_STOP:
+	case SYS_ALARM:
+		DIABLE_ALL();
+		BridgeABC_Current_Monitor_BIT();
+		PwrBus_OverVoltage_BIT();
+		CLEAR_SW_PWM_ISR_ALARM;
+		break;
+	default:
+		SET_SW_PWM_ISR_ALARM;
+		Disable_All_Epwms();
+		break;
+	}
+}
+
+#pragma CODE_SECTION(Spwm_Output, "ramfuncs")
+void Spwm_Output(SPWM_PARA* spwmPara) /*PWM中断函数*/
+{
+	GpioDataRegs.GPBSET.bit.GPIO50 = 1; /*线程监视*/
+	spwmPara->pwmSM = gSysStateFlag.sysRunningState;
+//	if((spwmPara->pwmSM < 0) || (spwmPara->pwmSM > 3)) test1 = spwmPara->pwmSM;
+	if(!IS_HARDWARE_OC) {
+		DIABLE_ALL();
+		SET_SYS_BUS_CURRENT_ALARM;
+//		spwmPara->pwmSM = PWM_ALARM;
+	}
+
+    UpdateSingleAnalog(&gSysAnalogVar); /*读取16通道ADC转换结果*/
+
+	Spwm_HighSpeed_BIT(spwmPara);
+	if(gSysStateFlag.j150WorkMode == NORMAL){
+		if(gSysStateFlag.alarm.all){
+			DIABLE_ALL();
+		}
+		else{
+			if(spwmPara->pwmSM == SYS_FORWARD_RUN){
+				Duty_Gradual_Change(spwmPara);
+				SwitchDirection(spwmPara);
+			}
+			else{
+				DIABLE_ALL();
+			}
+		}
+	}
+	else{
+		/*战时*/
+	}
 	GpioDataRegs.GPBCLEAR.bit.GPIO50 = 1; /*线程监视*/
 }
 
@@ -386,5 +460,7 @@ void Init_Spwm_Service(void)
 	gSpwmPara.CurrentHallPosition = 0;
 	gSpwmPara.LastHalllPosition = 0;
 	gSpwmPara.TargetDuty = 0;
-	gSpwmPara.pwmSM = PWM_INIT;
+	gSpwmPara.pwmSM = SYS_INIT;
+	gSpwmPara.restrictduty = 0;
+	gSpwmPara.Cnt_PWM_Init_BIT = 0;
 }

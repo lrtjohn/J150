@@ -31,8 +31,11 @@
                                         }
 #define ENABLE_BUSBAR_VOLTAGE			(GpioDataRegs.GPADAT.bit.GPIO7 = 1)
 #define DISABLE_BUSBAR_VOLTAGE			(GpioDataRegs.GPACLEAR.bit.GPIO7 = 1)
+#define IS_BUSBAR_ENABLED               (GpioDataRegs.GPADAT.bit.GPIO7 == 1)
 
-#define DISABLE_SW_BREAK			(GpioDataRegs.GPACLEAR.bit.GPIO9 = 1)
+#define DISABLE_SW_BREAK			    (GpioDataRegs.GPACLEAR.bit.GPIO9 = 1)
+#define ENABLE_SW_BREAK                 (GpioDataRegs.GPASET.bit.GPIO9 = 1)
+#define IS_SW_BREAK_ENABLED             (GpioDataRegs.GPADAT.bit.GPIO9 == 1)
 
 #define ENABLE_RS422_DRIVER()                                            			\
                                         {                                           \
@@ -63,8 +66,10 @@
 #define HARDWARE_OVER_CURRENT_CLEAR()                                               \
                                         {                                           \
                                             GpioDataRegs.GPACLEAR.bit.GPIO12 = 1;   \
-                                            DELAY_NOPS(1000);                       \
+                                            GpioDataRegs.GPADAT.bit.GPIO12 = 0;		\
+                                            DELAY_NOPS(5);                       \
                                             GpioDataRegs.GPADAT.bit.GPIO12 = 1;     \
+                                            GpioDataRegs.GPASET.bit.GPIO12 = 1;		\
                                         }
 
 #define ENABLE_DRIVERS()										\
@@ -76,24 +81,20 @@
 							HARDWARE_OVER_CURRENT_CLEAR();		\
 						}
 
-#define DIGIT_SIG_ROUTING_INSPECTION()                                              \
-                                        {                                           \
-                                            if(!IS_VCC5V_PG)                        \
-                                            {                                       \
-                                                SET_SYS_PG_VCC5V_ALARM;             \
-                                            }                                       \
-                                            if(!IS_VCC1V9_PG)                       \
-                                            {                                       \
-                                                SET_SYS_PG_1V9_ALARM;               \
-                                            }                                       \
-                                            if(!IS_VCC3V3_PG)                       \
-                                            {                                       \
-                                                SET_SYS_PG_VCC3V3_ALARM;            \
-                                            }                                       \
-											if(!IS_HARDWARE_OC)                     \
-                                            {                                       \
-                                                SET_SYS_BUS_CURRENT_ALARM;          \
-                                            }                                       \
+#define DIABLE_ALL()                                            \
+                    {                                           \
+                    	Disable_All_Epwms();                    \
+		                DISABLE_SW_BREAK;                       \
+                    }
+
+#define DIGIT_SIG_ROUTING_INSPECTION()                                              	   \
+                                        {                                           	   \
+                                            if(!IS_VCC5V_PG) SET_SYS_PG_VCC5V_ALARM;       \
+                                            if(!IS_VCC1V9_PG) SET_SYS_PG_1V9_ALARM;        \
+                                            if(!IS_VCC3V3_PG) SET_SYS_PG_VCC3V3_ALARM;     \
+											if(!IS_VDD5V_PG) SET_SYS_PG_VDD5V_ALARM;       \
+											if(!IS_HARDWARE_OC) SET_SYS_BUS_CURRENT_ALARM; \
+											else CLEAR_SYS_BUS_CURRENT_ALARM;			   \
                                         }
 
                     

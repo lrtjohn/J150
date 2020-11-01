@@ -9,6 +9,9 @@ typedef struct _TIMER_INTERVAL_CNT
 {
     Uint16 watchDogCnt;
     Uint16 WatchDogCntThreshold;
+    Uint16 Cnt_SM_Stop_5ms;
+    Uint16 Cnt_SM_Alarm_5ms;
+    Uint16 Cnt_PwrBus;
 }TIMER_INTERVAL_CNT;
 
 #define PWRBUS_BUILTUP_TIMES (20)
@@ -26,4 +29,5 @@ void MotorSpeed(void);
 void updateCtrlStrategyParameters(void);
 void CtrlStrategyCalculation(void);
 void PFAL_Timer0_ISR(void);
+extern TIMER_INTERVAL_CNT gTimerCnt;
 #endif
