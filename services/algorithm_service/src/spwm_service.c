@@ -410,7 +410,6 @@ void Spwm_Output(SPWM_PARA* spwmPara) /*PWM中断函数*/
 {
 	GpioDataRegs.GPBSET.bit.GPIO50 = 1; /*线程监视*/
 	spwmPara->pwmSM = gSysStateFlag.sysRunningState;
-//	if((spwmPara->pwmSM < 0) || (spwmPara->pwmSM > 3)) test1 = spwmPara->pwmSM;
 	if(!IS_HARDWARE_OC) {
 		DIABLE_ALL();
 		SET_SYS_BUS_CURRENT_ALARM;

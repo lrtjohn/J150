@@ -132,6 +132,7 @@ void Sys_hlsAlarm(void) /*故障保护状态*/
 {
 	DISABLE_GATE_DRIVER();
 	DISABLE_BUSBAR_VOLTAGE;
+	SET_SYS_ENABLE_STOP_ROTATE;
 	gTimerCnt.Cnt_SM_Stop_5ms = 0;
 	if(gTimerCnt.Cnt_SM_Alarm_5ms < 10) ++gTimerCnt.Cnt_SM_Alarm_5ms;
 	if(gSysStateFlag.j150WorkMode == NORMAL){

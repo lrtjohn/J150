@@ -226,6 +226,7 @@ typedef struct _SYS_STATE_FLAG
 #define SW_PWM_ISR_ALARM_MASK							BIT23
 
 #define IS_SYS_ENABLE_STOP_ROTATE                   	(gSysStateFlag.rotateDirectoin == STOP)
+#define SET_SYS_ENABLE_STOP_ROTATE						(gSysStateFlag.rotateDirectoin = STOP)
 #define IS_SYS_ENABLE_FORWARD_ROTATE                    (gSysStateFlag.rotateDirectoin == FORWARD)
 #define IS_SYS_ENABLE_BACKWARD_ROTATE                   (gSysStateFlag.rotateDirectoin == BACKWARD)
 #define IS_SYS_ALARM                                    (gSysStateFlag.alarm.all)

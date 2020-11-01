@@ -27,7 +27,7 @@ void main(void)
 
 	DISABLE_GATE_DRIVER(); /*禁止驱动芯片*/
 	DISABLE_BUSBAR_VOLTAGE; /*断开母线开关*/
-//	Disable_All_Epwms(); /*PWM开关禁止*/
+	Disable_All_Epwms(); /*PWM开关禁止*/
 	DISABLE_SW_BREAK; /*禁止泄放*/
 
 	/*设置PWM管脚为GPIO输出时的安全电平*/
