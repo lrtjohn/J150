@@ -22,7 +22,7 @@
 #define ENABLE_GATE_DRIVER()                                            		    \
                                         {                                           \
                                             GpioDataRegs.GPADAT.bit.GPIO16 = 1;     \
-                                            GpioDataRegs.GPACLEAR.bit.GPIO15 = 1;   \
+                                            GpioDataRegs.GPADAT.bit.GPIO15 = 0;   \
                                         }
 #define DISABLE_GATE_DRIVER()                                            		    \
                                         {                                           \
@@ -66,20 +66,9 @@
 #define HARDWARE_OVER_CURRENT_CLEAR()                                               \
                                         {                                           \
                                             GpioDataRegs.GPACLEAR.bit.GPIO12 = 1;   \
-                                            GpioDataRegs.GPADAT.bit.GPIO12 = 0;		\
-                                            DELAY_NOPS(5);                       \
-                                            GpioDataRegs.GPADAT.bit.GPIO12 = 1;     \
+                                            DELAY_NOPS(5);							\
                                             GpioDataRegs.GPASET.bit.GPIO12 = 1;		\
                                         }
-
-#define ENABLE_DRIVERS()										\
-						{										\
-							while(!IS_VDD5V_PG)					\
-							{									\
-							}									\
-							ENABLE_RS422_DRIVER();				\
-							HARDWARE_OVER_CURRENT_CLEAR();		\
-						}
 
 #define DIABLE_ALL()                                            \
                     {                                           \

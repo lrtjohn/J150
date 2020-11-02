@@ -75,8 +75,8 @@ typedef struct _SysAnalogVar{
 }SysAnalogVar;
 
 typedef struct _Current_Struct{
-	int32 zerosum_IABC[3];
-	int16 zero_IABC[3];
+	Uint32 zerosum_IABC[3];
+	Uint16 zero_IABC[3];
 	int16 I_bridgeABC[3];
 	int16 Thr_max_I_Bridge;
 	int16 Thr_min_I_Bridge;

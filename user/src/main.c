@@ -50,6 +50,7 @@ void main(void)
 	Init_PID_Service(); /*初始化PID全局变量*/
 	Init_OpenLoop_Service();/*初始化开环全局变量*/
 	Init_Timer0_Buf(); /*初始化5ms中断中母线电压环形队列变量*/
+	InitEcapVar();
 
 	powerOn_BIT();
 	/*ADC事件管理器配置*/
@@ -74,7 +75,7 @@ void main(void)
 
 	PFAL_INTERRUPT_CFG(CfgInterruptTbl_User,sizeof(CfgInterruptTbl_User)/sizeof(CfgInterruptTbl_User[0]));
 	 /*等待VDD5V完成上电后清除硬件过流及使能RS422*/
-	ENABLE_DRIVERS();
+	ENABLE_RS422_DRIVER();
 	
 	while(1)
 	{

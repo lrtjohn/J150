@@ -1,8 +1,8 @@
 #include "spwm_service.h"
 SPWM_PARA gSpwmPara = {0};
 
-#define ZERO_MAX (2100)
-#define ZERO_MIN (1900)
+#define ZERO_MAX (2250)
+#define ZERO_MIN (1840)
 
 inline void openAH(void){
 	EPwm1Regs.AQCSFRC.bit.CSFA = 3;
@@ -383,20 +383,17 @@ void Spwm_HighSpeed_BIT(SPWM_PARA* spwmPara){
 	switch(spwmPara->pwmSM){
 	case SYS_INIT:
 		DIABLE_ALL();
-		CLEAR_SW_PWM_ISR_ALARM;
 		Pwm_Init_BIT(spwmPara);
 		break;
 	case SYS_FORWARD_RUN:
 		BridgeABC_Current_Monitor_BIT();
 		PwrBus_OverVoltage_BIT();
-		CLEAR_SW_PWM_ISR_ALARM;
 		break;
 	case SYS_STOP:
 	case SYS_ALARM:
 		DIABLE_ALL();
 		BridgeABC_Current_Monitor_BIT();
 		PwrBus_OverVoltage_BIT();
-		CLEAR_SW_PWM_ISR_ALARM;
 		break;
 	default:
 		SET_SW_PWM_ISR_ALARM;
@@ -420,7 +417,7 @@ void Spwm_Output(SPWM_PARA* spwmPara) /*PWM中断函数*/
 
 	Spwm_HighSpeed_BIT(spwmPara);
 	if(gSysStateFlag.j150WorkMode == NORMAL){
-		if(gSysStateFlag.alarm.all){
+		if(IS_SYS_ALARM){
 			DIABLE_ALL();
 		}
 		else{

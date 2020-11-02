@@ -66,27 +66,31 @@ void Sys_hlsStop(void)
 			if(IS_SYS_ENABLE_FORWARD_ROTATE)
 			{
 				if(IS_J150_POWER_NOR && (gTimerCnt.Cnt_SM_Stop_5ms >=4)){
-					ENABLE_GATE_DRIVER();
+//					ENABLE_GATE_DRIVER();
 					ENABLE_BUSBAR_VOLTAGE;
+//					asm (" NOP");
+//					asm (" NOP");
+//					asm (" NOP");
+					if(IS_BUSBAR_ENABLED){
+						ENABLE_GATE_DRIVER();
+//						ENABLE_BUSBAR_VOLTAGE;
+						if(gTimerCnt.Cnt_PwrBus < 5) ++gTimerCnt.Cnt_PwrBus;
+						else Sys_chstForwardRotate();
+					}
+					else{
+						DISABLE_GATE_DRIVER();
+//						DISABLE_BUSBAR_VOLTAGE;
+						gTimerCnt.Cnt_PwrBus = 0;
+					}
 				}
 				else{
 					DISABLE_GATE_DRIVER();
 					DISABLE_BUSBAR_VOLTAGE;
 				} 
-				/*如果开优化则需要放开等待语句，否则GPIO7的值更改后，不会立即生效
-				*asm (" NOP");
-				*/
-				if(IS_BUSBAR_ENABLED){
-					ENABLE_GATE_DRIVER();
-					ENABLE_BUSBAR_VOLTAGE;
-					if(gTimerCnt.Cnt_PwrBus < 5) ++gTimerCnt.Cnt_PwrBus;
-					else Sys_chstForwardRotate();
-				}
-				else{
-					DISABLE_GATE_DRIVER();
-					DISABLE_BUSBAR_VOLTAGE;
-					gTimerCnt.Cnt_PwrBus = 0;
-				}
+				//如果开优化则需要放开等待语句，否则GPIO7的值更改后，不会立即生效
+//				asm (" NOP");
+//				asm (" NOP");
+//				asm (" NOP");
 			}
 			else{
 					DISABLE_GATE_DRIVER();
@@ -166,78 +170,187 @@ void Init_Sys_State_Service(void)
     gSysVersionNum = 0; /*版本号*/
 }
 
+int test111 = 0;
 void checkInputGPIOs (void){
-	if(GpioDataRegs.GPADAT.bit.GPIO30 == 1) SET_HW_DIGITAL_LEVEL_ALARM;
+	if(GpioDataRegs.GPADAT.bit.GPIO30 == 1){
+		SET_HW_DIGITAL_LEVEL_ALARM;
+		test111 = 1;
+	}
 	else CLEAR_HW_DIGITAL_LEVEL_ALARM;
-	if(GpioDataRegs.GPADAT.bit.GPIO29 == 0) SET_HW_DIGITAL_LEVEL_ALARM;
+//	if(GpioDataRegs.GPADAT.bit.GPIO29 == 0){
+//		SET_HW_DIGITAL_LEVEL_ALARM;
+//		test111 = 2;
+//	}
+//	else CLEAR_HW_DIGITAL_LEVEL_ALARM;
+	if(GpioDataRegs.GPADAT.bit.GPIO6 == 1){
+		SET_HW_DIGITAL_LEVEL_ALARM;
+		test111 = 3;
+	}
 	else CLEAR_HW_DIGITAL_LEVEL_ALARM;
-	if(GpioDataRegs.GPADAT.bit.GPIO6 == 1) SET_HW_DIGITAL_LEVEL_ALARM;
+	if(GpioDataRegs.GPADAT.bit.GPIO8 == 1){
+		SET_HW_DIGITAL_LEVEL_ALARM;
+		test111 = 4;
+	}
 	else CLEAR_HW_DIGITAL_LEVEL_ALARM;
-	if(GpioDataRegs.GPADAT.bit.GPIO8 == 1) SET_HW_DIGITAL_LEVEL_ALARM;
+	if(GpioDataRegs.GPADAT.bit.GPIO10 == 1){
+		SET_HW_DIGITAL_LEVEL_ALARM;
+		test111 = 5;
+	}
 	else CLEAR_HW_DIGITAL_LEVEL_ALARM;
-	if(GpioDataRegs.GPADAT.bit.GPIO10 == 1) SET_HW_DIGITAL_LEVEL_ALARM;
+	if(GpioDataRegs.GPADAT.bit.GPIO11 == 1){
+		SET_HW_DIGITAL_LEVEL_ALARM;
+		test111 = 6;
+	}
 	else CLEAR_HW_DIGITAL_LEVEL_ALARM;
-	if(GpioDataRegs.GPADAT.bit.GPIO11 == 1) SET_HW_DIGITAL_LEVEL_ALARM;
+	if(GpioDataRegs.GPADAT.bit.GPIO14 == 1){
+		SET_HW_DIGITAL_LEVEL_ALARM;
+		test111 = 7;
+	}
 	else CLEAR_HW_DIGITAL_LEVEL_ALARM;
-	if(GpioDataRegs.GPADAT.bit.GPIO14 == 1) SET_HW_DIGITAL_LEVEL_ALARM;
+	if(GpioDataRegs.GPBDAT.bit.GPIO32 == 0){
+		SET_HW_DIGITAL_LEVEL_ALARM;
+		test111 = 8;
+	}
 	else CLEAR_HW_DIGITAL_LEVEL_ALARM;
-	if(GpioDataRegs.GPBDAT.bit.GPIO32 == 0) SET_HW_DIGITAL_LEVEL_ALARM;
+	if(GpioDataRegs.GPBDAT.bit.GPIO33 == 0){
+		SET_HW_DIGITAL_LEVEL_ALARM;
+		test111 = 9;
+	}
 	else CLEAR_HW_DIGITAL_LEVEL_ALARM;
-	if(GpioDataRegs.GPBDAT.bit.GPIO33 == 0) SET_HW_DIGITAL_LEVEL_ALARM;
+	if(GpioDataRegs.GPBDAT.bit.GPIO52 == 1){
+		SET_HW_DIGITAL_LEVEL_ALARM;
+		test111 = 10;
+	}
 	else CLEAR_HW_DIGITAL_LEVEL_ALARM;
-	if(GpioDataRegs.GPBDAT.bit.GPIO52 == 1) SET_HW_DIGITAL_LEVEL_ALARM;
+	if(GpioDataRegs.GPBDAT.bit.GPIO53 == 1){
+		SET_HW_DIGITAL_LEVEL_ALARM;
+		test111 = 11;
+	}
 	else CLEAR_HW_DIGITAL_LEVEL_ALARM;
-	if(GpioDataRegs.GPBDAT.bit.GPIO53 == 1) SET_HW_DIGITAL_LEVEL_ALARM;
+	if(GpioDataRegs.GPBDAT.bit.GPIO58 == 1){
+		SET_HW_DIGITAL_LEVEL_ALARM;
+		test111 = 12;
+	}
 	else CLEAR_HW_DIGITAL_LEVEL_ALARM;
-	if(GpioDataRegs.GPBDAT.bit.GPIO58 == 1) SET_HW_DIGITAL_LEVEL_ALARM;
+	if(GpioDataRegs.GPBDAT.bit.GPIO61 == 1){
+		SET_HW_DIGITAL_LEVEL_ALARM;
+		test111 = 13;
+	}
 	else CLEAR_HW_DIGITAL_LEVEL_ALARM;
-	if(GpioDataRegs.GPBDAT.bit.GPIO61 == 1) SET_HW_DIGITAL_LEVEL_ALARM;
+	if(GpioDataRegs.GPCDAT.bit.GPIO66 == 1){
+		SET_HW_DIGITAL_LEVEL_ALARM;
+		test111 = 14;
+	}
 	else CLEAR_HW_DIGITAL_LEVEL_ALARM;
-	if(GpioDataRegs.GPCDAT.bit.GPIO66 == 1) SET_HW_DIGITAL_LEVEL_ALARM;
+	if(GpioDataRegs.GPCDAT.bit.GPIO69 == 1){
+		SET_HW_DIGITAL_LEVEL_ALARM;
+		test111 = 15;
+	}
 	else CLEAR_HW_DIGITAL_LEVEL_ALARM;
-	if(GpioDataRegs.GPCDAT.bit.GPIO69 == 1) SET_HW_DIGITAL_LEVEL_ALARM;
+	if(GpioDataRegs.GPCDAT.bit.GPIO70 == 1){
+		SET_HW_DIGITAL_LEVEL_ALARM;
+		test111 = 16;
+	}
 	else CLEAR_HW_DIGITAL_LEVEL_ALARM;
-	if(GpioDataRegs.GPCDAT.bit.GPIO70 == 1) SET_HW_DIGITAL_LEVEL_ALARM;
+	if(GpioDataRegs.GPCDAT.bit.GPIO71 == 1){
+		SET_HW_DIGITAL_LEVEL_ALARM;
+		test111 = 17;
+	}
 	else CLEAR_HW_DIGITAL_LEVEL_ALARM;
-	if(GpioDataRegs.GPCDAT.bit.GPIO71 == 1) SET_HW_DIGITAL_LEVEL_ALARM;
+	if(GpioDataRegs.GPCDAT.bit.GPIO72 == 1){
+		SET_HW_DIGITAL_LEVEL_ALARM;
+		test111 = 18;
+	}
 	else CLEAR_HW_DIGITAL_LEVEL_ALARM;
-	if(GpioDataRegs.GPCDAT.bit.GPIO72 == 1) SET_HW_DIGITAL_LEVEL_ALARM;
+	if(GpioDataRegs.GPCDAT.bit.GPIO73 == 1){
+		SET_HW_DIGITAL_LEVEL_ALARM;
+		test111 = 19;
+	}
 	else CLEAR_HW_DIGITAL_LEVEL_ALARM;
-	if(GpioDataRegs.GPCDAT.bit.GPIO73 == 1) SET_HW_DIGITAL_LEVEL_ALARM;
+	if(GpioDataRegs.GPCDAT.bit.GPIO74 == 1){
+		SET_HW_DIGITAL_LEVEL_ALARM;
+		test111 = 20;
+	}
 	else CLEAR_HW_DIGITAL_LEVEL_ALARM;
-	if(GpioDataRegs.GPCDAT.bit.GPIO74 == 1) SET_HW_DIGITAL_LEVEL_ALARM;
+	if(GpioDataRegs.GPCDAT.bit.GPIO75 == 1){
+		SET_HW_DIGITAL_LEVEL_ALARM;
+		test111 = 21;
+	}
 	else CLEAR_HW_DIGITAL_LEVEL_ALARM;
-	if(GpioDataRegs.GPCDAT.bit.GPIO75 == 1) SET_HW_DIGITAL_LEVEL_ALARM;
+	if(GpioDataRegs.GPCDAT.bit.GPIO76 == 1){
+		SET_HW_DIGITAL_LEVEL_ALARM;
+		test111 = 22;
+	}
 	else CLEAR_HW_DIGITAL_LEVEL_ALARM;
-	if(GpioDataRegs.GPCDAT.bit.GPIO76 == 1) SET_HW_DIGITAL_LEVEL_ALARM;
+	if(GpioDataRegs.GPCDAT.bit.GPIO79 == 1){
+		SET_HW_DIGITAL_LEVEL_ALARM;
+		test111 = 23;
+	}
 	else CLEAR_HW_DIGITAL_LEVEL_ALARM;
-	if(GpioDataRegs.GPCDAT.bit.GPIO79 == 1) SET_HW_DIGITAL_LEVEL_ALARM;
+	if(GpioDataRegs.GPBDAT.bit.GPIO38 == 1){
+		SET_HW_DIGITAL_LEVEL_ALARM;
+		test111 = 24;
+	}
 	else CLEAR_HW_DIGITAL_LEVEL_ALARM;
-	if(GpioDataRegs.GPBDAT.bit.GPIO38 == 1) SET_HW_DIGITAL_LEVEL_ALARM;
+	if(GpioDataRegs.GPBDAT.bit.GPIO34 == 1){
+		SET_HW_DIGITAL_LEVEL_ALARM;
+		test111 = 25;
+	}
 	else CLEAR_HW_DIGITAL_LEVEL_ALARM;
-	if(GpioDataRegs.GPBDAT.bit.GPIO34 == 1) SET_HW_DIGITAL_LEVEL_ALARM;
+	if(GpioDataRegs.GPBDAT.bit.GPIO36 == 1){
+		SET_HW_DIGITAL_LEVEL_ALARM;
+		test111 = 26;
+	}
 	else CLEAR_HW_DIGITAL_LEVEL_ALARM;
-	if(GpioDataRegs.GPBDAT.bit.GPIO36 == 1) SET_HW_DIGITAL_LEVEL_ALARM;
+	if(GpioDataRegs.GPBDAT.bit.GPIO46 == 1){
+		SET_HW_DIGITAL_LEVEL_ALARM;
+		test111 = 27;
+	}
 	else CLEAR_HW_DIGITAL_LEVEL_ALARM;
-	if(GpioDataRegs.GPBDAT.bit.GPIO46 == 1) SET_HW_DIGITAL_LEVEL_ALARM;
+	if(GpioDataRegs.GPBDAT.bit.GPIO47 == 1){
+		SET_HW_DIGITAL_LEVEL_ALARM;
+		test111 = 28;
+	}
 	else CLEAR_HW_DIGITAL_LEVEL_ALARM;
-	if(GpioDataRegs.GPBDAT.bit.GPIO47 == 1) SET_HW_DIGITAL_LEVEL_ALARM;
+	if(GpioDataRegs.GPCDAT.bit.GPIO80 == 1){
+		SET_HW_DIGITAL_LEVEL_ALARM;
+		test111 = 29;
+	}
 	else CLEAR_HW_DIGITAL_LEVEL_ALARM;
-	if(GpioDataRegs.GPCDAT.bit.GPIO80 == 1) SET_HW_DIGITAL_LEVEL_ALARM;
+	if(GpioDataRegs.GPCDAT.bit.GPIO81 == 1){
+		SET_HW_DIGITAL_LEVEL_ALARM;
+		test111 = 30;
+	}
 	else CLEAR_HW_DIGITAL_LEVEL_ALARM;
-	if(GpioDataRegs.GPCDAT.bit.GPIO81 == 1) SET_HW_DIGITAL_LEVEL_ALARM;
+	if(GpioDataRegs.GPCDAT.bit.GPIO82 == 1){
+		SET_HW_DIGITAL_LEVEL_ALARM;
+		test111 = 31;
+	}
 	else CLEAR_HW_DIGITAL_LEVEL_ALARM;
-	if(GpioDataRegs.GPCDAT.bit.GPIO82 == 1) SET_HW_DIGITAL_LEVEL_ALARM;
+	if(GpioDataRegs.GPCDAT.bit.GPIO83 == 1){
+		SET_HW_DIGITAL_LEVEL_ALARM;
+		test111 = 32;
+	}
 	else CLEAR_HW_DIGITAL_LEVEL_ALARM;
-	if(GpioDataRegs.GPCDAT.bit.GPIO83 == 1) SET_HW_DIGITAL_LEVEL_ALARM;
+	if(GpioDataRegs.GPCDAT.bit.GPIO85 == 0){
+		SET_HW_DIGITAL_LEVEL_ALARM;
+		test111 = 33;
+	}
 	else CLEAR_HW_DIGITAL_LEVEL_ALARM;
-	if(GpioDataRegs.GPCDAT.bit.GPIO85 == 0) SET_HW_DIGITAL_LEVEL_ALARM;
+	if(GpioDataRegs.GPCDAT.bit.GPIO86 == 0){
+		SET_HW_DIGITAL_LEVEL_ALARM;
+		test111 = 34;
+	}
 	else CLEAR_HW_DIGITAL_LEVEL_ALARM;
-	if(GpioDataRegs.GPCDAT.bit.GPIO86 == 0) SET_HW_DIGITAL_LEVEL_ALARM;
+	if(GpioDataRegs.GPCDAT.bit.GPIO87 == 0){
+		SET_HW_DIGITAL_LEVEL_ALARM;
+		test111 = 35;
+	}
 	else CLEAR_HW_DIGITAL_LEVEL_ALARM;
-	if(GpioDataRegs.GPCDAT.bit.GPIO87 == 0) SET_HW_DIGITAL_LEVEL_ALARM;
-	else CLEAR_HW_DIGITAL_LEVEL_ALARM;
-	if(GpioDataRegs.GPBDAT.bit.GPIO39 == 1) SET_HW_DIGITAL_LEVEL_ALARM;
+	if(GpioDataRegs.GPBDAT.bit.GPIO39 == 1){
+		SET_HW_DIGITAL_LEVEL_ALARM;
+		test111 = 36;
+	}
 	else CLEAR_HW_DIGITAL_LEVEL_ALARM;
 
 

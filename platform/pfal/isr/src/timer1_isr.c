@@ -19,9 +19,12 @@ void PFAL_Timer1_ISR(void)
 
 	/*DEBUG START*/
 	gSciAppProtocolTx_J150.RFU = gSpwmPara.Duty;
+//	gSciAppProtocolTx_J150.RFU = gSysStateFlag.rotateDirectoin;
 	gSciAppProtocolTx_J150.currentSpeed = gEcapPara.gMotorSpeedEcap;
+//	gSciAppProtocolTx_J150.currentSpeed = gCurrent_Struct.zero_IABC[0];
 //	gSciAppProtocolTx_J150.RFU = gSysStateFlag.sysRunningState;
 //    gSciAppProtocolTx_J150.RFU = gSysStateFlag.alarm.all;
+//	gSciAppProtocolTx_J150.RFU = gCurrent_Struct.zero_IABC[1];
 	/*DEBUG END*/
 
     SCI_TX_PackData(gScibTxQue);
