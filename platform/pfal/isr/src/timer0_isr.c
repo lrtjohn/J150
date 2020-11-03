@@ -101,21 +101,21 @@ void PwrBusVoltageMonitor(void)
 			}
 		}
 		else{
-			if(!IS_J150_POWER_NOR){
-				if(PwrBusVotlageEnQueue(gSysAnalogVar.single.var[updatePower270V_M].value, pwrBus_Vltge_Que)){
-					pwrbus_delta = (pwrBus_Vltge_Que->buffer[pwrBus_Vltge_Que->rear])-(pwrBus_Vltge_Que->buffer[pwrBus_Vltge_Que->front]);
-					if(pwrbus_delta < 0) pwrbus_delta = -pwrbus_delta;
-					if(pwrbus_delta > PWRBUS_VOLTAGE_DELTA) cnt_VoltageDelta = 0;
-					else{
-						if(cnt_VoltageDelta > PWRBUS_FULCHGR_TIMES){
-							SET_J150_POWER_BUS;
-							CLEAR_SYS_BUS_UNDER_VOLTAGE_ALARM;
-						}
-						else ++cnt_VoltageDelta;
-					}
+			if(PwrBusVotlageEnQueue(gSysAnalogVar.single.var[updatePower270V_M].value, pwrBus_Vltge_Que)){
+				pwrbus_delta = (pwrBus_Vltge_Que->buffer[pwrBus_Vltge_Que->rear])-(pwrBus_Vltge_Que->buffer[pwrBus_Vltge_Que->front]);
+				if(pwrbus_delta > PWRBUS_VOLTAGE_DELTA){
+					cnt_VoltageDelta = 0;
+					CLR_J150_POWER_BUS;
 				}
-				else cnt_VoltageDelta = 0;
+				else{
+					if(cnt_VoltageDelta > PWRBUS_FULCHGR_TIMES){
+						SET_J150_POWER_BUS;
+						CLEAR_SYS_BUS_UNDER_VOLTAGE_ALARM;
+					}
+					else ++cnt_VoltageDelta;
+				}
 			}
+			else cnt_VoltageDelta = 0;
 		}
 	}
 	else if(gSysAnalogVar.single.var[updatePower270V_M].value < gSysAnalogVar.single.var[updatePower270V_M].min){

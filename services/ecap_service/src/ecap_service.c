@@ -29,7 +29,8 @@ double CalculateSpeed(Uint32 capCount){
 	//unit of speed32 = degree/sec
 	//6171428571.42857
 	//1436156.641641
-	speed32 = ((CPU_FREQUENCY * 60000000 / MOTOR_POLES)/(float)capCount);//1800000000 = 150000000*60/5 150000000=150MHz pwm clk, 5=the nunber of pairs of poles of the motor
+//	speed32 = (((CPU_FREQUENCY * 60000000) / MOTOR_POLES)/(float)capCount);//1800000000 = 150000000*60/5 150000000=150MHz pwm clk, 5=the nunber of pairs of poles of the motor
+	speed32 = (1800000000/(float)capCount);
 	return speed32;
 //	if(speed32 < 19200){
 //		return speed32;
