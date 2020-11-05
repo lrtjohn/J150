@@ -184,7 +184,7 @@ void SwitchDirection(SPWM_PARA* spwmPara){
         case 4://C+ --------------->A-
         	closeBL(); closeAH(); closeCL();
             if(spwmPara->CurrentHallPosition == spwmPara->LastHalllPosition){
-                closeBL();
+                closeBH();
             	EPMW3_OUTPUT_UP(PWM_DUTY_BASE, spwmPara->Duty);
             	EPMW1_OUTPUT_DOWN(PWM_DUTY_BASE, spwmPara->Duty);
                 openCH(); openAL();
@@ -203,7 +203,7 @@ void SwitchDirection(SPWM_PARA* spwmPara){
         case 6://C+ --------------->B-
             closeAH(); closeBH(); closeCL();
             if(spwmPara->CurrentHallPosition == spwmPara->LastHalllPosition){
-                closeAH();
+                closeAL();
             	EPMW3_OUTPUT_UP(PWM_DUTY_BASE, spwmPara->Duty);
             	EPMW2_OUTPUT_DOWN(PWM_DUTY_BASE, spwmPara->Duty);
                 openCH(); openBL();
@@ -222,7 +222,7 @@ void SwitchDirection(SPWM_PARA* spwmPara){
         case 2://A+ --------------->B-
             closeCL(); closeBH(); closeAL();
             if(spwmPara->CurrentHallPosition == spwmPara->LastHalllPosition){
-                closeCL();
+                closeCH();
             	EPMW1_OUTPUT_UP(PWM_DUTY_BASE, spwmPara->Duty);
             	EPMW2_OUTPUT_DOWN(PWM_DUTY_BASE, spwmPara->Duty);
                 openAH(); openBL();
@@ -241,7 +241,7 @@ void SwitchDirection(SPWM_PARA* spwmPara){
         case 3://A+ --------------->C-
             closeBH(); closeCH(); closeAL();
             if(spwmPara->CurrentHallPosition == spwmPara->LastHalllPosition){
-                closeBH();
+                closeBL();
             	EPMW1_OUTPUT_UP(PWM_DUTY_BASE, spwmPara->Duty);
             	EPMW3_OUTPUT_DOWN(PWM_DUTY_BASE, spwmPara->Duty);
                 openAH(); openCL();
@@ -260,7 +260,7 @@ void SwitchDirection(SPWM_PARA* spwmPara){
         case 1://B+ --------------->C-
             closeAL(); closeBL(); closeCH();
             if(spwmPara->CurrentHallPosition == spwmPara->LastHalllPosition){
-                closeAL();
+                closeAH();
             	EPMW2_OUTPUT_UP(PWM_DUTY_BASE, spwmPara->Duty);
             	EPMW3_OUTPUT_DOWN(PWM_DUTY_BASE, spwmPara->Duty);
                 openBH(); openCL();
@@ -279,7 +279,7 @@ void SwitchDirection(SPWM_PARA* spwmPara){
         case 5://B+ --------------->A-
             closeCH(); closeAH(); closeBL();
             if(spwmPara->CurrentHallPosition == spwmPara->LastHalllPosition){
-                closeCH();
+                closeCL();
             	EPMW2_OUTPUT_UP(PWM_DUTY_BASE, spwmPara->Duty);
             	EPMW1_OUTPUT_DOWN(PWM_DUTY_BASE, spwmPara->Duty);
                 openBH(); openAL();
