@@ -98,6 +98,7 @@ typedef struct _Voltage_Struct{
 	Uint16 Thr_max_Voltage;
 	Uint16 Thr_max2nd_Voltage;
 	Uint16 Thr_max3rd_Voltage;
+	Uint16 Thr_max4th_Voltage;
 	Uint16 Thr_min_Voltage;
 	Uint16 Thr_min2nd_Voltage;
 }Voltage_Struct;

@@ -57,7 +57,7 @@ const Uint16 SDB_SingleAnologMaxMinInit[TOTAL_SNGL_ANAL_CHS][4] =
 	{0,0,0,0},            //3
 	{0,0,0,0},            //4
 	{0,0,0,0},      	  //5
-	{3063,2968,300,400},      //6 320V, 310V, 210V, 215V 2013,2060
+	{3063,2968,2013,2060},      //6 320V, 310V, 210V, 215V 2013,2060
 	{0,0,0,0},            //7
 	{0,0,0,0}, 			  //8
 	{0,0,0,0},            //9
@@ -83,54 +83,66 @@ void UpdateSingleAnalog(SysAnalogVar* sysAnalogVar)
 /*由PWM中断调用*/
 #pragma CODE_SECTION(PwrBus_OverVoltage_BIT, "ramfuncs")
 void PwrBus_OverVoltage_BIT(void){
-    static int count_max = 0;
-    static int count_sw_break = 0;
+    static int count_enable_alarm = 0;
+    static int cnt_disable_alarm = 0;
+    static int cnt_disable_break = 0;
+    static int cnt_enable_break = 0;
+
+    if(gSpwmPara.pwmSM == SYS_FORWARD_RUN){
+    	if (gSysAnalogVar.single.var[updatePower270V_M].value > gVoltage_Struct.Thr_max3rd_Voltage){
+    		++cnt_enable_break;
+    		if(cnt_enable_break > 3){
+    			cnt_enable_break = 0;
+    			ENABLE_SW_BREAK;
+    		}
+			else;/*DO NOTHING*/
+    	}
+    	else{
+			cnt_enable_break = 0;
+
+    		if(IS_SW_BREAK_ENABLED){
+        		if(gSysAnalogVar.single.var[updatePower270V_M].value < gVoltage_Struct.Thr_max4th_Voltage){
+        			++cnt_disable_break;
+        			if(cnt_disable_break > 5){
+        				cnt_disable_break = 0;
+        				DISABLE_SW_BREAK;
+        			}
+        		}
+        		else cnt_disable_break = 0;
+			}
+    		else cnt_disable_break = 0;
+    	}
+    }
+	else{
+		DISABLE_SW_BREAK;
+		cnt_enable_break = 0;
+		cnt_disable_break = 0;
+	}
 
 
-    if (gSysAnalogVar.single.var[updatePower270V_M].value > gVoltage_Struct.Thr_max2nd_Voltage){
-		ENABLE_SW_BREAK;
-		if (gSysAnalogVar.single.var[updatePower270V_M].value > gVoltage_Struct.Thr_max_Voltage){
-            ++count_max;
-            if(count_max > 5){
-                count_max = 0;
-                SET_SW_BUS_OV_ALARM;
-            }
+	if (gSysAnalogVar.single.var[updatePower270V_M].value > gVoltage_Struct.Thr_max_Voltage){
+		++count_enable_alarm;
+		if(count_enable_alarm > 3){
+			count_enable_alarm = 0;
+			SET_SW_BUS_OV_ALARM;
 		}
-		else{
-			if(count_max >= 1) --count_max;
-			else{
-				count_max = 0;
-			} 
-		}
+		else;/*DO NOTHING*/
 	}
 	else{
-		if(count_max >= 1) --count_max;
-		else{
-			count_max = 0;
-			CLEAR_SW_BUS_OV_ALARM;
-		} 
-	}
-
-	if(IS_SW_BREAK_ENABLED){
-		if(gSysAnalogVar.single.var[updatePower270V_M].value < gVoltage_Struct.Thr_max3rd_Voltage){
-			++count_sw_break;
-			if(count_sw_break > 5){
-				count_sw_break = 0;
-				DISABLE_SW_BREAK;
+		count_enable_alarm = 0;
+		if(IS_SW_BUS_OV_ALARM){
+			if(gSysAnalogVar.single.var[updatePower270V_M].value < gVoltage_Struct.Thr_max2nd_Voltage){
+				++cnt_disable_alarm;
+				if(cnt_disable_alarm > 5){
+					cnt_disable_alarm = 0;
+					CLEAR_SW_BUS_OV_ALARM;
+				}
+				else;/*DO NOTHING*/
 			}
-			else{
-				if(count_sw_break >= 1) --count_sw_break;
-				else{
-					count_sw_break = 0;
-					DISABLE_SW_BREAK;
-				} 
-			}
+			else cnt_disable_alarm = 0;
 		}
+		else cnt_disable_alarm = 0;
 	}
-	else{
-		/*no use*/
-	}
-
 }
 
 /*由主循环调用*/
@@ -553,9 +565,10 @@ void Init_ADC_Current(void)
 
 void Init_ADC_Voltage(void)
 {
-	gVoltage_Struct.Thr_max_Voltage = 3063;    /*320V*/
-	gVoltage_Struct.Thr_max2nd_Voltage = 2968; /*310V*/
-	gVoltage_Struct.Thr_max3rd_Voltage = 2776; /*290V*/
+	gVoltage_Struct.Thr_max_Voltage = 3352;    /*350V*/
+	gVoltage_Struct.Thr_max2nd_Voltage = 3255; /*340V*/
+	gVoltage_Struct.Thr_max3rd_Voltage = 3206; //3206; /*335*/
+	gVoltage_Struct.Thr_max4th_Voltage = 3110; //3110; /*325*/
 	gVoltage_Struct.Thr_min_Voltage = 2013;    /*210V*/
 	gVoltage_Struct.Thr_min2nd_Voltage = 2060; /*215V*/
 }
