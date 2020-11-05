@@ -61,8 +61,8 @@ typedef struct _ALARM_32BIT
 	Uint16 hw_anlg_lvl	: 1;/*21 other ADs except 270V V and I*/
 	Uint16 hw_I_zero	: 1;/*22*/
 	Uint16 sw_pwm_alarm : 1;/*23 来自PWM报警*/
-	Uint16 i        	: 1;/*24*/
-	Uint16 j     		: 1;/*25*/
+	Uint16 hall_error  	: 1;/*24*/
+	Uint16 pahse_change	: 1;/*25*/
 	Uint16 k      		: 1;/*26*/
 	Uint16 l   			: 1;/*27*/
 	Uint16 m 			: 1;/*28*/
@@ -224,6 +224,8 @@ typedef struct _SYS_STATE_FLAG
 #define HW_ANALOG_LEVEL_ALARM_MASK						BIT21
 #define HW_CURRENT_ZERO_ALARM_MASK						BIT22
 #define SW_PWM_ISR_ALARM_MASK							BIT23
+#define HALL_OUTOF_RANGE_ALARM_MASK						BIT24
+#define PHASE_CHANGE_ALARM_MASK							BIT25
 
 #define IS_SYS_ENABLE_STOP_ROTATE                   	(gSysStateFlag.rotateDirectoin == STOP)
 #define SET_SYS_ENABLE_STOP_ROTATE						(gSysStateFlag.rotateDirectoin = STOP)
@@ -238,6 +240,7 @@ typedef struct _SYS_STATE_FLAG
 #define INIT_SYS_RUNNING_STATE                          (gSysStateFlag.sysRunningState = SYS_INIT)
 #define INIT_SYS_ROTATE_DIRECTION                       (gSysStateFlag.rotateDirectoin = STOP)
 #define INIT_SYS_WORK_MODE								(gSysStateFlag.j150WorkMode = NORMAL)
+#define INIT_SYS_STATUS									(gSysStateFlag.j150SysStatus.all = 0)
 
 
 /*bit0*/
@@ -360,6 +363,15 @@ typedef struct _SYS_STATE_FLAG
 #define CLEAR_SW_PWM_ISR_ALARM           				(gSysStateFlag.alarm.bit.sw_pwm_alarm = 0)
 #define IS_SW_PWM_ISR_ALARM          		   	 		(gSysStateFlag.alarm.bit.sw_pwm_alarm | SW_PWM_ISR_ALARM_MASK)
 
+/*bit24*/
+#define SET_HALL_ERROR_ALARM             				(gSysStateFlag.alarm.bit.hall_error = 1)
+#define CLEAR_HALL_ERROR_ALARM           				(gSysStateFlag.alarm.bit.hall_error = 0)
+#define IS_HALL_ERROR_ALARM          		   	 		(gSysStateFlag.alarm.bit.hall_error | HALL_OUTOF_RANGE_ALARM_MASK)
+
+/*bit25*/
+#define SET_PAHSE_CHANGE_ALARM             				(gSysStateFlag.alarm.bit.pahse_change = 1)
+#define CLEAR_PAHSE_CHANGE_ALARM           				(gSysStateFlag.alarm.bit.pahse_change = 0)
+#define IS_PAHSE_CHANGE_ALARM          		   	 		(gSysStateFlag.alarm.bit.pahse_change | PHASE_CHANGE_ALARM_MASK)
 
 #define SET_MOTOR_TEMPERATURE_WARNING                   (gSysStateFlag.warning.bit.motortemp = 1)
 #define CLEAR_MOTOR_TEMPERATURE_WARNING                 (gSysStateFlag.warning.bit.motortemp = 0)

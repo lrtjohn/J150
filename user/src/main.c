@@ -74,6 +74,7 @@ void main(void)
 	/*中断配置使能*/
 
 	PFAL_INTERRUPT_CFG(CfgInterruptTbl_User,sizeof(CfgInterruptTbl_User)/sizeof(CfgInterruptTbl_User[0]));
+	gSpwmPara.CurrentHallPosition = GetCurrentHallValue();
 	 /*等待VDD5V完成上电后清除硬件过流及使能RS422*/
 	ENABLE_RS422_DRIVER();
 	

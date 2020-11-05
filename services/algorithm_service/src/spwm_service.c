@@ -72,7 +72,7 @@ Uint16 GetCurrentHallValue(void){
 	temp = ((a << 2) + (b << 1) + c);
 
 	if(temp < 1 || temp >6){
-//		gSysState.erro.bit.software = 1;
+		SET_HALL_ERROR_ALARM;
 	}
 	return temp;
 }
@@ -182,123 +182,122 @@ void SwitchDirection(SPWM_PARA* spwmPara){
     //1:A 2:B 3:C
     switch (spwmPara->CurrentHallPosition) {
         case 4://C+ --------------->A-
-        	closeBH(); closeAH(); closeCL();
+        	closeBL(); closeAH(); closeCL();
             if(spwmPara->CurrentHallPosition == spwmPara->LastHalllPosition){
                 closeBL();
             	EPMW3_OUTPUT_UP(PWM_DUTY_BASE, spwmPara->Duty);
             	EPMW1_OUTPUT_DOWN(PWM_DUTY_BASE, spwmPara->Duty);
                 openCH(); openAL();
             }
-            else if(6 == spwmPara->LastHalllPosition){
+            else if(5 == spwmPara->LastHalllPosition){
             	EPMW3_OUTPUT_UP(PWM_DUTY_BASE, spwmPara->Duty);
             	EPMW1_OUTPUT_DOWN(PWM_DUTY_BASE, spwmPara->Duty);
             	EPMW2_OUTPUT_DOWN(PWM_DUTY_BASE, middleDuty);
-                openCH();
-                openAL();
-                openBL();
+                openCH(); openAL(); openBH();
             }
             else{
             	Disable_All_Epwms();
-//	                gSysInfo.hallErrorCount++;
+            	SET_PAHSE_CHANGE_ALARM;
             }
             break;
         case 6://C+ --------------->B-
-            closeAL(); closeBH(); closeCL();
+            closeAH(); closeBH(); closeCL();
             if(spwmPara->CurrentHallPosition == spwmPara->LastHalllPosition){
                 closeAH();
             	EPMW3_OUTPUT_UP(PWM_DUTY_BASE, spwmPara->Duty);
             	EPMW2_OUTPUT_DOWN(PWM_DUTY_BASE, spwmPara->Duty);
                 openCH(); openBL();
             }
-            else if(2 == spwmPara->LastHalllPosition){
+            else if(4 == spwmPara->LastHalllPosition){
             	EPMW3_OUTPUT_UP(PWM_DUTY_BASE, spwmPara->Duty);
             	EPMW2_OUTPUT_DOWN(PWM_DUTY_BASE, spwmPara->Duty);
             	EPMW1_OUTPUT_UP(PWM_DUTY_BASE, middleDuty);
-                openCH(); openBL(); openAH();
+                openCH(); openBL(); openAL();
             }
             else{
             	Disable_All_Epwms();
-//	                gSysInfo.hallErrorCount++;
+            	SET_PAHSE_CHANGE_ALARM;
             }
             break;
         case 2://A+ --------------->B-
-            closeCH(); closeBH(); closeAL();
+            closeCL(); closeBH(); closeAL();
             if(spwmPara->CurrentHallPosition == spwmPara->LastHalllPosition){
                 closeCL();
             	EPMW1_OUTPUT_UP(PWM_DUTY_BASE, spwmPara->Duty);
             	EPMW2_OUTPUT_DOWN(PWM_DUTY_BASE, spwmPara->Duty);
                 openAH(); openBL();
             }
-            else if(3 == spwmPara->LastHalllPosition){
+            else if(6 == spwmPara->LastHalllPosition){
             	EPMW1_OUTPUT_UP(PWM_DUTY_BASE, spwmPara->Duty);
             	EPMW2_OUTPUT_DOWN(PWM_DUTY_BASE, spwmPara->Duty);
             	EPMW3_OUTPUT_DOWN(PWM_DUTY_BASE, middleDuty);
-                openAH(); openBL(); openCL();
+                openAH(); openBL(); openCH();
             }
             else{
             	Disable_All_Epwms();
-//                gSysInfo.hallErrorCount++;
+            	SET_PAHSE_CHANGE_ALARM;
             }
             break;
         case 3://A+ --------------->C-
-            closeBL(); closeCH(); closeAL();
+            closeBH(); closeCH(); closeAL();
             if(spwmPara->CurrentHallPosition == spwmPara->LastHalllPosition){
                 closeBH();
             	EPMW1_OUTPUT_UP(PWM_DUTY_BASE, spwmPara->Duty);
             	EPMW3_OUTPUT_DOWN(PWM_DUTY_BASE, spwmPara->Duty);
                 openAH(); openCL();
             }
-            else if(1 == spwmPara->LastHalllPosition){
+            else if(2 == spwmPara->LastHalllPosition){
             	EPMW1_OUTPUT_UP(PWM_DUTY_BASE, spwmPara->Duty);
             	EPMW3_OUTPUT_DOWN(PWM_DUTY_BASE, spwmPara->Duty);
             	EPMW2_OUTPUT_UP(PWM_DUTY_BASE, middleDuty);
-                openAH(); openCL(); openBH();
+                openAH(); openCL(); openBL();
             }
             else{
             	Disable_All_Epwms();
-//	                gSysInfo.hallErrorCount++;
+            	SET_PAHSE_CHANGE_ALARM;
             }
             break;
         case 1://B+ --------------->C-
-            closeAH(); closeBL(); closeCH();
+            closeAL(); closeBL(); closeCH();
             if(spwmPara->CurrentHallPosition == spwmPara->LastHalllPosition){
                 closeAL();
             	EPMW2_OUTPUT_UP(PWM_DUTY_BASE, spwmPara->Duty);
             	EPMW3_OUTPUT_DOWN(PWM_DUTY_BASE, spwmPara->Duty);
                 openBH(); openCL();
             }
-            else if(5 == spwmPara->LastHalllPosition){
+            else if(3 == spwmPara->LastHalllPosition){
             	EPMW2_OUTPUT_UP(PWM_DUTY_BASE, spwmPara->Duty);
             	EPMW3_OUTPUT_DOWN(PWM_DUTY_BASE, spwmPara->Duty);
             	EPMW1_OUTPUT_DOWN(PWM_DUTY_BASE, middleDuty);
-                openBH(); openCL(); openAL();
+                openBH(); openCL(); openAH();
             }
             else{
             	Disable_All_Epwms();
-//	                gSysInfo.hallErrorCount++;
+            	SET_PAHSE_CHANGE_ALARM;
             }
             break;
         case 5://B+ --------------->A-
-            closeCL(); closeAH(); closeBL();
+            closeCH(); closeAH(); closeBL();
             if(spwmPara->CurrentHallPosition == spwmPara->LastHalllPosition){
                 closeCH();
             	EPMW2_OUTPUT_UP(PWM_DUTY_BASE, spwmPara->Duty);
             	EPMW1_OUTPUT_DOWN(PWM_DUTY_BASE, spwmPara->Duty);
                 openBH(); openAL();
             }
-            else if(4 == spwmPara->LastHalllPosition){
+            else if(1 == spwmPara->LastHalllPosition){
             	EPMW2_OUTPUT_UP(PWM_DUTY_BASE, spwmPara->Duty);
             	EPMW1_OUTPUT_DOWN(PWM_DUTY_BASE, spwmPara->Duty);
             	EPMW3_OUTPUT_UP(PWM_DUTY_BASE, middleDuty);
-                openBH(); openAL(); openCH();
+                openBH(); openAL(); openCL();
             }
             else{
             	Disable_All_Epwms();
-//	                gSysInfo.hallErrorCount++;
+            	SET_PAHSE_CHANGE_ALARM;
             }
             break;
         default:
         	Disable_All_Epwms();
+        	SET_HALL_ERROR_ALARM;
             break;
     }
 }

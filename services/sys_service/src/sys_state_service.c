@@ -35,7 +35,9 @@ void Sys_hlstInit(void)
 	gTimerCnt.Cnt_SM_Alarm_5ms = 0;
 	DISABLE_BUSBAR_VOLTAGE;
 	DISABLE_GATE_DRIVER();
+	CLR_J150_MOTOR_STA;
 	if(gSpwmPara.Cnt_PWM_Init_BIT >= CNT_INIT_END){
+		SET_J150_BIT_CMPLT;
 		if(gSysStateFlag.j150WorkMode == NORMAL){
 			if(IS_SYS_ALARM) {
 				Sys_chstAlarm();
@@ -56,6 +58,7 @@ void Sys_hlsStop(void)
 	gTimerCnt.Cnt_SM_Alarm_5ms = 0;
 	if(gTimerCnt.Cnt_SM_Stop_5ms < 4) gTimerCnt.Cnt_PwrBus = 0;
 	if(gTimerCnt.Cnt_SM_Stop_5ms < 10) ++gTimerCnt.Cnt_SM_Stop_5ms;
+	CLR_J150_MOTOR_STA;
 	if(gSysStateFlag.j150WorkMode == NORMAL){
 		if(IS_SYS_ALARM){
 			DISABLE_GATE_DRIVER();
@@ -130,6 +133,7 @@ void Sys_hlstForwardRotate(void) /*运行状态*/
 	else{
 		/*战时模式*/
 	}
+	SET_J150_MOTOR_STA;
 }
 
 void Sys_hlsAlarm(void) /*故障保护状态*/
@@ -137,6 +141,8 @@ void Sys_hlsAlarm(void) /*故障保护状态*/
 	DISABLE_GATE_DRIVER();
 	DISABLE_BUSBAR_VOLTAGE;
 	SET_SYS_ENABLE_STOP_ROTATE;
+	SET_J150_FAULT_EXT;
+	CLR_J150_MOTOR_STA;
 	gTimerCnt.Cnt_SM_Stop_5ms = 0;
 	if(gTimerCnt.Cnt_SM_Alarm_5ms < 10) ++gTimerCnt.Cnt_SM_Alarm_5ms;
 	if(gSysStateFlag.j150WorkMode == NORMAL){
@@ -145,6 +151,7 @@ void Sys_hlsAlarm(void) /*故障保护状态*/
 		}
 		else{
 			if(gTimerCnt.Cnt_SM_Alarm_5ms >= 8){
+				CLR_J150_FAULT_EXT;
 				Sys_chstStop(); 
 			}			
 		}
@@ -164,10 +171,13 @@ void Init_Sys_State_Service(void)
     INIT_SYS_RUNNING_STATE; /*状态机变量设置为为初始化*/
     SYS_STATE_MACHINE_INIT; /*状态机指针设置为初始化*/
     INIT_SYS_WORK_MODE;
+    CLR_J150_BIT_CMPLT;
+    CLR_J150_MOTOR_STA;
+    INIT_SYS_STATUS;
     }
     INIT_SYS_ROTATE_DIRECTION; /*电机驱动系统初始化为停止态*/
 //    SET_J150_BIT_ING;
-    gSysVersionNum = 0; /*版本号*/
+    gSysVersionNum = 2; /*版本号*/
 }
 
 int test111 = 0;

@@ -86,7 +86,7 @@ extern cregister volatile unsigned int IER;
 #define BIT22   0x00400000
 #define BIT23   0x00800000
 #define BIT24   0x01000000
-
+#define BIT25   0x02000000
 
 
 //---------------------------------------------------------------------------

@@ -18,14 +18,24 @@ void PFAL_Timer1_ISR(void)
 #endif
 
 	/*DEBUG START*/
-	gSciAppProtocolTx_J150.RFU = gSpwmPara.Duty;
 //	gSciAppProtocolTx_J150.RFU = gSysStateFlag.rotateDirectoin;
-	gSciAppProtocolTx_J150.currentSpeed = gEcapPara.gMotorSpeedEcap;
 //	gSciAppProtocolTx_J150.currentSpeed = gCurrent_Struct.zero_IABC[0];
 //	gSciAppProtocolTx_J150.RFU = gSysStateFlag.sysRunningState;
 //    gSciAppProtocolTx_J150.RFU = gSysStateFlag.alarm.all;
 //	gSciAppProtocolTx_J150.RFU = gCurrent_Struct.zero_IABC[1];
 	/*DEBUG END*/
+	gSciAppProtocolTx_J150.workStatus = gSysStateFlag.j150SysStatus.all;
+	gSciAppProtocolTx_J150.sysStatus1 = gSysStateFlag.sysRunningState;
+	gSciAppProtocolTx_J150.faultStatus = gSysStateFlag.alarm.all;
+	gSciAppProtocolTx_J150.targetSpeed = gSciAppProtocolRx_J150.targetSpeed;
+	gSciAppProtocolTx_J150.currentSpeed = gEcapPara.gMotorSpeedEcap;
+	gSciAppProtocolTx_J150.busVoltage = gSysAnalogVar.single.var[updatePower270V_M].value;
+	gSciAppProtocolTx_J150.busCurrent = gCurrent_Struct.I_busCurrent;
+	gSciAppProtocolTx_J150.servoTemp = gSysAnalogVar.single.var[updateDriverTemp].value;
+	gSciAppProtocolTx_J150.motorTemp = gSysAnalogVar.single.var[updateMotorTemp].value;
+	gSciAppProtocolTx_J150.fwVersionNum = gSysVersionNum;
+	gSciAppProtocolTx_J150.workMode = gSysStateFlag.j150WorkMode;
+	gSciAppProtocolTx_J150.RFU = gSpwmPara.Duty;
 
     SCI_TX_PackData(gScibTxQue);
 
