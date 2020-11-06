@@ -177,8 +177,6 @@ void SwitchDirection(SPWM_PARA* spwmPara){
 	int16 middleDuty;
 
 	middleDuty = ((spwmPara->Duty) >> 1) + 1;
-	spwmPara->LastHalllPosition = spwmPara->CurrentHallPosition;
-	spwmPara->CurrentHallPosition = GetCurrentHallValue();
     //1:A 2:B 3:C
     switch (spwmPara->CurrentHallPosition) {
         case 4://C+ --------------->A-
@@ -405,6 +403,8 @@ void Spwm_HighSpeed_BIT(SPWM_PARA* spwmPara){
 void Spwm_Output(SPWM_PARA* spwmPara) /*PWM中断函数*/
 {
 	GpioDataRegs.GPBSET.bit.GPIO50 = 1; /*线程监视*/
+	spwmPara->LastHalllPosition = spwmPara->CurrentHallPosition;
+	spwmPara->CurrentHallPosition = GetCurrentHallValue();
 	spwmPara->pwmSM = gSysStateFlag.sysRunningState;
 	if(!IS_HARDWARE_OC) {
 		DIABLE_ALL();
