@@ -168,8 +168,8 @@ void CtrlStrategyCalculation(void)
 {
 	gSpwmPara.CloseLoopDuty = Pid_Process(&gPID_Speed_Para);
 	gSpwmPara.OpenLoopDuty = OpenLoop_Process(&gOpenLoop_Para);
-//	gSpwmPara.TargetDuty = gSpwmPara.CloseLoopDuty + gSpwmPara.OpenLoopDuty;
-	gSpwmPara.TargetDuty = gSpwmPara.OpenLoopDuty;
+	gSpwmPara.TargetDuty = gSpwmPara.CloseLoopDuty + gSpwmPara.OpenLoopDuty;
+//	gSpwmPara.TargetDuty = gSpwmPara.CloseLoopDuty;
 }
 
 void PFAL_Timer0_ISR(void)

@@ -16,7 +16,7 @@ double Pid_Process(PID_VAR* pidVar)
     double pidOutput = 0;
 
     pidVar->currentErr = (pidVar->targetVal - (pidVar->currentVal));
-    if((pidVar->currentErr > -pidVar->currentErrThreshold) && (pidVar->currentErr < pidVar->currentErrThreshold))
+    if((pidVar->currentErr > -(pidVar->currentErrThreshold)) && (pidVar->currentErr < pidVar->currentErrThreshold))
     {
         if((( pidVar->currentErr > 0) && (pidVar->sumErr < pidVar->sumErrThreshold)) || ((pidVar->currentErr < 0) && (pidVar->sumErr > -pidVar->sumErrThreshold)))
         {
@@ -44,15 +44,15 @@ double Pid_Process(PID_VAR* pidVar)
 
 void Init_PID_Service(void)
 {
-	gPID_Speed_Para.targetVal = 1700;
+	gPID_Speed_Para.targetVal = 500;
 	gPID_Speed_Para.currentVal = 0;
 	gPID_Speed_Para.currentErr = 0;
 	gPID_Speed_Para.sumErr = 0;
-	gPID_Speed_Para.currentErrThreshold = 500;
-	gPID_Speed_Para.sumErrThreshold = 1171070;
-	gPID_Speed_Para.outputThreshold = 700;
-	gPID_Speed_Para.kp = 300;
-	gPID_Speed_Para.ki = 400;
+	gPID_Speed_Para.currentErrThreshold = 600;
+	gPID_Speed_Para.sumErrThreshold = 4200000;
+	gPID_Speed_Para.outputThreshold = 1100;
+	gPID_Speed_Para.kp = 0.3;
+	gPID_Speed_Para.ki = 0.000168;
 }
 
 void Init_OpenLoop_Service(void)

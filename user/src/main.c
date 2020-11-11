@@ -92,7 +92,7 @@ void main(void)
 		else /*NO USE*/;
 
 		gOpenLoop_Para.volt_Ratio = gOpenLoop_Para.nominalBusVoltage / currVolt;
-		gSpwmPara.BusVolt_Ratio = gOpenLoop_Para.volt_Ratio * 1.0;
+		gSpwmPara.BusVolt_Ratio = gOpenLoop_Para.volt_Ratio * 0.9;
 
 		/*补内部看门狗*/
 #if(SYS_DEBUG == INCLUDE_FEATURE)

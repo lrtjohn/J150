@@ -12,17 +12,17 @@ int gtimer1test = 0;
 
 void PFAL_Timer1_ISR(void)
 {
-//	static int cnt = 0;
+	static int cnt = 0;
 	GpioDataRegs.GPBDAT.bit.GPIO59 = 1;
 #if(SYS_DEBUG == INCLUDE_FEATURE)
     gtimer1test++;
 #endif
 
-//    if(cnt == 2){
-//    	cnt = 0;
+    if(cnt == 2){
+    	cnt = 0;
     	gSciAppProtocolTx_J150.workStatus = gSysStateFlag.j150SysStatus.all;
     	gSciAppProtocolTx_J150.sysStatus1 = gSysStateFlag.sysRunningState;
-    	gSciAppProtocolTx_J150.sysStatus2 = gSpwmPara.OpenLoopDuty;
+    	gSciAppProtocolTx_J150.sysStatus2 = gSpwmPara.CloseLoopDuty;
     	gSciAppProtocolTx_J150.faultStatus = gSysStateFlag.alarm.all;
     	gSciAppProtocolTx_J150.targetSpeed = gSciAppProtocolRx_J150.targetSpeed;
     	gSciAppProtocolTx_J150.currentSpeed = gEcapPara.gMotorSpeedEcap;
@@ -31,17 +31,19 @@ void PFAL_Timer1_ISR(void)
     	gSciAppProtocolTx_J150.servoTemp = gSysAnalogVar.single.var[updateDriverTemp].value;
     	gSciAppProtocolTx_J150.motorTemp = gSysAnalogVar.single.var[updateMotorTemp].value;
 //    	gSciAppProtocolTx_J150.fwVersionNum = gSysVersionNum;
-    	gSciAppProtocolTx_J150.fwVersionNum = gSpwmPara.StepMaxDuty;
+    	gSciAppProtocolTx_J150.fwVersionNum = gSciAppProtocolRx_J150.targetSpeed;
     	gSciAppProtocolTx_J150.workMode = gSysStateFlag.j150WorkMode;
     	gSciAppProtocolTx_J150.RFU = gSpwmPara.Duty;
+//    	gSciAppProtocolTx_J150.RFU = (Uint16)(gPID_Speed_Para.sumErr * gPID_Speed_Para.ki);
+
 
         SCI_TX_PackData(gScibTxQue);
 
         CheckEnableScibTx(gScibTxQue);
-//    }
-//    else{
-//    	++cnt;
-//    }
+    }
+    else{
+    	++cnt;
+    }
 	/*DEBUG START*/
 //	gSciAppProtocolTx_J150.RFU = gSysStateFlag.rotateDirectoin;
 //	gSciAppProtocolTx_J150.currentSpeed = gCurrent_Struct.zero_IABC[0];
