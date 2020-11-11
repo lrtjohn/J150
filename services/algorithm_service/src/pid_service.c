@@ -1,12 +1,12 @@
 #include "pid_service.h"
-
+#include "spwm_service.h"
 PID_VAR gPID_Speed_Para = {0};
 OPENLOOP_VAR gOpenLoop_Para = {0};
 
 double OpenLoop_Process(OPENLOOP_VAR* openloopVar){
 	double openloop_Output = 0;
 
-	openloop_Output = (openloopVar->targetSpeed * openloopVar->openloop_K + openloopVar->openloop_B) * (openloopVar->nominalBusVoltage / openloopVar->currentBusVoltage);
+	openloop_Output = (openloopVar->targetSpeed * openloopVar->openloop_K + openloopVar->openloop_B) * openloopVar->volt_Ratio;
 
 	return openloop_Output;
 }
@@ -59,7 +59,8 @@ void Init_OpenLoop_Service(void)
 {
 	gOpenLoop_Para.currentBusVoltage = 0;
 	gOpenLoop_Para.nominalBusVoltage = 2585;
+	gOpenLoop_Para.volt_Ratio = 0.794;
 	gOpenLoop_Para.targetSpeed = 0;
-	gOpenLoop_Para.openloop_K = 0.7286;
-	gOpenLoop_Para.openloop_B = -4396.3;
+	gOpenLoop_Para.openloop_K = 0.2292;
+	gOpenLoop_Para.openloop_B = -123.83;
 }

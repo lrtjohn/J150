@@ -168,7 +168,8 @@ void CtrlStrategyCalculation(void)
 {
 	gSpwmPara.CloseLoopDuty = Pid_Process(&gPID_Speed_Para);
 	gSpwmPara.OpenLoopDuty = OpenLoop_Process(&gOpenLoop_Para);
-	gSpwmPara.TargetDuty = gSpwmPara.CloseLoopDuty + gSpwmPara.OpenLoopDuty;
+//	gSpwmPara.TargetDuty = gSpwmPara.CloseLoopDuty + gSpwmPara.OpenLoopDuty;
+	gSpwmPara.TargetDuty = gSpwmPara.OpenLoopDuty;
 }
 
 void PFAL_Timer0_ISR(void)
@@ -190,14 +191,19 @@ void PFAL_Timer0_ISR(void)
 //        gSciAppProtocolTx_J150.currentSpeed = gEcapPara.gMotorSpeedEcap;
 //        gSciAppProtocolTx_J150.currentSpeed = gSysAnalogVar.single.var[updatePower270V_M].value;
 	/*DEBUG END*/
-	updateCtrlStrategyParameters(); /*开闭环用反馈转速，反馈电压更新*/
-//	CtrlStrategyCalculation(); /*计算开环，闭环占空比，并赋值目标占空比*/
 
     if (IS_WATCH_DOG_TIMER_EXPIRE)
     {
         RESET_WATCH_DOG_TIMER_CNT;
 
         TOOGLE_CTL_BOARD_WATCHDOG;
+    }
+
+    if((gEcapPara.gMotorSpeedEcap < (4000)) && (gEcapPara.gMotorSpeedEcap > (1000))){
+    	GpioDataRegs.GPCDAT.bit.GPIO68 = 0;
+    }
+    else if((gEcapPara.gMotorSpeedEcap > (4100)) || (gEcapPara.gMotorSpeedEcap > (900))){
+    	GpioDataRegs.GPCDAT.bit.GPIO68 = 1;
     }
 
     GpioDataRegs.GPBCLEAR.bit.GPIO49 = 1; /*进程监视用*/

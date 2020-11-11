@@ -57,11 +57,11 @@ const Uint16 SDB_SingleAnologMaxMinInit[TOTAL_SNGL_ANAL_CHS][4] =
 	{0,0,0,0},            //3
 	{0,0,0,0},            //4
 	{0,0,0,0},      	  //5
-	{3063,2968,300,400},      //6 320V, 310V, 210V, 215V 2013,2060
+	{3063,2968,0,0},      //6 320V, 310V, 210V, 215V 2013,2060
 	{0,0,0,0},            //7
 	{0,0,0,0}, 			  //8
 	{0,0,0,0},            //9
-	{1600,0,1000,0},      //10
+	{1860,0,980,0},      //10
 	{0,0,0,0},            //11
 	{550,0,200,0},        //12
 	{0,0,0,0},            //13
@@ -457,7 +457,7 @@ void check_Analog_Ref(void){
 		if((gAnalog_Ref_Struct.analog_ref[i] > gAnalog_Ref_Struct.thr_max_analog_ref[i]) ||
 		   (gAnalog_Ref_Struct.analog_ref[i] < gAnalog_Ref_Struct.thr_min_analog_ref[i])){
 			++gAnalog_Ref_Struct.cnt_analog_ref[i];
-			if(gAnalog_Ref_Struct.cnt_analog_ref[i] > 20){
+			if(gAnalog_Ref_Struct.cnt_analog_ref[i] > 10){
 				SET_HW_ANALOG_LEVEL_ALARM;
 			}
 		}
@@ -598,17 +598,17 @@ void Init_Analog_Ref(void)
 	gAnalog_Ref_Struct.thr_max_analog_ref[0] = 3800; /*10%*/
 	gAnalog_Ref_Struct.thr_max_analog_ref[1] = 3800; /*10%*/
 	gAnalog_Ref_Struct.thr_max_analog_ref[2] = 3600; /*10%*/
-	gAnalog_Ref_Struct.thr_max_analog_ref[3] = 2645; /*10%*/
+	gAnalog_Ref_Struct.thr_max_analog_ref[3] = 3020; /*10% 摘除R152用2645，未摘除使用3020*/
 	gAnalog_Ref_Struct.thr_max_analog_ref[4] = 2500; /*10%*/
 	gAnalog_Ref_Struct.thr_max_analog_ref[5] = 2240; /*10%*/
-	gAnalog_Ref_Struct.thr_max_analog_ref[6] = 2240; /*10%*/
+	gAnalog_Ref_Struct.thr_max_analog_ref[6] = 1717; /*10% 摘除R152用2240，未摘除使用1420*/
 	gAnalog_Ref_Struct.thr_min_analog_ref[0] = 3100; /*10%*/
 	gAnalog_Ref_Struct.thr_min_analog_ref[1] = 3100; /*10%*/
 	gAnalog_Ref_Struct.thr_min_analog_ref[2] = 3000; /*10%*/
-	gAnalog_Ref_Struct.thr_min_analog_ref[3] = 2165; /*10%*/
+	gAnalog_Ref_Struct.thr_min_analog_ref[3] = 2470; /*10% 摘除R152用2165，未摘除使用2470*/
 	gAnalog_Ref_Struct.thr_min_analog_ref[4] = 2050; /*10%*/
 	gAnalog_Ref_Struct.thr_min_analog_ref[5] = 1830; /*10%*/
-	gAnalog_Ref_Struct.thr_min_analog_ref[6] = 1830; /*10%*/
+	gAnalog_Ref_Struct.thr_min_analog_ref[6] = 1404; /*10% 摘除R152用1830，未摘除使用1160*/
 	gAnalog_Ref_Struct.cnt_analog_ref[0] = 0;
 	gAnalog_Ref_Struct.cnt_analog_ref[1] = 0;
 	gAnalog_Ref_Struct.cnt_analog_ref[2] = 0;

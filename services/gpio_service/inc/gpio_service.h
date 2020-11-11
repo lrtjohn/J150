@@ -22,7 +22,7 @@
 #define ENABLE_GATE_DRIVER()                                            		    \
                                         {                                           \
                                             GpioDataRegs.GPADAT.bit.GPIO16 = 1;     \
-                                            GpioDataRegs.GPADAT.bit.GPIO15 = 0;   \
+                                            GpioDataRegs.GPADAT.bit.GPIO15 = 0;   	\
                                         }
 #define DISABLE_GATE_DRIVER()                                            		    \
                                         {                                           \
@@ -43,13 +43,13 @@
                                             GpioDataRegs.GPCCLEAR.bit.GPIO78 = 1;   \
                                         }
 
-#define IS_VCC3V3_PG                    (GpioDataRegs.GPBDAT.bit.GPIO43 == 1)
-#define IS_VCC1V9_PG                    (GpioDataRegs.GPBDAT.bit.GPIO45 == 1)
-#define IS_VCC5V_PG                     (GpioDataRegs.GPBDAT.bit.GPIO42 == 1)
-#define IS_VDD5V_PG                     (GpioDataRegs.GPBDAT.bit.GPIO44 == 1)
-#define IS_HARDWARE_OC				    (GpioDataRegs.GPADAT.bit.GPIO17 == 1)
-#define IS_HARDWARE_OV					(GpioDataRegs.GPCDAT.bit.GPIO31 == 1)
-#define IS_HARDWARE_OC_OV               (GpioDataRegs.GPADAT.bit.GPIO12 == 1)
+#define IS_VCC3V3_PG                    (GpioDataRegs.GPBDAT.bit.GPIO43 == 0)
+#define IS_VCC1V9_PG                    (GpioDataRegs.GPBDAT.bit.GPIO45 == 0)
+#define IS_VCC5V_PG                     (GpioDataRegs.GPBDAT.bit.GPIO42 == 0)
+#define IS_VDD5V_PG                     (GpioDataRegs.GPBDAT.bit.GPIO44 == 0)
+#define IS_HARDWARE_OC				    (GpioDataRegs.GPADAT.bit.GPIO17 == 0)
+#define IS_HARDWARE_OV					(GpioDataRegs.GPADAT.bit.GPIO31 == 0)
+#define IS_HARDWARE_OC_OV               (GpioDataRegs.GPADAT.bit.GPIO13 == 0)
 
 //#define TURN_ON_PWM_VALVE               (GpioDataRegs.GPCCLEAR.bit.GPIO84 = 1)
 #define TURN_OFF_PWM_VALVE              (GpioDataRegs.GPCSET.bit.GPIO84 = 1)
@@ -76,14 +76,18 @@
 		                DISABLE_SW_BREAK;                       \
                     }
 
-#define DIGIT_SIG_ROUTING_INSPECTION()                                              	   \
-                                        {                                           	   \
-                                            if(!IS_VCC5V_PG) SET_SYS_PG_VCC5V_ALARM;       \
-                                            if(!IS_VCC1V9_PG) SET_SYS_PG_1V9_ALARM;        \
-                                            if(!IS_VCC3V3_PG) SET_SYS_PG_VCC3V3_ALARM;     \
-											if(!IS_VDD5V_PG) SET_SYS_PG_VDD5V_ALARM;       \
-											if(!IS_HARDWARE_OC) SET_SYS_BUS_CURRENT_ALARM; \
-											else CLEAR_SYS_BUS_CURRENT_ALARM;			   \
+#define DIGIT_SIG_ROUTING_INSPECTION()                                              	   	   \
+                                        {                                           	   	   \
+                                            if(IS_VCC5V_PG) SET_SYS_PG_VCC5V_ALARM;       	   \
+                                            if(IS_VCC1V9_PG) SET_SYS_PG_1V9_ALARM;        	   \
+                                            if(IS_VCC3V3_PG) SET_SYS_PG_VCC3V3_ALARM;     	   \
+											if(IS_VDD5V_PG) SET_SYS_PG_VDD5V_ALARM;       	   \
+											if(IS_HARDWARE_OC){								   \
+												SET_SYS_BUS_CURRENT_ALARM; 	   				   \
+											}												   \
+											else CLEAR_SYS_BUS_CURRENT_ALARM;			   	   \
+											if(IS_HARDWARE_OV) SET_SYS_BUS_OVER_VOLTAGE_ALARM; \
+											else CLEAR_SYS_BUS_OVER_VOLTAGE_ALARM;			   \
                                         }
 
                     

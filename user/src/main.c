@@ -23,6 +23,8 @@ Uint32 gtArinc429ReadWord = 0;
 
 void main(void)
 {
+	double currVolt;
+
   	InitSysCtrl(); /*禁止内部看门狗，初始化锁相环，外围时钟及FLASH*/
 
 	DISABLE_GATE_DRIVER(); /*禁止驱动芯片*/
@@ -77,18 +79,30 @@ void main(void)
 	gSpwmPara.CurrentHallPosition = GetCurrentHallValue();
 	 /*等待VDD5V完成上电后清除硬件过流及使能RS422*/
 	ENABLE_RS422_DRIVER();
+	GpioDataRegs.GPCDAT.bit.GPIO68 = 1;
 	
 	while(1)
 	{
 		/*补周期BIT*/
 		period_BIT();
+
+		currVolt = gSysAnalogVar.single.var[updatePower270V_M].value;
+		if(currVolt > 3255) currVolt = 3255;
+		else if(currVolt < 2107) currVolt = 2107;
+		else /*NO USE*/;
+
+		gOpenLoop_Para.volt_Ratio = gOpenLoop_Para.nominalBusVoltage / currVolt;
+		gSpwmPara.BusVolt_Ratio = gOpenLoop_Para.volt_Ratio * 1.0;
+
 		/*补内部看门狗*/
 #if(SYS_DEBUG == INCLUDE_FEATURE)
 		PF_ProcessSciRxPacket(gScibRxQue);
         ProcessSciRxPacket(gScibRxQue);
 #else
 		SCI_RX_UnpackData(gScibRxQue);
-		gSpwmPara.TargetDuty = gDebugDataArray[0];
+//		gSpwmPara.TargetDuty = gDebugDataArray[0];
+//		gSpwmPara.DutyAddInterval = gDebugDataArray[0];
+
 #endif
 
 #if(J150_SCI_PROTOCOL_TX == NOT_INCLUDE_FEATURE)

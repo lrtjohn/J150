@@ -28,6 +28,16 @@ void Sys_hlsAlarm(void);
 #define Sys_chstAlarm()                 Sys_hlstPtr = Sys_hlsAlarm; SET_SYS_RUNNING_STATE_ALARM;
 
 #define SYS_STATE_MACHINE_INIT        Sys_chstInit()  
+
+void KeyParametersClear(void){
+	gSpwmPara.CloseLoopDuty = 0;
+	gSpwmPara.OpenLoopDuty = 0;
+	gSpwmPara.Duty_Gradual = 0;
+	gSpwmPara.Duty = 0;
+	gSpwmPara.TargetDuty = 0;
+	gSpwmPara.StepMaxDuty = 0;
+}
+
 /*初始化状态*/
 void Sys_hlstInit(void)
 {
@@ -59,6 +69,7 @@ void Sys_hlsStop(void)
 	if(gTimerCnt.Cnt_SM_Stop_5ms < 4) gTimerCnt.Cnt_PwrBus = 0;
 	if(gTimerCnt.Cnt_SM_Stop_5ms < 10) ++gTimerCnt.Cnt_SM_Stop_5ms;
 	CLR_J150_MOTOR_STA;
+	KeyParametersClear();
 	if(gSysStateFlag.j150WorkMode == NORMAL){
 		if(IS_SYS_ALARM){
 			DISABLE_GATE_DRIVER();
@@ -78,7 +89,9 @@ void Sys_hlsStop(void)
 						ENABLE_GATE_DRIVER();
 //						ENABLE_BUSBAR_VOLTAGE;
 						if(gTimerCnt.Cnt_PwrBus < 5) ++gTimerCnt.Cnt_PwrBus;
-						else Sys_chstForwardRotate();
+						else{
+							Sys_chstForwardRotate();
+						}
 					}
 					else{
 						DISABLE_GATE_DRIVER();
@@ -117,12 +130,14 @@ void Sys_hlstForwardRotate(void) /*运行状态*/
 		{
 			DISABLE_GATE_DRIVER();
 			DISABLE_BUSBAR_VOLTAGE;
+			KeyParametersClear();
 			Sys_chstAlarm();
 		}
 		else if(IS_SYS_ENABLE_STOP_ROTATE)
 		{
 			DISABLE_GATE_DRIVER();
 			DISABLE_BUSBAR_VOLTAGE;
+			KeyParametersClear();
 			Sys_chstStop();
 		}
 		else{
@@ -134,20 +149,26 @@ void Sys_hlstForwardRotate(void) /*运行状态*/
 		/*战时模式*/
 	}
 	SET_J150_MOTOR_STA;
+	updateCtrlStrategyParameters(); /*开闭环用反馈转速，反馈电压更新*/
+	CtrlStrategyCalculation(); /*计算开环，闭环占空比，并赋值目标占空比*/
 }
 
 void Sys_hlsAlarm(void) /*故障保护状态*/
 {
+//	static int cnt_clear = 0;
 	DISABLE_GATE_DRIVER();
 	DISABLE_BUSBAR_VOLTAGE;
 	SET_SYS_ENABLE_STOP_ROTATE;
 	SET_J150_FAULT_EXT;
 	CLR_J150_MOTOR_STA;
+	KeyParametersClear();
 	gTimerCnt.Cnt_SM_Stop_5ms = 0;
 	if(gTimerCnt.Cnt_SM_Alarm_5ms < 10) ++gTimerCnt.Cnt_SM_Alarm_5ms;
 	if(gSysStateFlag.j150WorkMode == NORMAL){
 		if(IS_SYS_ALARM){
-			if(gTimerCnt.Cnt_SM_Alarm_5ms > 4) HARDWARE_OVER_CURRENT_CLEAR();
+			if((gTimerCnt.Cnt_SM_Alarm_5ms > 4) && (gDebugDataArray[3] == 555)){
+				HARDWARE_OVER_CURRENT_CLEAR();
+			}
 		}
 		else{
 			if(gTimerCnt.Cnt_SM_Alarm_5ms >= 8){

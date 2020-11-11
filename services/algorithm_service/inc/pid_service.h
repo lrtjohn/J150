@@ -18,6 +18,7 @@ typedef struct _OPENLOOP_VAR
 {
     double currentBusVoltage;
     double nominalBusVoltage;
+    double volt_Ratio;
     double targetSpeed;
     double openloop_K;
     double openloop_B;
