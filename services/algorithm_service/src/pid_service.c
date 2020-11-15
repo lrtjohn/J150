@@ -7,7 +7,7 @@ double OpenLoop_Process(OPENLOOP_VAR* openloopVar){
 	double openloop_Output = 0;
 
 	openloop_Output = (openloopVar->targetSpeed * openloopVar->openloop_K + openloopVar->openloop_B) * openloopVar->volt_Ratio;
-
+/*增加限幅*/
 	return openloop_Output;
 }
 

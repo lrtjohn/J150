@@ -601,14 +601,14 @@ void Init_Analog_Ref(void)
 	gAnalog_Ref_Struct.thr_max_analog_ref[3] = 3020; /*10% 摘除R152用2645，未摘除使用3020*/
 	gAnalog_Ref_Struct.thr_max_analog_ref[4] = 2500; /*10%*/
 	gAnalog_Ref_Struct.thr_max_analog_ref[5] = 2240; /*10%*/
-	gAnalog_Ref_Struct.thr_max_analog_ref[6] = 1717; /*10% 摘除R152用2240，未摘除使用1420*/
+	gAnalog_Ref_Struct.thr_max_analog_ref[6] = 1420; /*10% 摘除R152用2240，未摘除使用1420  1717*/
 	gAnalog_Ref_Struct.thr_min_analog_ref[0] = 3100; /*10%*/
 	gAnalog_Ref_Struct.thr_min_analog_ref[1] = 3100; /*10%*/
 	gAnalog_Ref_Struct.thr_min_analog_ref[2] = 3000; /*10%*/
 	gAnalog_Ref_Struct.thr_min_analog_ref[3] = 2470; /*10% 摘除R152用2165，未摘除使用2470*/
 	gAnalog_Ref_Struct.thr_min_analog_ref[4] = 2050; /*10%*/
 	gAnalog_Ref_Struct.thr_min_analog_ref[5] = 1830; /*10%*/
-	gAnalog_Ref_Struct.thr_min_analog_ref[6] = 1404; /*10% 摘除R152用1830，未摘除使用1160*/
+	gAnalog_Ref_Struct.thr_min_analog_ref[6] = 1160; /*10% 摘除R152用1830，未摘除使用1160   1404*/
 	gAnalog_Ref_Struct.cnt_analog_ref[0] = 0;
 	gAnalog_Ref_Struct.cnt_analog_ref[1] = 0;
 	gAnalog_Ref_Struct.cnt_analog_ref[2] = 0;
