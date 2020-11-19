@@ -49,9 +49,11 @@ void main(void)
 	Init_ADC_Temperature();
 	Init_Analog_Ref();
 	Init_gKF_Speed(); /*初始化卡尔曼滤波全局变量*/
+	Init_gKF_Current();
 	Init_PID_Service(); /*初始化PID全局变量*/
 	Init_OpenLoop_Service();/*初始化开环全局变量*/
 	Init_Timer0_Buf(); /*初始化5ms中断中母线电压环形队列变量*/
+	Init_PWM_Buf();
 	InitEcapVar();
 
 	powerOn_BIT();
@@ -92,7 +94,8 @@ void main(void)
 		else /*NO USE*/;
 
 		gOpenLoop_Para.volt_Ratio = gOpenLoop_Para.nominalBusVoltage / currVolt;
-		gSpwmPara.BusVolt_Ratio = gOpenLoop_Para.volt_Ratio * 0.9;
+//		gSpwmPara.BusVolt_Ratio = gOpenLoop_Para.volt_Ratio * (((double)(gDebugDataArray[0])) / 10);
+		gSpwmPara.BusVolt_Ratio = gOpenLoop_Para.volt_Ratio * 1.5;
 
 		/*补内部看门狗*/
 #if(SYS_DEBUG == INCLUDE_FEATURE)
@@ -104,6 +107,9 @@ void main(void)
 //		gSpwmPara.DutyAddInterval = gDebugDataArray[0];
 
 #endif
+//		ScibRegs.SCIRXST.bit.RXERROR = gDebugDataArray[1];
+		ClearScibRxOverFlow();
+		CheckScibRxError();
 
 #if(J150_SCI_PROTOCOL_TX == NOT_INCLUDE_FEATURE)
         PackSciTxPacket(gScibTxQue,gSciTxVar);

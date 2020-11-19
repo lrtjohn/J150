@@ -19,6 +19,8 @@ void ClearSciaRxOverFlow(void);
 void ClearScibRxOverFlow(void);
 void ClearScicRxOverFlow(void);
 
+void CheckScibRxError(void);
+
 void CheckEnableSciaTx(SCITXQUE* RS422TxQue);
 void CheckEnableScibTx(SCITXQUE* RS422TxQue);
 void CheckEnableScicTx(SCITXQUE* RS422TxQue);

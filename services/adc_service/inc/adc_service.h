@@ -92,6 +92,7 @@ typedef struct _Current_Struct{
 	int16 Pos_BridgeSum;
 	int16 Neg_BridgeSum;
 	int16 Max_BusCurrent;
+	int16 I_busCurrent_Ave;
 }Current_Struct;
 
 typedef struct _Voltage_Struct{

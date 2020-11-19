@@ -23,9 +23,10 @@ void PFAL_Timer1_ISR(void)
     	gSciAppProtocolTx_J150.workStatus = gSysStateFlag.j150SysStatus.all;
     	gSciAppProtocolTx_J150.sysStatus1 = gSysStateFlag.sysRunningState;
 //    	gSciAppProtocolTx_J150.sysStatus2 = gSpwmPara.CloseLoopDuty;
-    	gSciAppProtocolTx_J150.sysStatus2 = gCurrent_Struct.I_bridgeABC[1];
+    	gSciAppProtocolTx_J150.sysStatus2 = gSpwmPara.StepMaxDuty;
     	gSciAppProtocolTx_J150.faultStatus = gSysStateFlag.alarm.all;
     	gSciAppProtocolTx_J150.targetSpeed = gSciAppProtocolRx_J150.targetSpeed;
+//    	gSciAppProtocolTx_J150.targetSpeed = gSpwmPara.StepMaxDuty;
     	gSciAppProtocolTx_J150.currentSpeed = gEcapPara.gMotorSpeedEcap;
 //    	gSciAppProtocolTx_J150.busVoltage = gSysAnalogVar.single.var[updatePower270V_M].value;
     	gSciAppProtocolTx_J150.busVoltage = gCurrent_Struct.I_bridgeABC[0];
@@ -33,10 +34,10 @@ void PFAL_Timer1_ISR(void)
     	gSciAppProtocolTx_J150.servoTemp = gSysAnalogVar.single.var[updateDriverTemp].value;
     	gSciAppProtocolTx_J150.motorTemp = gSysAnalogVar.single.var[updateMotorTemp].value;
 //    	gSciAppProtocolTx_J150.fwVersionNum = gSysVersionNum;
-    	gSciAppProtocolTx_J150.fwVersionNum = gCurrent_Struct.I_bridgeABC[2];
+    	gSciAppProtocolTx_J150.fwVersionNum = gCurrent_Struct.Max_BusCurrent;
 
 //    	gSciAppProtocolTx_J150.workMode = gSysStateFlag.j150WorkMode;
-    	gSciAppProtocolTx_J150.workMode = gSpwmPara.CurrentHallPosition;
+    	gSciAppProtocolTx_J150.workMode = gSpwmPara.restrictduty;
     	gSciAppProtocolTx_J150.RFU = gSpwmPara.Duty;
 //    	gSciAppProtocolTx_J150.RFU = (Uint16)(gPID_Speed_Para.sumErr * gPID_Speed_Para.ki);
 

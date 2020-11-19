@@ -26,6 +26,7 @@ typedef struct _OPENLOOP_VAR
 
 double Pid_Process(PID_VAR* pidVar);
 double OpenLoop_Process(OPENLOOP_VAR* openloopVar);
+double CurrentCompensate(void);
 void Init_PID_Service(void);
 void Init_OpenLoop_Service(void);
 extern PID_VAR gPID_Speed_Para;

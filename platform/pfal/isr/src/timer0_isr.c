@@ -166,10 +166,16 @@ void updateCtrlStrategyParameters(void)
 
 void CtrlStrategyCalculation(void)
 {
+	int16 tmp_TargetDuty;
 	gSpwmPara.CloseLoopDuty = Pid_Process(&gPID_Speed_Para);
 	gSpwmPara.OpenLoopDuty = OpenLoop_Process(&gOpenLoop_Para);
-	gSpwmPara.TargetDuty = gSpwmPara.CloseLoopDuty + gSpwmPara.OpenLoopDuty;
-//	gSpwmPara.TargetDuty = gSpwmPara.CloseLoopDuty;
+	gSpwmPara.CurrentCompensateDuty = CurrentCompensate();
+	tmp_TargetDuty = gSpwmPara.CloseLoopDuty + gSpwmPara.OpenLoopDuty + gSpwmPara.CurrentCompensateDuty;
+//	tmp_TargetDuty = gSpwmPara.CloseLoopDuty + gSpwmPara.OpenLoopDuty;
+	if(tmp_TargetDuty > 1250) tmp_TargetDuty = 1250;
+	else if(tmp_TargetDuty < 0) tmp_TargetDuty = 0;
+	else; /*DO NOTHING*/
+	gSpwmPara.TargetDuty = tmp_TargetDuty;
 }
 
 void PFAL_Timer0_ISR(void)

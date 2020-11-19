@@ -182,15 +182,14 @@ void BridgeABC_Current_Monitor_BIT(void){
 	int16 I_bridge_temp;
 	int i;
 	int alarm_flag;
-	int restrict_flag;
-	static int cnt_bridgeSum;
-	static int cnt_busCurrent;
+	static int cnt_bridgeSum = 0;
+	static int cnt_busCurrent = 0;
 
 	gCurrent_Struct.I_bridgeABC[0] = gSysAnalogVar.single.var[updateBridgeCurrentA].value - gCurrent_Struct.zero_IABC[0];
 	gCurrent_Struct.I_bridgeABC[1] = gSysAnalogVar.single.var[updateBridgeCurrentB].value - gCurrent_Struct.zero_IABC[1];
 	gCurrent_Struct.I_bridgeABC[2] = gSysAnalogVar.single.var[updateBridgeCurrentC].value - gCurrent_Struct.zero_IABC[2];
 
-	alarm_flag = restrict_flag = 0;
+	alarm_flag = 0;
 	gCurrent_Struct.I_busCurrent = gCurrent_Struct.I_bridgeSum = 0;
 	for(i=0; i<3; i++){
 		I_bridge_temp = gCurrent_Struct.I_bridgeABC[i];
@@ -201,7 +200,6 @@ void BridgeABC_Current_Monitor_BIT(void){
 		if(I_bridge_temp < 0) I_bridge_temp = - I_bridge_temp;
 		gCurrent_Struct.I_busCurrent = gCurrent_Struct.I_busCurrent + I_bridge_temp;
 		if(I_bridge_temp > gCurrent_Struct.Thr_min_I_Bridge){
-			restrict_flag = 1;
 			if(I_bridge_temp > gCurrent_Struct.Thr_max_I_Bridge){
 				gCurrent_Struct.cnt_max_threshold[i] = (I_bridge_temp - gCurrent_Struct.Thr_max_I_Bridge) +
 						gCurrent_Struct.cnt_max_threshold[i];
@@ -240,11 +238,22 @@ void BridgeABC_Current_Monitor_BIT(void){
 			CLEAR_BUS_CURRENT_ALARM;
 		}
 	}
-	if(restrict_flag) gSpwmPara.restrictduty = 1;
-	else gSpwmPara.restrictduty = 0;
+
 	if(alarm_flag) SET_BRIDGE_CURRENT_ALARM;
 	else{
 		if(IS_SYS_RUNNING_STATE_ALARM) CLEAR_BRIDGE_CURRENT_ALARM;
+	}
+
+	PwmBusCurrentEnQueue(gCurrent_Struct.I_busCurrent, pwm_busCurrent_Que);
+
+//	gKF_Current.currentData = gCurrent_Struct.I_busCurrent_Ave;
+//	gCurrent_Struct.I_busCurrent_Ave = KalmanVarFilter(&gKF_Current);
+
+	if(gCurrent_Struct.I_busCurrent_Ave > 185){
+		gSpwmPara.restrictduty = 1;
+	}
+	else{
+		gSpwmPara.restrictduty = 0;
 	}
 
 	if(gCurrent_Struct.I_busCurrent > gCurrent_Struct.Max_BusCurrent) gCurrent_Struct.Max_BusCurrent = gCurrent_Struct.I_busCurrent;
@@ -561,6 +570,7 @@ void Init_ADC_Current(void)
 	gCurrent_Struct.Pos_BridgeSum = 0;
 	gCurrent_Struct.Neg_BridgeSum = 0;
 	gCurrent_Struct.Max_BusCurrent = 0;
+	gCurrent_Struct.I_busCurrent_Ave = 0;
 }
 
 void Init_ADC_Voltage(void)
