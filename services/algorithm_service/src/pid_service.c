@@ -3,7 +3,7 @@
 PID_VAR gPID_Speed_Para = {0};
 OPENLOOP_VAR gOpenLoop_Para = {0};
 
-#define COMPENSATE_DUTY_K	(1.8)
+#define COMPENSATE_DUTY_K	(0.36)
 
 double OpenLoop_Process(OPENLOOP_VAR* openloopVar){
 	double openloop_Output = 0;
@@ -19,9 +19,14 @@ double OpenLoop_Process(OPENLOOP_VAR* openloopVar){
 
 double CurrentCompensate(void){
 	double Compensate_Duty = 0;
+	int16 I_busCurrent = 0;
 
-	Compensate_Duty = gCurrent_Struct.I_busCurrent_Ave * COMPENSATE_DUTY_K * 0.5;
-	if(Compensate_Duty > 170) Compensate_Duty = 170;
+	I_busCurrent = gCurrent_Struct.I_busCurrent_Ave;
+	if(I_busCurrent < 62) I_busCurrent = 0;
+	else if(I_busCurrent > 839) I_busCurrent = 839;
+	else; /*DO NOTHING*/
+	Compensate_Duty = I_busCurrent * COMPENSATE_DUTY_K * 0.7;
+	if(Compensate_Duty > 300) Compensate_Duty = 300;
 	else if(Compensate_Duty < 0) Compensate_Duty = 0;
 	else;/*DO NOTHING*/
 	return Compensate_Duty;

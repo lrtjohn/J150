@@ -272,67 +272,75 @@ void SwitchDirection(SPWM_PARA* spwmPara){
     }
 }
 
-#pragma CODE_SECTION(OverCurrentSoftProtect, "ramfuncs")
-void OverCurrentSoftProtect(SPWM_PARA* spwmPara){
-	if(1 == spwmPara->restrictduty){
-		spwmPara->Duty_Gradual = spwmPara->Duty_Gradual - 7;
-	}
-	else{
-		spwmPara->Duty_Gradual = spwmPara->Duty_Gradual;
-	}
-}
+//#pragma CODE_SECTION(OverCurrentSoftProtect, "ramfuncs")
+//void OverCurrentSoftProtect(SPWM_PARA* spwmPara){
+//	if(1 == spwmPara->restrictduty){
+//		spwmPara->Duty_Gradual = spwmPara->Duty_Gradual - 7;
+//	}
+//	else{
+//		spwmPara->Duty_Gradual = spwmPara->Duty_Gradual;
+//	}
+//}
 
 #pragma CODE_SECTION(Duty_Gradual_Change, "ramfuncs")
 void Duty_Gradual_Change (SPWM_PARA* spwmPara){
 	double currSpeed;
+	int16 CurrentCompensate;
+	int16 lastDuty;
+	static int16 cnt_tmp = 0;
 
 	currSpeed = gEcapPara.gMotorSpeedEcap;
-	/*占空比缓变开始*/
-//	++(spwmPara->DutyAddIntervalCnt); /*缓变频数计数*/
-//	if(spwmPara->DutyAddIntervalCnt >= spwmPara->DutyAddInterval){
-//
-//	spwmPara->DutyAddIntervalCnt = 0;
-//
-//	if(spwmPara->Duty_Gradual > spwmPara->TargetDuty){
-//			spwmPara->Duty_Gradual = spwmPara->TargetDuty;
-//    }
-//    else if(spwmPara->Duty_Gradual < spwmPara->TargetDuty){
-//    	if((spwmPara->Duty_Gradual + spwmPara->Ddtmax) > spwmPara->TargetDuty){
-//    		spwmPara->Duty_Gradual = spwmPara->TargetDuty;
-//    	}
-//    	else{
-//    		spwmPara->Duty_Gradual = spwmPara->Duty_Gradual + spwmPara->Ddtmax;
-//    	}
-//    }
-//    else{
-//           //nothing need change
-//    }
-//
-//	OverCurrentSoftProtect(spwmPara);
-//
-//   	if(spwmPara->Duty_Gradual > spwmPara->ThresholdDutyP) spwmPara->Duty_Gradual = spwmPara->ThresholdDutyP;
-//   	else if(spwmPara->Duty_Gradual < spwmPara->ThresholdDutyN) spwmPara->Duty_Gradual = spwmPara->ThresholdDutyN;
-//
-//	spwmPara->Duty = spwmPara->Duty_Gradual;
-//	}
+	CurrentCompensate = gSpwmPara.CurrentCompensateDuty;
+	lastDuty = spwmPara->Duty;
 
-//	OverCurrentSoftProtect(spwmPara);
+	if(currSpeed < 0) currSpeed = 0;
+	else if(currSpeed > 6000) currSpeed = 6000;
+	else; /*DO NOTHING*/
+	/*占空比缓变开始*/
 
 	if(1 == spwmPara->restrictduty){
-		if(spwmPara->TargetDuty > (spwmPara->Duty_Gradual - 3)){
-			spwmPara->Duty_Gradual = spwmPara->Duty_Gradual - 3;
+		if(spwmPara->TargetDuty > (lastDuty - 3)){
+			spwmPara->Duty_Gradual = lastDuty - 3;
 		}
 		else{
 			spwmPara->Duty_Gradual = spwmPara->TargetDuty;
 		}
 	}
 	else{
-		spwmPara->StepMaxDuty = (int16)((K_MAXDUTY * currSpeed + B_MAXDUTY) * spwmPara->BusVolt_Ratio);
+		spwmPara->StepMaxDuty = (int16)((K_MAXDUTY * currSpeed + B_MAXDUTY + CurrentCompensate) * spwmPara->BusVolt_Ratio);
 		if(spwmPara->TargetDuty > spwmPara->StepMaxDuty){
-			spwmPara->Duty_Gradual = spwmPara->StepMaxDuty;
+			spwmPara->Duty_Gradual_mid = spwmPara->StepMaxDuty;
+
 		}
 		else{
-			spwmPara->Duty_Gradual = spwmPara->TargetDuty;
+			spwmPara->Duty_Gradual_mid = spwmPara->TargetDuty;
+		}
+
+		if(lastDuty >= spwmPara->Duty_Gradual_mid){
+				spwmPara->Duty_Gradual = spwmPara->Duty_Gradual_mid;
+		}
+		else{
+			cnt_tmp = cnt_tmp + 1;
+			if(cnt_tmp > 50){
+				cnt_tmp = 0;
+				spwmPara->Duty_Gradual = lastDuty + 1;
+			}
+			else{
+				spwmPara->Duty_Gradual = lastDuty;
+			}
+//			spwmPara->DutyAddIntervalCnt = spwmPara->DutyAddIntervalCnt + 1; /*缓变频数计数*/
+//			if(spwmPara->DutyAddIntervalCnt >= spwmPara->DutyAddInterval){
+//				spwmPara->DutyAddIntervalCnt = 0;
+//				if((spwmPara->Duty_Gradual + 1) > spwmPara->Duty_Gradual_mid){
+//					spwmPara->Duty_Gradual = spwmPara->Duty_Gradual_mid;
+//				}
+//				else{
+//					spwmPara->Duty_Gradual = spwmPara->Duty_Gradual + 1;
+//				}
+//			}
+//			else{
+//				spwmPara->Duty_Gradual = lastDuty;
+//			}
 		}
 	}
 
@@ -447,8 +455,9 @@ void Init_Spwm_Service(void)
 //	gSpwmPara.Rvdt_Pos = 0;
 //	gSpwmPara.Rvdt_Zero = 1500;
 	gSpwmPara.Duty_Gradual = 0;
-//	gSpwmPara.DutyAddInterval = 10;
-//	gSpwmPara.DutyAddIntervalCnt = 0;
+	gSpwmPara.Duty_Gradual_mid = 0;
+	gSpwmPara.DutyAddInterval = 200;
+	gSpwmPara.DutyAddIntervalCnt = 0;
 //	gSpwmPara.Ddtmax = 1;
 	gSpwmPara.StepMaxDuty = 0;
 	gSpwmPara.BusVolt_Ratio = 0.794;

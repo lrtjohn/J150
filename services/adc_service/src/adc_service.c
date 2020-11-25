@@ -215,6 +215,9 @@ void BridgeABC_Current_Monitor_BIT(void){
 		}
 		else gCurrent_Struct.cnt_max_threshold[i] = 0;
 	}
+
+	PwmBusCurrentEnQueue(gCurrent_Struct.I_busCurrent, pwm_busCurrent_Que);
+
 	if(gCurrent_Struct.I_bridgeSum < 0 ) gCurrent_Struct.I_bridgeSum = - gCurrent_Struct.I_bridgeSum;
 	if(gCurrent_Struct.I_bridgeSum >= gCurrent_Struct.Thr_BridgeSum){
 		++cnt_bridgeSum;
@@ -227,7 +230,7 @@ void BridgeABC_Current_Monitor_BIT(void){
 			CLEAR_BRIDGE_CURRENT_SUM_ALARM;
 		}
 	}
-	if(gCurrent_Struct.I_busCurrent >= gCurrent_Struct.Thr_BusCurrent){
+	if(gCurrent_Struct.I_busCurrent_Ave >= gCurrent_Struct.Thr_BusCurrent){
 		++cnt_busCurrent;
 		if(cnt_busCurrent > 10) SET_BUS_CURRENT_ALARM;
 	}
@@ -244,12 +247,10 @@ void BridgeABC_Current_Monitor_BIT(void){
 		if(IS_SYS_RUNNING_STATE_ALARM) CLEAR_BRIDGE_CURRENT_ALARM;
 	}
 
-	PwmBusCurrentEnQueue(gCurrent_Struct.I_busCurrent, pwm_busCurrent_Que);
-
 //	gKF_Current.currentData = gCurrent_Struct.I_busCurrent_Ave;
 //	gCurrent_Struct.I_busCurrent_Ave = KalmanVarFilter(&gKF_Current);
 
-	if(gCurrent_Struct.I_busCurrent_Ave > 185){
+	if(gCurrent_Struct.I_busCurrent_Ave > 840){
 		gSpwmPara.restrictduty = 1;
 	}
 	else{
@@ -557,7 +558,7 @@ void Init_ADC_Current(void)
 	gCurrent_Struct.I_busCurrent = 0;
 	gCurrent_Struct.I_bridgeSum = 0;
 	gCurrent_Struct.Thr_BridgeSum = 2000;
-	gCurrent_Struct.Thr_BusCurrent = 2000;
+	gCurrent_Struct.Thr_BusCurrent = 1500;
 	gCurrent_Struct.cnt_max_threshold[0] = 0;
 	gCurrent_Struct.cnt_max_threshold[1] = 0;
 	gCurrent_Struct.cnt_max_threshold[2] = 0;

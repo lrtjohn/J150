@@ -434,7 +434,7 @@ static int J150_TransTxCalCheckSum(void)
     Uint16 i = 0;
     Uint16 checkSum = 0;
 
-    for (i = TX_LENGTH_POS; i < TX_CHECK_SUM_POS - 1; ++i)
+    for (i = TX_LENGTH_POS; i < TX_CHECK_SUM_POS; ++i)
     {
         checkSum += gSciTransTx_J150.mpTxOneFrameArray[i];
     }
