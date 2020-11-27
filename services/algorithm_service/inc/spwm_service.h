@@ -42,7 +42,7 @@ typedef struct _SPWM_PARA
     int16 TargetDuty;
     int16 StepMaxDuty;
     double BusVolt_Ratio;
-//    int16 Ddtmax;
+    int16 lastDuty;
     int16 ThresholdDutyP;
     int16 ThresholdDutyN;
     int16 OpenLoopDuty;

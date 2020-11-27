@@ -358,12 +358,10 @@ void SwitchDirection(SPWM_PARA* spwmPara){
 void Duty_Gradual_Change (SPWM_PARA* spwmPara){
 	double currSpeed;
 	int16 CurrentCompensate;
-	int16 lastDuty;
-	static int16 cnt_tmp = 0;
 
 	currSpeed = gEcapPara.gMotorSpeedEcap;
 	CurrentCompensate = gSpwmPara.CurrentCompensateDuty;
-	lastDuty = spwmPara->Duty;
+	spwmPara->lastDuty = spwmPara->Duty;
 
 	if(currSpeed < 0) currSpeed = 0;
 	else if(currSpeed > 6000) currSpeed = 6000;
@@ -371,8 +369,8 @@ void Duty_Gradual_Change (SPWM_PARA* spwmPara){
 	/*占空比缓变开始*/
 
 	if(1 == spwmPara->restrictduty){
-		if(spwmPara->TargetDuty > (lastDuty - 3)){
-			spwmPara->Duty_Gradual = lastDuty - 3;
+		if(spwmPara->TargetDuty > (spwmPara->lastDuty - 3)){
+			spwmPara->Duty_Gradual = spwmPara->lastDuty - 3;
 		}
 		else{
 			spwmPara->Duty_Gradual = spwmPara->TargetDuty;
@@ -388,31 +386,18 @@ void Duty_Gradual_Change (SPWM_PARA* spwmPara){
 			spwmPara->Duty_Gradual_mid = spwmPara->TargetDuty;
 		}
 
-		if(lastDuty >= spwmPara->Duty_Gradual_mid){
+		if(spwmPara->lastDuty >= spwmPara->Duty_Gradual_mid){
 				spwmPara->Duty_Gradual = spwmPara->Duty_Gradual_mid;
 		}
 		else{
-			cnt_tmp = cnt_tmp + 1;
-			if(cnt_tmp > 15){
-				cnt_tmp = 0;
-				spwmPara->Duty_Gradual = lastDuty + 1;
+			spwmPara->DutyAddIntervalCnt = spwmPara->DutyAddIntervalCnt + 1;
+			if(spwmPara->DutyAddIntervalCnt > spwmPara->DutyAddInterval){
+				spwmPara->DutyAddIntervalCnt = 0;
+				spwmPara->Duty_Gradual = spwmPara->lastDuty + 1;
 			}
 			else{
-				spwmPara->Duty_Gradual = lastDuty;
+				spwmPara->Duty_Gradual = spwmPara->lastDuty;
 			}
-//			spwmPara->DutyAddIntervalCnt = spwmPara->DutyAddIntervalCnt + 1; /*缓变频数计数*/
-//			if(spwmPara->DutyAddIntervalCnt >= spwmPara->DutyAddInterval){
-//				spwmPara->DutyAddIntervalCnt = 0;
-//				if((spwmPara->Duty_Gradual + 1) > spwmPara->Duty_Gradual_mid){
-//					spwmPara->Duty_Gradual = spwmPara->Duty_Gradual_mid;
-//				}
-//				else{
-//					spwmPara->Duty_Gradual = spwmPara->Duty_Gradual + 1;
-//				}
-//			}
-//			else{
-//				spwmPara->Duty_Gradual = lastDuty;
-//			}
 		}
 	}
 
@@ -528,9 +513,9 @@ void Init_Spwm_Service(void)
 //	gSpwmPara.Rvdt_Zero = 1500;
 	gSpwmPara.Duty_Gradual = 0;
 	gSpwmPara.Duty_Gradual_mid = 0;
-	gSpwmPara.DutyAddInterval = 200;
+	gSpwmPara.DutyAddInterval = 15;
 	gSpwmPara.DutyAddIntervalCnt = 0;
-//	gSpwmPara.Ddtmax = 1;
+	gSpwmPara.lastDuty = 0;
 	gSpwmPara.StepMaxDuty = 0;
 	gSpwmPara.BusVolt_Ratio = 0.794;
 	gSpwmPara.ThresholdDutyP = 1250;
