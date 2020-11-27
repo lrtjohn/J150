@@ -1,4 +1,5 @@
 #include "sci_service.h"
+#include "gpio_service.h"
 
 void Sci_A_Receive(SCIRXQUE* RS422RxQue)
 {
@@ -180,6 +181,17 @@ void ClearScicRxOverFlow(void)
 		{
 //			printf(">>scib clear fifo over flow flag\r\n");
 		}
+	}
+}
+
+void CheckScibRxError(void){
+	if(ScibRegs.SCIRXST.bit.RXERROR == 1){
+		ScibRegs.SCICTL1.bit.SWRESET = 0;
+//		DELAY_NOPS(5);
+//		ScibRegs.SCICTL1.bit.SWRESET = 1;
+	}
+	else{
+		ScibRegs.SCICTL1.bit.SWRESET = 1;
 	}
 }
 

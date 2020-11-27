@@ -1,8 +1,13 @@
 
 
 #include "adc_service.h"
+#include "spwm_service.h"
 
 SysAnalogVar gSysAnalogVar = {0};
+Current_Struct gCurrent_Struct = {0};
+Voltage_Struct gVoltage_Struct = {0};
+Temperature_Struct gTemperature_Struct = {0};
+Analog_Ref_Struct gAnalog_Ref_Struct = {0};
 
 Uint16 ADCINA0(void){return Get_Adc_CHL0;}
 Uint16 ADCINA1(void){return Get_Adc_CHL2;}
@@ -52,18 +57,19 @@ const Uint16 SDB_SingleAnologMaxMinInit[TOTAL_SNGL_ANAL_CHS][4] =
 	{0,0,0,0},            //3
 	{0,0,0,0},            //4
 	{0,0,0,0},      	  //5
-	{3063,2968,1822,1917},            //6 320V, 310V, 190V, 200V
+	{3063,2968,2013,2060},      //6 320V, 310V, 210V, 215V 2013,2060
 	{0,0,0,0},            //7
 	{0,0,0,0}, 			  //8
 	{0,0,0,0},            //9
-	{0,0,0,0},            //10
+	{1860,0,980,0},      //10
 	{0,0,0,0},            //11
-	{0,0,0,0},            //12
+	{550,0,200,0},        //12
 	{0,0,0,0},            //13
 	{0,0,0,0},            //14
 	{0,0,0,0}             //15
 };
 
+#pragma CODE_SECTION(Spwm_HighSpeed_BIT, "ramfuncs")
 void UpdateSingleAnalog(SysAnalogVar* sysAnalogVar)
 {
 	int index;
@@ -74,61 +80,408 @@ void UpdateSingleAnalog(SysAnalogVar* sysAnalogVar)
 	}
 }
 
-void updateAndCheckVoltage(void){
-    static int count_max = 0;
-    static int count_min = 0;
+/*由PWM中断调用*/
+#pragma CODE_SECTION(PwrBus_OverVoltage_BIT, "ramfuncs")
+void PwrBus_OverVoltage_BIT(void){
+    static int count_enable_alarm = 0;
+    static int cnt_disable_alarm = 0;
+    static int cnt_disable_break = 0;
+    static int cnt_enable_break = 0;
 
-    gSysAnalogVar.single.var[updatePower270V_M].value = gSysAnalogVar.single.var[updatePower270V_M].updateValue();
+    if(gSpwmPara.pwmSM == SYS_FORWARD_RUN){
+    	if (gSysAnalogVar.single.var[updatePower270V_M].value > gVoltage_Struct.Thr_max3rd_Voltage){
+    		++cnt_enable_break;
+    		if(cnt_enable_break > 3){
+    			cnt_enable_break = 0;
+    			ENABLE_SW_BREAK;
+    		}
+			else;/*DO NOTHING*/
+    	}
+    	else{
+			cnt_enable_break = 0;
 
-    if(IS_SYS_BUS_OVER_VOLTAGE_ALARM){
-        if((gSysAnalogVar.single.var[updatePower270V_M].value < gSysAnalogVar.single.var[updatePower270V_M].max2nd)){
-        	CLEAR_SYS_BUS_OVER_VOLTAGE_ALARM;
-        }
-        else{
-        	SET_SYS_BUS_OVER_VOLTAGE_ALARM;
-        }
+    		if(IS_SW_BREAK_ENABLED){
+        		if(gSysAnalogVar.single.var[updatePower270V_M].value < gVoltage_Struct.Thr_max4th_Voltage){
+        			++cnt_disable_break;
+        			if(cnt_disable_break > 5){
+        				cnt_disable_break = 0;
+        				DISABLE_SW_BREAK;
+        			}
+        		}
+        		else cnt_disable_break = 0;
+			}
+    		else cnt_disable_break = 0;
+    	}
     }
-    else if(!IS_SYS_BUS_OVER_VOLTAGE_ALARM){
-        if((gSysAnalogVar.single.var[updatePower270V_M].value > gSysAnalogVar.single.var[updatePower270V_M].max)) {
-            ++count_max;
-            if(count_max > 10){
-                count_max = 0;
-                SET_SYS_BUS_OVER_VOLTAGE_ALARM;
-            }
-        }
-        else{
-            count_max = 0;
-        }
-    }
-    else{
-//        gSysSWAlarm.bit.updateAndCheckVoltage = 1;
-//        gSysAlarm.bit.softwareFault = 1;
-    }
-    if(IS_SYS_BUS_UNDER_VOLTAGE_ALARM){
-        if((gSysAnalogVar.single.var[updatePower270V_M].value > gSysAnalogVar.single.var[updatePower270V_M].min2nd)){
-        	CLEAR_SYS_BUS_UNDER_VOLTAGE_ALARM;
-        }
-        else{
-        	SET_SYS_BUS_UNDER_VOLTAGE_ALARM;
-        }
-    }
-    else if (!IS_SYS_BUS_UNDER_VOLTAGE_ALARM){
-        if((gSysAnalogVar.single.var[updatePower270V_M].value < gSysAnalogVar.single.var[updatePower270V_M].min)) {
+	else{
+		DISABLE_SW_BREAK;
+		cnt_enable_break = 0;
+		cnt_disable_break = 0;
+	}
+
+
+	if (gSysAnalogVar.single.var[updatePower270V_M].value > gVoltage_Struct.Thr_max_Voltage){
+		++count_enable_alarm;
+		if(count_enable_alarm > 3){
+			count_enable_alarm = 0;
+			SET_SW_BUS_OV_ALARM;
+		}
+		else;/*DO NOTHING*/
+	}
+	else{
+		count_enable_alarm = 0;
+		if(IS_SW_BUS_OV_ALARM){
+			if(gSysAnalogVar.single.var[updatePower270V_M].value < gVoltage_Struct.Thr_max2nd_Voltage){
+				++cnt_disable_alarm;
+				if(cnt_disable_alarm > 5){
+					cnt_disable_alarm = 0;
+					CLEAR_SW_BUS_OV_ALARM;
+				}
+				else;/*DO NOTHING*/
+			}
+			else cnt_disable_alarm = 0;
+		}
+		else cnt_disable_alarm = 0;
+	}
+}
+
+/*由主循环调用*/
+void PwrBus_UnderVoltage(void){
+	static int count_min = 0;
+	static int count_min2nd = 0;
+
+		if (gSysAnalogVar.single.var[updatePower270V_M].value < gVoltage_Struct.Thr_min_Voltage){ /*210*/
             ++count_min;
             if(count_min > 10){
                 count_min = 0;
                 SET_SYS_BUS_UNDER_VOLTAGE_ALARM;
             }
+		}
+		else{
+			if(count_min >= 1) --count_min;
+			else count_min = 0; 
+		}
+
+		if(IS_SYS_BUS_UNDER_VOLTAGE_ALARM){
+			if(gSysAnalogVar.single.var[updatePower270V_M].value > gVoltage_Struct.Thr_min2nd_Voltage){ /*215V*/
+				++count_min2nd;
+				if(count_min2nd > 150){					
+					count_min2nd = 0;
+					CLEAR_SYS_BUS_UNDER_VOLTAGE_ALARM;
+				}
+				else{
+					if(count_min2nd >= 1) --count_min2nd;
+					else count_min2nd = 0;
+				}
+			}
+		}
+}
+
+#pragma CODE_SECTION(BridgeABC_Current_Monitor_BIT, "ramfuncs")
+void BridgeABC_Current_Monitor_BIT(void){
+	int16 I_bridge_temp;
+	int i;
+	int alarm_flag;
+	static int cnt_bridgeSum = 0;
+	static int cnt_busCurrent = 0;
+
+	gCurrent_Struct.I_bridgeABC[0] = gSysAnalogVar.single.var[updateBridgeCurrentA].value - gCurrent_Struct.zero_IABC[0];
+	gCurrent_Struct.I_bridgeABC[1] = gSysAnalogVar.single.var[updateBridgeCurrentB].value - gCurrent_Struct.zero_IABC[1];
+	gCurrent_Struct.I_bridgeABC[2] = gSysAnalogVar.single.var[updateBridgeCurrentC].value - gCurrent_Struct.zero_IABC[2];
+
+	alarm_flag = 0;
+	gCurrent_Struct.I_busCurrent = gCurrent_Struct.I_bridgeSum = 0;
+	for(i=0; i<3; i++){
+		I_bridge_temp = gCurrent_Struct.I_bridgeABC[i];
+		if(I_bridge_temp > gCurrent_Struct.Pos_BridgeCurrent[i]) gCurrent_Struct.Pos_BridgeCurrent[i] = I_bridge_temp;
+		if(I_bridge_temp < gCurrent_Struct.Neg_BridgeCurrent[i]) gCurrent_Struct.Neg_BridgeCurrent[i] = I_bridge_temp;
+
+		gCurrent_Struct.I_bridgeSum = I_bridge_temp + gCurrent_Struct.I_bridgeSum;
+		if(I_bridge_temp < 0) I_bridge_temp = - I_bridge_temp;
+		gCurrent_Struct.I_busCurrent = gCurrent_Struct.I_busCurrent + I_bridge_temp;
+		if(I_bridge_temp > gCurrent_Struct.Thr_min_I_Bridge){
+			if(I_bridge_temp > gCurrent_Struct.Thr_max_I_Bridge){
+				gCurrent_Struct.cnt_max_threshold[i] = (I_bridge_temp - gCurrent_Struct.Thr_max_I_Bridge) +
+						gCurrent_Struct.cnt_max_threshold[i];
+		        if(gCurrent_Struct.cnt_max_threshold[i] > 150){
+		        	gCurrent_Struct.cnt_max_threshold[i] = 0;
+		        	alarm_flag = 1;
+		        }
+			}
+		    else{
+			    if(gCurrent_Struct.cnt_max_threshold[i] >= 1) --gCurrent_Struct.cnt_max_threshold[i];
+			    else gCurrent_Struct.cnt_max_threshold[i] = 0;
+		    }
+		}
+		else gCurrent_Struct.cnt_max_threshold[i] = 0;
+	}
+
+	PwmBusCurrentEnQueue(gCurrent_Struct.I_busCurrent, pwm_busCurrent_Que);
+
+	if(gCurrent_Struct.I_bridgeSum < 0 ) gCurrent_Struct.I_bridgeSum = - gCurrent_Struct.I_bridgeSum;
+	if(gCurrent_Struct.I_bridgeSum >= gCurrent_Struct.Thr_BridgeSum){
+		++cnt_bridgeSum;
+		if(cnt_bridgeSum > 10) SET_BRIDGE_CURRENT_SUM_ALARM;
+	}
+	else{
+		if(cnt_bridgeSum >= 1) --cnt_bridgeSum;
+		else{
+			cnt_bridgeSum = 0;
+			CLEAR_BRIDGE_CURRENT_SUM_ALARM;
+		}
+	}
+	if(gCurrent_Struct.I_busCurrent_Ave >= gCurrent_Struct.Thr_BusCurrent){
+		++cnt_busCurrent;
+		if(cnt_busCurrent > 10) SET_BUS_CURRENT_ALARM;
+	}
+	else{
+		if(cnt_busCurrent >= 1) --cnt_busCurrent;
+		else{
+			cnt_busCurrent = 0;
+			CLEAR_BUS_CURRENT_ALARM;
+		}
+	}
+
+	if(alarm_flag) SET_BRIDGE_CURRENT_ALARM;
+	else{
+		if(IS_SYS_RUNNING_STATE_ALARM) CLEAR_BRIDGE_CURRENT_ALARM;
+	}
+
+//	gKF_Current.currentData = gCurrent_Struct.I_busCurrent_Ave;
+//	gCurrent_Struct.I_busCurrent_Ave = KalmanVarFilter(&gKF_Current);
+
+	if(gCurrent_Struct.I_busCurrent_Ave > 840){
+		gSpwmPara.restrictduty = 1;
+	}
+	else{
+		gSpwmPara.restrictduty = 0;
+	}
+
+	if(gCurrent_Struct.I_busCurrent > gCurrent_Struct.Max_BusCurrent) gCurrent_Struct.Max_BusCurrent = gCurrent_Struct.I_busCurrent;
+	if(gCurrent_Struct.I_bridgeSum > gCurrent_Struct.Pos_BridgeSum) gCurrent_Struct.Pos_BridgeSum = gCurrent_Struct.I_bridgeSum;
+	if(gCurrent_Struct.I_bridgeSum < gCurrent_Struct.Neg_BridgeSum) gCurrent_Struct.Neg_BridgeSum = gCurrent_Struct.I_bridgeSum;
+	GpioDataRegs.GPBDAT.bit.GPIO50 = 0;/*debug3*/
+}
+
+void CheckMotorTemperature(void){
+    static int cnt_alarm_max = 0;
+    static int cnt_alarm_max2nd = 0;
+    static int over_alarm_limit_lasttime = 0;
+
+    static int cnt_warning_max = 0;
+    static int cnt_warning_max2nd = 0;
+    static int over_warning_limit_lasttime = 0;
+
+    if(over_alarm_limit_lasttime == 1){/*保护*/
+        if(gSysAnalogVar.single.var[updateMotorTemp].value < gTemperature_Struct.Thr_max2nd_alarm_motor_Temp){
+            ++cnt_alarm_max2nd;
+            if(cnt_alarm_max2nd >5000){
+            	CLEAR_MOTOR_TEMPERATURE_ALARM;
+            	over_alarm_limit_lasttime = 0;
+            }
         }
         else{
-            count_min = 0;
+        	cnt_alarm_max2nd = 0;
+            over_alarm_limit_lasttime = 1;
+            SET_MOTOR_TEMPERATURE_ALARM;
         }
     }
-    else {
-//    	gSysSWAlarm.bit.updateAndCheckVoltage = 1;
-//        gSysAlarm.bit.softwareFault = 1;
+    else if (over_alarm_limit_lasttime == 0){
+        if(gSysAnalogVar.single.var[updateMotorTemp].value > gTemperature_Struct.Thr_max_alarm_motor_Temp) {
+            ++cnt_alarm_max;
+            if(cnt_alarm_max > 5000){
+                cnt_alarm_max = 0;
+                SET_MOTOR_TEMPERATURE_ALARM;
+                over_alarm_limit_lasttime = 1;
+            }
+        }
+        else{
+            if(cnt_alarm_max >= 1) --cnt_alarm_max;
+            else cnt_alarm_max = 0;
+        }
+    }
+    else{
+//    	gSysSWAlarm.bit.updateAndCheckTemperature = 1;
+//    	gSysAlarm.bit.softwareFault = 1;
+    }
+
+    if(over_warning_limit_lasttime == 1){/*警告*/
+        if(gSysAnalogVar.single.var[updateMotorTemp].value < gTemperature_Struct.Thr_max2nd_warning_motor_Temp){
+            ++cnt_warning_max2nd;
+            if(cnt_warning_max2nd >5000){
+            	CLEAR_MOTOR_TEMPERATURE_WARNING;
+            	over_warning_limit_lasttime = 0;
+            }
+        }
+        else{
+        	cnt_warning_max2nd = 0;
+            over_warning_limit_lasttime = 1;
+            SET_MOTOR_TEMPERATURE_WARNING;
+        }
+    }
+    else if (over_warning_limit_lasttime == 0){
+        if(gSysAnalogVar.single.var[updateMotorTemp].value > gTemperature_Struct.Thr_max_warning_motor_Temp) {
+            ++cnt_warning_max;
+            if(cnt_warning_max > 5000){
+                cnt_warning_max = 0;
+                SET_MOTOR_TEMPERATURE_WARNING;
+                over_alarm_limit_lasttime = 1;
+            }
+        }
+        else{
+            if(cnt_warning_max >= 1) --cnt_warning_max;
+            else cnt_warning_max = 0;
+        }
+    }
+    else{
+//    	gSysSWAlarm.bit.updateAndCheckTemperature = 1;
+//    	gSysAlarm.bit.softwareFault = 1;
     }
 }
+
+void CheckDriverTemperature(void){
+    static int cnt_alarm_max = 0;
+    static int cnt_alarm_max2nd = 0;
+    static int over_alarm_limit_lasttime = 0;
+
+    static int cnt_warning_max = 0;
+    static int cnt_warning_max2nd = 0;
+    static int over_warning_limit_lasttime = 0;
+
+    if(over_alarm_limit_lasttime == 1){/*保护*/
+        if(gSysAnalogVar.single.var[updateDriverTemp].value < gTemperature_Struct.Thr_max2nd_alarm_driver_Temp){
+            ++cnt_alarm_max2nd;
+            if(cnt_alarm_max2nd >5000){
+            	CLEAR_DRIVER_TEMPERATURE_ALARM;
+            	over_alarm_limit_lasttime = 0;
+            }
+        }
+        else{
+        	cnt_alarm_max2nd = 0;
+            over_alarm_limit_lasttime = 1;
+            SET_DRIVER_TEMPERATURE_ALARM;
+        }
+    }
+    else if (over_alarm_limit_lasttime == 0){
+        if(gSysAnalogVar.single.var[updateDriverTemp].value > gTemperature_Struct.Thr_max_alarm_driver_Temp) {
+            ++cnt_alarm_max;
+            if(cnt_alarm_max > 5000){
+                cnt_alarm_max = 0;
+                SET_DRIVER_TEMPERATURE_ALARM;
+                over_alarm_limit_lasttime = 1;
+            }
+        }
+        else{
+            if(cnt_alarm_max >= 1) --cnt_alarm_max;
+            else cnt_alarm_max = 0;
+        }
+    }
+    else{
+//    	gSysSWAlarm.bit.updateAndCheckTemperature = 1;
+//    	gSysAlarm.bit.softwareFault = 1;
+    }
+
+    if(over_warning_limit_lasttime == 1){/*警告*/
+        if(gSysAnalogVar.single.var[updateDriverTemp].value < gTemperature_Struct.Thr_max2nd_warning_driver_Temp){
+            ++cnt_warning_max2nd;
+            if(cnt_warning_max2nd >5000){
+            	CLEAR_DRIVERR_TEMPERATURE_WARNING;
+            	over_warning_limit_lasttime = 0;
+            }
+        }
+        else{
+        	cnt_warning_max2nd = 0;
+            over_warning_limit_lasttime = 1;
+            SET_DRIVER_TEMPERATURE_WARNING;
+        }
+    }
+    else if (over_warning_limit_lasttime == 0){
+        if(gSysAnalogVar.single.var[updateDriverTemp].value > gTemperature_Struct.Thr_max_warning_driver_Temp) {
+            ++cnt_warning_max;
+            if(cnt_warning_max > 5000){
+                cnt_warning_max = 0;
+                SET_DRIVER_TEMPERATURE_WARNING;
+                over_alarm_limit_lasttime = 1;
+            }
+        }
+        else{
+            if(cnt_warning_max >= 1) --cnt_warning_max;
+            else cnt_warning_max = 0;
+        }
+    }
+    else{
+//    	gSysSWAlarm.bit.updateAndCheckTemperature = 1;
+//    	gSysAlarm.bit.softwareFault = 1;
+    }
+}
+
+void check_28V_Current(void){
+	static int cnt_alarm = 0;
+
+	if((gSysAnalogVar.single.var[updateCurrent28V].value > gSysAnalogVar.single.var[updateCurrent28V].max) ||
+	   (gSysAnalogVar.single.var[updateCurrent28V].value < gSysAnalogVar.single.var[updateCurrent28V].min)){
+		++cnt_alarm;
+		if(cnt_alarm > 10){
+			SET_CONTROL_BUS_CURRENT_ALARM;
+		}
+	}
+	else{
+		if(cnt_alarm >= 1) --cnt_alarm;
+		else{
+			cnt_alarm = 0;
+			CLEAR_CONTROL_BUS_CURRENT_ALARM;
+		} 			
+	}
+}
+
+void check_28V_Voltage(void){
+	static int cnt_alarm = 0;
+
+	if((gSysAnalogVar.single.var[updateVoltage28V].value > gSysAnalogVar.single.var[updateVoltage28V].max) ||
+	   (gSysAnalogVar.single.var[updateVoltage28V].value < gSysAnalogVar.single.var[updateVoltage28V].min)){
+		++cnt_alarm;
+		if(cnt_alarm > 10){
+			SET_CONTROL_BUS_VOLTAGE_ALARM;
+		}
+	}
+	else{
+		if(cnt_alarm >= 1) --cnt_alarm;
+		else{
+			cnt_alarm = 0;
+			CLEAR_CONTROL_BUS_VOLTAGE_ALARM;
+		} 			
+	}
+}
+
+void check_Analog_Ref(void){
+	int i;
+	gAnalog_Ref_Struct.analog_ref[0] = gSysAnalogVar.single.var[updateVoltageVCC5V].value;
+	gAnalog_Ref_Struct.analog_ref[1] = gSysAnalogVar.single.var[updateVoltageAVDD5V].value;
+	gAnalog_Ref_Struct.analog_ref[2] = gSysAnalogVar.single.var[updateVoltageRef2V5].value;
+	gAnalog_Ref_Struct.analog_ref[3] = gSysAnalogVar.single.var[updateCurrentMax].value;
+	gAnalog_Ref_Struct.analog_ref[4] = gSysAnalogVar.single.var[updateDriverVoltage5V].value;
+	gAnalog_Ref_Struct.analog_ref[5] = gSysAnalogVar.single.var[updateVoltageRef1V5].value;
+	gAnalog_Ref_Struct.analog_ref[6] = gSysAnalogVar.single.var[updateCurrentMin].value;
+
+	for(i=0; i<7; i++){
+		if((gAnalog_Ref_Struct.analog_ref[i] > gAnalog_Ref_Struct.thr_max_analog_ref[i]) ||
+		   (gAnalog_Ref_Struct.analog_ref[i] < gAnalog_Ref_Struct.thr_min_analog_ref[i])){
+			++gAnalog_Ref_Struct.cnt_analog_ref[i];
+			if(gAnalog_Ref_Struct.cnt_analog_ref[i] > 10){
+				SET_HW_ANALOG_LEVEL_ALARM;
+			}
+		}
+		else{
+			if(gAnalog_Ref_Struct.cnt_analog_ref[i] >= 1) --gAnalog_Ref_Struct.cnt_analog_ref[i];
+			else{
+				gAnalog_Ref_Struct.cnt_analog_ref[i] = 0;
+				CLEAR_HW_ANALOG_LEVEL_ALARM;
+			} 			
+		}
+	}
+
+}
+
 
 int IsSingleAnalogValueAbnormal(SysAnalogVar* sysAnalogVar)
 {
@@ -187,3 +540,91 @@ void Init_Adc_Service(void)
 
 }
 
+void Init_ADC_Current(void)
+{
+	gCurrent_Struct.zerosum_IABC[0] = 0;
+	gCurrent_Struct.zerosum_IABC[1] = 0;
+	gCurrent_Struct.zerosum_IABC[2] = 0;
+	gCurrent_Struct.zero_IABC[0] = 0;
+	gCurrent_Struct.zero_IABC[1] = 0;
+	gCurrent_Struct.zero_IABC[2] = 0;
+	gCurrent_Struct.I_bridgeABC[0] = 0;
+	gCurrent_Struct.I_bridgeABC[1] = 0;
+	gCurrent_Struct.I_bridgeABC[2] = 0;
+	gCurrent_Struct.Thr_max_I_Bridge = 2000;
+	gCurrent_Struct.Thr_min_I_Bridge = 2000;
+	gCurrent_Struct.Thr_max_I_Bus = 1000;
+	gCurrent_Struct.Thr_min_I_Bus = 1000;
+	gCurrent_Struct.I_busCurrent = 0;
+	gCurrent_Struct.I_bridgeSum = 0;
+	gCurrent_Struct.Thr_BridgeSum = 2000;
+	gCurrent_Struct.Thr_BusCurrent = 1500;
+	gCurrent_Struct.cnt_max_threshold[0] = 0;
+	gCurrent_Struct.cnt_max_threshold[1] = 0;
+	gCurrent_Struct.cnt_max_threshold[2] = 0;
+	gCurrent_Struct.Pos_BridgeCurrent[0] = 0;
+	gCurrent_Struct.Pos_BridgeCurrent[1] = 0;
+	gCurrent_Struct.Pos_BridgeCurrent[2] = 0;
+	gCurrent_Struct.Neg_BridgeCurrent[0] = 0;
+	gCurrent_Struct.Neg_BridgeCurrent[1] = 0;
+	gCurrent_Struct.Neg_BridgeCurrent[2] = 0;
+	gCurrent_Struct.Pos_BridgeSum = 0;
+	gCurrent_Struct.Neg_BridgeSum = 0;
+	gCurrent_Struct.Max_BusCurrent = 0;
+	gCurrent_Struct.I_busCurrent_Ave = 0;
+}
+
+void Init_ADC_Voltage(void)
+{
+	gVoltage_Struct.Thr_max_Voltage = 3352;    /*350V*/
+	gVoltage_Struct.Thr_max2nd_Voltage = 3255; /*340V*/
+	gVoltage_Struct.Thr_max3rd_Voltage = 3206; //3206; /*335*/
+	gVoltage_Struct.Thr_max4th_Voltage = 3110; //3110; /*325*/
+	gVoltage_Struct.Thr_min_Voltage = 2013;    /*210V*/
+	gVoltage_Struct.Thr_min2nd_Voltage = 2060; /*215V*/
+}
+
+void Init_ADC_Temperature(void)
+{
+	gTemperature_Struct.Thr_max_warning_motor_Temp = 3000;    /**/
+	gTemperature_Struct.Thr_max2nd_warning_motor_Temp = 2500; /**/
+	gTemperature_Struct.Thr_max_alarm_motor_Temp = 4000; 		/**/
+	gTemperature_Struct.Thr_max2nd_alarm_motor_Temp = 3500;   /**/
+
+	gTemperature_Struct.Thr_max_warning_driver_Temp = 3000;    /**/
+	gTemperature_Struct.Thr_max2nd_warning_driver_Temp = 2500; /**/
+	gTemperature_Struct.Thr_max_alarm_driver_Temp = 4000; 		/**/
+	gTemperature_Struct.Thr_max2nd_alarm_driver_Temp = 3500;   /**/
+}
+
+void Init_Analog_Ref(void)
+{
+	gAnalog_Ref_Struct.analog_ref[0] = 0;
+	gAnalog_Ref_Struct.analog_ref[1] = 0;
+	gAnalog_Ref_Struct.analog_ref[2] = 0;
+	gAnalog_Ref_Struct.analog_ref[3] = 0;
+	gAnalog_Ref_Struct.analog_ref[4] = 0;
+	gAnalog_Ref_Struct.analog_ref[5] = 0;
+	gAnalog_Ref_Struct.analog_ref[6] = 0;
+	gAnalog_Ref_Struct.thr_max_analog_ref[0] = 3800; /*10%*/
+	gAnalog_Ref_Struct.thr_max_analog_ref[1] = 3800; /*10%*/
+	gAnalog_Ref_Struct.thr_max_analog_ref[2] = 3600; /*10%*/
+	gAnalog_Ref_Struct.thr_max_analog_ref[3] = 3020; /*10% 摘除R152用2645，未摘除使用3020*/
+	gAnalog_Ref_Struct.thr_max_analog_ref[4] = 2500; /*10%*/
+	gAnalog_Ref_Struct.thr_max_analog_ref[5] = 2240; /*10%*/
+	gAnalog_Ref_Struct.thr_max_analog_ref[6] = 1420; /*10% 摘除R152用2240，未摘除使用1420  1717*/
+	gAnalog_Ref_Struct.thr_min_analog_ref[0] = 3100; /*10%*/
+	gAnalog_Ref_Struct.thr_min_analog_ref[1] = 3100; /*10%*/
+	gAnalog_Ref_Struct.thr_min_analog_ref[2] = 3000; /*10%*/
+	gAnalog_Ref_Struct.thr_min_analog_ref[3] = 2470; /*10% 摘除R152用2165，未摘除使用2470*/
+	gAnalog_Ref_Struct.thr_min_analog_ref[4] = 2050; /*10%*/
+	gAnalog_Ref_Struct.thr_min_analog_ref[5] = 1830; /*10%*/
+	gAnalog_Ref_Struct.thr_min_analog_ref[6] = 1160; /*10% 摘除R152用1830，未摘除使用1160   1404*/
+	gAnalog_Ref_Struct.cnt_analog_ref[0] = 0;
+	gAnalog_Ref_Struct.cnt_analog_ref[1] = 0;
+	gAnalog_Ref_Struct.cnt_analog_ref[2] = 0;
+	gAnalog_Ref_Struct.cnt_analog_ref[3] = 0;
+	gAnalog_Ref_Struct.cnt_analog_ref[4] = 0;
+	gAnalog_Ref_Struct.cnt_analog_ref[5] = 0;
+	gAnalog_Ref_Struct.cnt_analog_ref[6] = 0;
+}

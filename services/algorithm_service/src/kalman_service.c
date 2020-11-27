@@ -1,7 +1,7 @@
 #include "kalman_service.h"
 
 KALMAN_VAR gKF_Speed = {0};
-
+KALMAN_VAR gKF_Current = {0};
 
 double KalmanFilter(const double ResrcData, double ProcessNiose_Q, double MeasureNoise_R)
 {
@@ -84,4 +84,12 @@ void Init_gKF_Speed(void)
 	gKF_Speed.isFirstTimeExcuted = 1;
 }
 
-
+void Init_gKF_Current(void)
+{
+	gKF_Current.currentData = -1;
+	gKF_Current.ProcessNiose_Q = 1;
+	gKF_Current.MeasureNoise_R = 157;
+	gKF_Current.xlast = 0;
+	gKF_Current.plast = 0;
+	gKF_Current.isFirstTimeExcuted = 1;
+}

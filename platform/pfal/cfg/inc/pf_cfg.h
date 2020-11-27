@@ -25,6 +25,22 @@ CFG_GPIO_TBL CfgGpioTbl_User[] =
 	{45, GPIO_INTPUT}, //VCC1V9_PG
 	{31, GPIO_INTPUT}, //OV_FG_3V3
 
+	// {0, GPIO_INTPUT},
+	// {1, GPIO_INTPUT},
+	// {2, GPIO_INTPUT},
+	// {3, GPIO_INTPUT},
+	// {4, GPIO_INTPUT},
+	// {5, GPIO_INTPUT},
+	// {7, GPIO_INTPUT},
+	// {9, GPIO_INTPUT},
+	// {12, GPIO_INTPUT},
+	// {15, GPIO_INTPUT},
+	// {16, GPIO_INTPUT},
+	// {22, GPIO_INTPUT},
+	// {51, GPIO_INTPUT},
+	// {77, GPIO_INTPUT},
+	// {78, GPIO_INTPUT},
+
 	{7, GPIO_OUTPUT}, //MX_RJ_KZ
 	{9, GPIO_OUTPUT}, //BREAK_RJ_KZ
 	{12, GPIO_OUTPUT}, //ERR_CLR
@@ -59,7 +75,7 @@ CFG_ECAP_TBL CfgECapTbl_User[] =
  }
 };
 
-#define EPWM_PERIOD_K 50
+#define EPWM_PERIOD_K 30
 CFG_PWM_TBL CfgPwmTbl_User[] =
 {
 #if(PF_PWM_1A == INCLUDE_FEATURE)
