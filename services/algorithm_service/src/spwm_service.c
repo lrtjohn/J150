@@ -230,40 +230,112 @@ void SwitchDirection(SPWM_PARA* spwmPara){
     //1:A 2:B 3:C
     switch (spwmPara->CurrentHallPosition) {
         case 4://C+ --------------->A-
-        	closeBL(); closeAH(); closeCL(); closeBH();
-			EPMW3_OUTPUT_UP(PWM_DUTY_BASE, spwmPara->Duty);
-			EPMW1_OUTPUT_DOWN(PWM_DUTY_BASE, spwmPara->Duty);
-			openCH(); openAL();
+        	if(spwmPara->CurrentHallPosition == spwmPara->LastHalllPosition){
+            	closeBL(); closeAH(); closeCL(); closeBH();
+    			EPMW3_OUTPUT_UP(PWM_DUTY_BASE, spwmPara->Duty);
+    			EPMW1_OUTPUT_DOWN(PWM_DUTY_BASE, spwmPara->Duty);
+    			openCH(); openAL();
+        	}
+			else if(5 == spwmPara->LastHalllPosition){
+	        	closeBL(); closeAH(); closeCL(); closeBH();
+				EPMW3_OUTPUT_UP(PWM_DUTY_BASE, spwmPara->Duty);
+				EPMW1_OUTPUT_DOWN(PWM_DUTY_BASE, spwmPara->Duty);
+				openCH(); openAL();
+			}
+			else{
+				SET_PAHSE_CHANGE_ALARM;
+				DIABLE_ALL();
+			}
             break;
         case 6://C+ --------------->B-
-            closeAH(); closeBH(); closeCL(); closeAL();
-			EPMW3_OUTPUT_UP(PWM_DUTY_BASE, spwmPara->Duty);
-			EPMW2_OUTPUT_DOWN(PWM_DUTY_BASE, spwmPara->Duty);
-			openCH(); openBL();
+        	if(spwmPara->CurrentHallPosition == spwmPara->LastHalllPosition){
+                closeAH(); closeBH(); closeCL(); closeAL();
+    			EPMW3_OUTPUT_UP(PWM_DUTY_BASE, spwmPara->Duty);
+    			EPMW2_OUTPUT_DOWN(PWM_DUTY_BASE, spwmPara->Duty);
+    			openCH(); openBL();
+        	}
+			else if(4 == spwmPara->LastHalllPosition){
+	            closeAH(); closeBH(); closeCL(); closeAL();
+				EPMW3_OUTPUT_UP(PWM_DUTY_BASE, spwmPara->Duty);
+				EPMW2_OUTPUT_DOWN(PWM_DUTY_BASE, spwmPara->Duty);
+				openCH(); openBL();
+			}
+			else{
+				SET_PAHSE_CHANGE_ALARM;
+				DIABLE_ALL();
+			}
             break;
         case 2://A+ --------------->B-
-            closeCL(); closeBH(); closeAL(); closeCH();
-			EPMW1_OUTPUT_UP(PWM_DUTY_BASE, spwmPara->Duty);
-			EPMW2_OUTPUT_DOWN(PWM_DUTY_BASE, spwmPara->Duty);
-			openAH(); openBL();
+        	if(spwmPara->CurrentHallPosition == spwmPara->LastHalllPosition){
+                closeCL(); closeBH(); closeAL(); closeCH();
+    			EPMW1_OUTPUT_UP(PWM_DUTY_BASE, spwmPara->Duty);
+    			EPMW2_OUTPUT_DOWN(PWM_DUTY_BASE, spwmPara->Duty);
+    			openAH(); openBL();
+        	}
+			else if(6 == spwmPara->LastHalllPosition){
+	            closeCL(); closeBH(); closeAL(); closeCH();
+				EPMW1_OUTPUT_UP(PWM_DUTY_BASE, spwmPara->Duty);
+				EPMW2_OUTPUT_DOWN(PWM_DUTY_BASE, spwmPara->Duty);
+				openAH(); openBL();
+			}
+			else{
+				SET_PAHSE_CHANGE_ALARM;
+				DIABLE_ALL();
+			}
             break;
         case 3://A+ --------------->C-
-            closeBH(); closeCH(); closeAL(); closeBL();
-			EPMW1_OUTPUT_UP(PWM_DUTY_BASE, spwmPara->Duty);
-			EPMW3_OUTPUT_DOWN(PWM_DUTY_BASE, spwmPara->Duty);
-			openAH(); openCL();
+        	if(spwmPara->CurrentHallPosition == spwmPara->LastHalllPosition){
+                closeBH(); closeCH(); closeAL(); closeBL();
+    			EPMW1_OUTPUT_UP(PWM_DUTY_BASE, spwmPara->Duty);
+    			EPMW3_OUTPUT_DOWN(PWM_DUTY_BASE, spwmPara->Duty);
+    			openAH(); openCL();
+        	}
+			else if(2 == spwmPara->LastHalllPosition){
+	            closeBH(); closeCH(); closeAL(); closeBL();
+				EPMW1_OUTPUT_UP(PWM_DUTY_BASE, spwmPara->Duty);
+				EPMW3_OUTPUT_DOWN(PWM_DUTY_BASE, spwmPara->Duty);
+				openAH(); openCL();
+			}
+			else{
+				SET_PAHSE_CHANGE_ALARM;
+				DIABLE_ALL();
+			}
             break;
         case 1://B+ --------------->C-
-            closeAL(); closeBL(); closeCH(); closeAH();
-			EPMW2_OUTPUT_UP(PWM_DUTY_BASE, spwmPara->Duty);
-			EPMW3_OUTPUT_DOWN(PWM_DUTY_BASE, spwmPara->Duty);
-			openBH(); openCL();
+        	if(spwmPara->CurrentHallPosition == spwmPara->LastHalllPosition){
+                closeAL(); closeBL(); closeCH(); closeAH();
+    			EPMW2_OUTPUT_UP(PWM_DUTY_BASE, spwmPara->Duty);
+    			EPMW3_OUTPUT_DOWN(PWM_DUTY_BASE, spwmPara->Duty);
+    			openBH(); openCL();
+        	}
+			else if(3 == spwmPara->LastHalllPosition){
+	            closeAL(); closeBL(); closeCH(); closeAH();
+				EPMW2_OUTPUT_UP(PWM_DUTY_BASE, spwmPara->Duty);
+				EPMW3_OUTPUT_DOWN(PWM_DUTY_BASE, spwmPara->Duty);
+				openBH(); openCL();
+			}
+			else{
+				SET_PAHSE_CHANGE_ALARM;
+				DIABLE_ALL();
+			}
             break;
         case 5://B+ --------------->A-
-            closeCH(); closeAH(); closeBL(); closeCL();
-			EPMW2_OUTPUT_UP(PWM_DUTY_BASE, spwmPara->Duty);
-			EPMW1_OUTPUT_DOWN(PWM_DUTY_BASE, spwmPara->Duty);
-			openBH(); openAL();
+        	if(spwmPara->CurrentHallPosition == spwmPara->LastHalllPosition){
+                closeCH(); closeAH(); closeBL(); closeCL();
+    			EPMW2_OUTPUT_UP(PWM_DUTY_BASE, spwmPara->Duty);
+    			EPMW1_OUTPUT_DOWN(PWM_DUTY_BASE, spwmPara->Duty);
+    			openBH(); openAL();
+        	}
+			else if(1 == spwmPara->LastHalllPosition){
+	            closeCH(); closeAH(); closeBL(); closeCL();
+				EPMW2_OUTPUT_UP(PWM_DUTY_BASE, spwmPara->Duty);
+				EPMW1_OUTPUT_DOWN(PWM_DUTY_BASE, spwmPara->Duty);
+				openBH(); openAL();
+			}
+			else{
+				SET_PAHSE_CHANGE_ALARM;
+				DIABLE_ALL();
+			}
             break;
         default:
         	Disable_All_Epwms();
@@ -321,7 +393,7 @@ void Duty_Gradual_Change (SPWM_PARA* spwmPara){
 		}
 		else{
 			cnt_tmp = cnt_tmp + 1;
-			if(cnt_tmp > 50){
+			if(cnt_tmp > 15){
 				cnt_tmp = 0;
 				spwmPara->Duty_Gradual = lastDuty + 1;
 			}

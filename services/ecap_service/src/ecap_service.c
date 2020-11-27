@@ -6,7 +6,7 @@ void InitEcapVar(void){
 	gEcapPara.gMotorSpeedEcap = 0;
 	gEcapPara.isEcapRefresh = 0;
 	gEcapPara.gECapCount = 0;
-	gEcapPara.SpeedUpperLimit = 7200;
+	gEcapPara.SpeedUpperLimit = 17200;
 	gEcapPara.SpeedLowerLimit = 6600;
 //    gECapCount = 0;
 }

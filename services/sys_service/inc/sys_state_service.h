@@ -62,7 +62,7 @@ typedef struct _ALARM_32BIT
 	Uint16 sw_pwm_alarm	: 1;/*22 来自PWM报警*/
 	Uint16 software 	: 1;/*23*/
 	Uint16 hw_digit_sig : 1;/*24*/
-	Uint16 j			: 1;/*25*/
+	Uint16 pahse_change	: 1;/*25*/
 	Uint16 k      		: 1;/*26*/
 	Uint16 l   			: 1;/*27*/
 	Uint16 m 			: 1;/*28*/
@@ -80,7 +80,7 @@ typedef struct _WARINING_16BIT
 	Uint16 busCurrent   : 1;
 	Uint16 hardware     : 1;
 	Uint16 drivertemp 	: 1;
-	Uint16 pahse_change : 1;
+	Uint16 h : 1;
 	Uint16 i : 1;
 	Uint16 j : 1;
 	Uint16 k : 1;
@@ -366,6 +366,11 @@ typedef struct _SYS_STATE_FLAG
 #define SET_HW_DIGIT_SIGNAL_ALARM             			(gSysStateFlag.alarm.bit.hw_digit_sig = 1)
 #define CLEAR_HW_DIGIT_SIGNAL_ALARM           			(gSysStateFlag.alarm.bit.hw_digit_sig = 0)
 #define IS_HW_DIGIT_SIGNAL_ALARM          		   	 	(gSysStateFlag.alarm.bit.hw_digit_sig | HW_DIGIT_SIGNAL_ALARM_MASK)
+
+/*bit25*/
+#define SET_PAHSE_CHANGE_ALARM             				(gSysStateFlag.alarm.bit.pahse_change = 1)
+#define CLEAR_PAHSE_CHANGE_ALARM           				(gSysStateFlag.alarm.bit.pahse_change = 0)
+#define IS_PAHSE_CHANGE_ALARM          		   	 		(gSysStateFlag.alarm.bit.pahse_change | PHASE_CHANGE_ALARM_MASK)
 
 #define SET_MOTOR_TEMPERATURE_WARNING                   (gSysStateFlag.warning.bit.motortemp = 1)
 #define CLEAR_MOTOR_TEMPERATURE_WARNING                 (gSysStateFlag.warning.bit.motortemp = 0)
