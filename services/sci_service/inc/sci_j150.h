@@ -197,6 +197,8 @@ extern SCI_TRANSPORT_TX gSciTransTx_J150;
 extern SCI_APP_PROTOCOL_TX gSciAppProtocolTx_J150;
 extern Uint16 gTxFrameArray[SCI_TX_ONE_FRAME_LENGTH];
 
+//extern Uint16 gCnt_Clear = 0;
+
 extern void SCI_APP_PROTOCOL_TX_Init(SCI_APP_PROTOCOL_TX* txAppProtocol);
 extern Uint16 gDebugDataArray[4];
 #endif

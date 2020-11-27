@@ -16,5 +16,7 @@ double KalmanFilter(const double ResrcData, double ProcessNiose_Q, double Measur
 double KalmanVarFilter(KALMAN_VAR* kalmanVar);
 
 extern KALMAN_VAR gKF_Speed;
+extern KALMAN_VAR gKF_Current;
 void Init_gKF_Speed(void);
+void Init_gKF_Current(void);
 #endif

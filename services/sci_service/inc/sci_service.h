@@ -19,12 +19,15 @@ void ClearSciaRxOverFlow(void);
 void ClearScibRxOverFlow(void);
 void ClearScicRxOverFlow(void);
 
+void CheckScibRxError(void);
+
 void CheckEnableSciaTx(SCITXQUE* RS422TxQue);
 void CheckEnableScibTx(SCITXQUE* RS422TxQue);
 void CheckEnableScicTx(SCITXQUE* RS422TxQue);
 
+/*初始化SCI接收和发送环形队列，初始化协议层接收和发送函数指针，初始化物理层接收和发送函数指针*/
 #define Init_Sci_Service(){                                                 	\
-                            Init_Sci_Protocol();                            	\
+                            Init_Sci_Protocol();           						\
 	                        SCI_APP_PROTOCOL_RX_Init(&gSciAppProtocolRx_J150); 	\
 							SCI_APP_PROTOCOL_TX_Init(&gSciAppProtocolTx_J150);	\
 	                        SCI_Trans_AdaptRx_Init(&gSciTransRx_J150);      	\
