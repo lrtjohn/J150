@@ -15,3 +15,17 @@ Whats new:
 	1. ECAP, speed calculate function added
 	2. ADC and open loop algorithm verified
 	3. Change System CLK to 150MHz
+
+/***************************0.0.3*******************************/
+Version Number: 0.0.3
+Date: 2020/11/28
+Author:Runtian
+
+Whats new: 
+	1. Finished and Tested Open loop and Close loop
+	2. Add Voltage compensate, and Current compensate
+	3. Add OTA feature
+	4. Optimize DutyGradualChange feature
+	5. Improve Alarm structure
+	6. Fix bugs during Rated loading test
+	7. Add BIT systems
