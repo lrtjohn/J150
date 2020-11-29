@@ -97,7 +97,7 @@ typedef struct _SYS_STATUS_16BIT
 	Uint16 POWER_BUS    : 1;
 	Uint16 FAULT_EXT	: 1;
 	Uint16 MOTOR_STA    : 1;
-	Uint16 e			: 1;
+	Uint16 PARA_CONF	: 1;
 	Uint16 f   			: 1;
 	Uint16 g     		: 1;
 	Uint16 h      		: 1;

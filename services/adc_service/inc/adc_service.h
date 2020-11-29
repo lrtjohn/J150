@@ -5,6 +5,16 @@
 #include "DSP2833x_Examples.h"   // DSP2833x Examples Include File
 #include "adc_hal.h"
 #include "sys_state_service.h"
+
+#define BUSVOLTAGE_K (0.1047)
+#define BUSVOLTAGE_B (-0.7154)
+#define BUSCURRENT_K (0.0295)
+#define BUSCURRENT_B (0.1709)
+#define SERVO_TEMP_K (0.026367)
+#define SERVO_TEMP_B (27.738)
+#define MOTOR_TEMP_K (0.13119)
+#define MOTOR_TEMP_B (5.6398)
+
 //single ADC channel
 enum SNGL_ANAL_IDX
 {
