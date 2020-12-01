@@ -36,6 +36,8 @@ void KeyParametersClear(void){
 	gSpwmPara.Duty = 0;
 	gSpwmPara.TargetDuty = 0;
 	gSpwmPara.StepMaxDuty = 0;
+	gSpwmPara.Duty_Gradual_mid = 0;
+	gSpwmPara.lastDuty = 0;
 }
 
 /*初始化状态*/
@@ -155,7 +157,7 @@ void Sys_hlstForwardRotate(void) /*运行状态*/
 
 void Sys_hlsAlarm(void) /*故障保护状态*/
 {
-//	static int cnt_clear = 0;
+	static int cnt_clear = 0;
 	DISABLE_GATE_DRIVER();
 	DISABLE_BUSBAR_VOLTAGE;
 	SET_SYS_ENABLE_STOP_ROTATE;
@@ -166,8 +168,16 @@ void Sys_hlsAlarm(void) /*故障保护状态*/
 	if(gTimerCnt.Cnt_SM_Alarm_5ms < 10) ++gTimerCnt.Cnt_SM_Alarm_5ms;
 	if(gSysStateFlag.j150WorkMode == NORMAL){
 		if(IS_SYS_ALARM){
-			if((gTimerCnt.Cnt_SM_Alarm_5ms > 4) && (gDebugDataArray[3] == 555)){
-				HARDWARE_OVER_CURRENT_CLEAR();
+			if(gTimerCnt.Cnt_SM_Alarm_5ms > 4){
+				if(cnt_clear == 0){
+					HARDWARE_OVER_CURRENT_CLEAR();
+					cnt_clear = 1;
+				}
+				else{
+					if(gDebugDataArray[3] == 555){
+						HARDWARE_OVER_CURRENT_CLEAR();
+					}
+				}
 			}
 		}
 		else{
