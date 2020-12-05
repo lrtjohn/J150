@@ -3,9 +3,9 @@
 #include "main.h"
 #include <stdlib.h>
 #include "pf_isr.h"
-//#ifdef FLASH_PROGRAM
+#ifdef FLASH_PROGRAM
 #include "flash_hal.h"
-//#endif
+#endif
 /*
  *******
  * main.c
@@ -82,20 +82,6 @@ void main(void)
 	 /*等待VDD5V完成上电后清除硬件过流及使能RS422*/
 	ENABLE_RS422_DRIVER();
 	GpioDataRegs.GPCDAT.bit.GPIO68 = 1;
-
-#if(SYS_DEBUG == INCLUDE_FEATURE)
-	DISABLE_GLOBAL_INTERRUPT;
-	if(Flash_WR(0x330000, flashArrayW, sizeof(flashArrayW)) != STATUS_SUCCESS)
-	{
-		gtest |= 0x01;
-	}
-
-	if(Flash_RD(0x330000,flashArrayR, sizeof(flashArrayR)) != STATUS_SUCCESS)
-	{
-		gtest |= 0x02;
-	}
-	ENABLE_GLOBAL_INTERRUPT;
-#endif
 	
 	while(1)
 	{
