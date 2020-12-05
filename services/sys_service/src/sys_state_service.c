@@ -5,6 +5,8 @@
 #include "ecap_service.h"
 #include "spwm_service.h"
 #include "timer0_isr.h"
+#include "pf_isr.h"
+#include "flash_hal.h"
 
 SYS_STATE_FLAG gSysStateFlag = 
 {
@@ -429,4 +431,43 @@ void period_BIT(void){ /*main函数进程*/
 	check_28V_Voltage();
 	check_Analog_Ref();
 	checkMotorSpeed();
+}
+
+void SYS_WriteFlashAlarmInfo(void)
+{
+	Uint16 flashArrayW[2] = {0x0, 0x0};
+	static Uint32 alarmBak = 0;
+	if(gSysStateFlag.alarm.all != alarmBak)
+	{
+		DISABLE_GLOBAL_INTERRUPT;
+
+		flashArrayW[0] = alarmBak;
+		flashArrayW[1] = (alarmBak >> 8);
+
+		if(Flash_WR(0x330000, flashArrayW, sizeof(flashArrayW)) != STATUS_SUCCESS)
+		{
+			// TODO generate write failed info;
+		}
+		ENABLE_GLOBAL_INTERRUPT;
+	}
+
+	alarmBak = gSysStateFlag.alarm.all;
+}
+
+Uint32 SYS_ReadFlashUpdateAlarmInfo(void)
+{
+	Uint16 flashArrayR[2] = {0x0, 0x0};
+	Uint32 ret;
+
+	DISABLE_GLOBAL_INTERRUPT;
+
+	if(Flash_RD(0x330000,flashArrayR, sizeof(flashArrayR)) != STATUS_SUCCESS)
+	{
+		// TODO generate alarm here
+	}
+
+	ret = (flashArrayR[0] << 8);
+	ret |= flashArrayR[1];
+
+	ENABLE_GLOBAL_INTERRUPT;
 }

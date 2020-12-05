@@ -406,4 +406,6 @@ void checkOutputGPIOs (void);
 void checkInputGPIOs (void);
 void period_BIT(void);
 void powerOn_BIT(void);
+void SYS_WriteFlashAlarmInfo(void);
+Uint32 SYS_ReadFlashUpdateAlarmInfo(void);
 #endif
