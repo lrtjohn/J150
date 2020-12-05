@@ -120,6 +120,7 @@ void PwrBusVoltageMonitor(void)
 						}
 						SET_J150_POWER_BUS;
 						CLEAR_SYS_BUS_UNDER_VOLTAGE_ALARM;
+						CLEAR_BUS_UND_VOLT_PROT;
 					}
 					else ++cnt_VoltageDelta;
 				}
@@ -136,6 +137,7 @@ void PwrBusVoltageMonitor(void)
 			CLR_J150_POWER_BUS;
 			PwrBusVotlageClrQueue(pwrBus_Vltge_Que);
 			SET_SYS_BUS_UNDER_VOLTAGE_ALARM;
+			SET_BUS_UND_VOLT_PROT;
 		}
 	}
 	else{

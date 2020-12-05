@@ -125,6 +125,7 @@ void PwrBus_OverVoltage_BIT(void){
 		if(count_enable_alarm > 3){
 			count_enable_alarm = 0;
 			SET_SW_BUS_OV_ALARM;
+			SET_BUS_OVER_VOLT_WARN;
 		}
 		else;/*DO NOTHING*/
 	}
@@ -136,6 +137,7 @@ void PwrBus_OverVoltage_BIT(void){
 				if(cnt_disable_alarm > 5){
 					cnt_disable_alarm = 0;
 					CLEAR_SW_BUS_OV_ALARM;
+					CLEAR_BUS_OVER_VOLT_WARN;
 				}
 				else;/*DO NOTHING*/
 			}
@@ -155,6 +157,7 @@ void PwrBus_UnderVoltage(void){
             if(count_min > 10){
                 count_min = 0;
                 SET_SYS_BUS_UNDER_VOLTAGE_ALARM;
+                SET_BUS_UND_VOLT_PROT;
             }
 		}
 		else{
@@ -168,6 +171,7 @@ void PwrBus_UnderVoltage(void){
 				if(count_min2nd > 150){					
 					count_min2nd = 0;
 					CLEAR_SYS_BUS_UNDER_VOLTAGE_ALARM;
+					CLEAR_BUS_UND_VOLT_PROT;
 				}
 				else{
 					if(count_min2nd >= 1) --count_min2nd;
@@ -232,13 +236,18 @@ void BridgeABC_Current_Monitor_BIT(void){
 	}
 	if(gCurrent_Struct.I_busCurrent_Ave >= gCurrent_Struct.Thr_BusCurrent){
 		++cnt_busCurrent;
-		if(cnt_busCurrent > 10) SET_BUS_CURRENT_ALARM;
+		if(cnt_busCurrent > 10) {
+			SET_BUS_CURRENT_ALARM;
+			SET_BUS_OVER_CURT_WARN;
+		}
 	}
 	else{
 		if(cnt_busCurrent >= 1) --cnt_busCurrent;
 		else{
 			cnt_busCurrent = 0;
 			CLEAR_BUS_CURRENT_ALARM;
+			CLEAR_BUS_OVER_CURT_WARN;
+
 		}
 	}
 
@@ -277,6 +286,7 @@ void CheckMotorTemperature(void){
             ++cnt_alarm_max2nd;
             if(cnt_alarm_max2nd >5000){
             	CLEAR_MOTOR_TEMPERATURE_ALARM;
+            	CLEAR_MOTOR_TEMP_PROT;
             	over_alarm_limit_lasttime = 0;
             }
         }
@@ -284,6 +294,7 @@ void CheckMotorTemperature(void){
         	cnt_alarm_max2nd = 0;
             over_alarm_limit_lasttime = 1;
             SET_MOTOR_TEMPERATURE_ALARM;
+            SET_MOTOR_TEMP_PROT;
         }
     }
     else if (over_alarm_limit_lasttime == 0){
@@ -292,6 +303,7 @@ void CheckMotorTemperature(void){
             if(cnt_alarm_max > 5000){
                 cnt_alarm_max = 0;
                 SET_MOTOR_TEMPERATURE_ALARM;
+                SET_MOTOR_TEMP_PROT;
                 over_alarm_limit_lasttime = 1;
             }
         }
@@ -310,6 +322,7 @@ void CheckMotorTemperature(void){
             ++cnt_warning_max2nd;
             if(cnt_warning_max2nd >5000){
             	CLEAR_MOTOR_TEMPERATURE_WARNING;
+            	CLEAR_MOTOR_TEMP_WARN;
             	over_warning_limit_lasttime = 0;
             }
         }
@@ -317,6 +330,7 @@ void CheckMotorTemperature(void){
         	cnt_warning_max2nd = 0;
             over_warning_limit_lasttime = 1;
             SET_MOTOR_TEMPERATURE_WARNING;
+            SET_MOTOR_TEMP_WARN;
         }
     }
     else if (over_warning_limit_lasttime == 0){
@@ -325,6 +339,7 @@ void CheckMotorTemperature(void){
             if(cnt_warning_max > 5000){
                 cnt_warning_max = 0;
                 SET_MOTOR_TEMPERATURE_WARNING;
+                SET_MOTOR_TEMP_WARN;
                 over_alarm_limit_lasttime = 1;
             }
         }
@@ -353,6 +368,7 @@ void CheckDriverTemperature(void){
             ++cnt_alarm_max2nd;
             if(cnt_alarm_max2nd >5000){
             	CLEAR_DRIVER_TEMPERATURE_ALARM;
+            	CLEAR_DRVER_TEMP_PROT;
             	over_alarm_limit_lasttime = 0;
             }
         }
@@ -360,6 +376,7 @@ void CheckDriverTemperature(void){
         	cnt_alarm_max2nd = 0;
             over_alarm_limit_lasttime = 1;
             SET_DRIVER_TEMPERATURE_ALARM;
+            SET_DRVER_TEMP_PROT;
         }
     }
     else if (over_alarm_limit_lasttime == 0){
@@ -368,6 +385,7 @@ void CheckDriverTemperature(void){
             if(cnt_alarm_max > 5000){
                 cnt_alarm_max = 0;
                 SET_DRIVER_TEMPERATURE_ALARM;
+                SET_DRVER_TEMP_PROT;
                 over_alarm_limit_lasttime = 1;
             }
         }
@@ -386,6 +404,7 @@ void CheckDriverTemperature(void){
             ++cnt_warning_max2nd;
             if(cnt_warning_max2nd >5000){
             	CLEAR_DRIVERR_TEMPERATURE_WARNING;
+            	CLEAR_DRVER_TEMP_WARN;
             	over_warning_limit_lasttime = 0;
             }
         }
@@ -393,6 +412,7 @@ void CheckDriverTemperature(void){
         	cnt_warning_max2nd = 0;
             over_warning_limit_lasttime = 1;
             SET_DRIVER_TEMPERATURE_WARNING;
+            SET_DRVER_TEMP_WARN;
         }
     }
     else if (over_warning_limit_lasttime == 0){
@@ -401,6 +421,7 @@ void CheckDriverTemperature(void){
             if(cnt_warning_max > 5000){
                 cnt_warning_max = 0;
                 SET_DRIVER_TEMPERATURE_WARNING;
+                SET_DRVER_TEMP_WARN;
                 over_alarm_limit_lasttime = 1;
             }
         }

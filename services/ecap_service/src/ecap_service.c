@@ -50,6 +50,7 @@ void checkMotorSpeed (void){
             ++cnt_alarm_max2nd;
             if(cnt_alarm_max2nd >300){
             	CLEAR_MOTOR_OVER_SPEED_ALARM;
+            	CLEAR_MOTOR_SPEED_PROT;
             	over_alarm_limit_lasttime = 0;
             }
         }
@@ -57,6 +58,7 @@ void checkMotorSpeed (void){
         	cnt_alarm_max2nd = 0;
             over_alarm_limit_lasttime = 1;
             SET_MOTOR_OVER_SPEED_ALARM;
+            SET_MOTOR_SPEED_PROT;
         }
     }
     else if (over_alarm_limit_lasttime == 0){
@@ -65,6 +67,7 @@ void checkMotorSpeed (void){
             if(cnt_alarm_max > 300){
                 cnt_alarm_max = 0;
                 SET_MOTOR_OVER_SPEED_ALARM;
+                SET_MOTOR_SPEED_PROT;
                 over_alarm_limit_lasttime = 1;
             }
         }

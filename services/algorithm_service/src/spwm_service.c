@@ -126,6 +126,7 @@ Uint16 GetCurrentHallValue(void){
 
 	if(temp < 1 || temp >6){
 		SET_HALL_ERROR_ALARM;
+		SET_MOTOR_HALL_PROT;
 	}
 	return temp;
 }
@@ -244,6 +245,7 @@ void SwitchDirection(SPWM_PARA* spwmPara){
 			}
 			else{
 				SET_PAHSE_CHANGE_ALARM;
+				SET_MOTOR_HALL_PROT;
 				DIABLE_ALL();
 			}
             break;
@@ -262,6 +264,7 @@ void SwitchDirection(SPWM_PARA* spwmPara){
 			}
 			else{
 				SET_PAHSE_CHANGE_ALARM;
+				SET_MOTOR_HALL_PROT;
 				DIABLE_ALL();
 			}
             break;
@@ -280,6 +283,7 @@ void SwitchDirection(SPWM_PARA* spwmPara){
 			}
 			else{
 				SET_PAHSE_CHANGE_ALARM;
+				SET_MOTOR_HALL_PROT;
 				DIABLE_ALL();
 			}
             break;
@@ -298,6 +302,7 @@ void SwitchDirection(SPWM_PARA* spwmPara){
 			}
 			else{
 				SET_PAHSE_CHANGE_ALARM;
+				SET_MOTOR_HALL_PROT;
 				DIABLE_ALL();
 			}
             break;
@@ -316,6 +321,7 @@ void SwitchDirection(SPWM_PARA* spwmPara){
 			}
 			else{
 				SET_PAHSE_CHANGE_ALARM;
+				SET_MOTOR_HALL_PROT;
 				DIABLE_ALL();
 			}
             break;
@@ -334,12 +340,14 @@ void SwitchDirection(SPWM_PARA* spwmPara){
 			}
 			else{
 				SET_PAHSE_CHANGE_ALARM;
+				SET_MOTOR_HALL_PROT;
 				DIABLE_ALL();
 			}
             break;
         default:
         	Disable_All_Epwms();
         	SET_HALL_ERROR_ALARM;
+        	SET_MOTOR_HALL_PROT;
             break;
     }
 }
@@ -475,6 +483,7 @@ void Spwm_Output(SPWM_PARA* spwmPara) /*PWM中断函数*/
 	if(IS_HARDWARE_OC) {
 		DIABLE_ALL();
 		SET_SYS_BUS_CURRENT_ALARM;
+		SET_BUS_OVER_CURT_PROT;
 //		gCnt_Clear = 1;
 //		spwmPara->pwmSM = PWM_ALARM;
 	}

@@ -20,7 +20,7 @@ void PFAL_Timer1_ISR(void)
 	gSciAppProtocolTx_J150.workStatus = gSysStateFlag.j150SysStatus.all;
 	gSciAppProtocolTx_J150.sysStatus1 = gSysStateFlag.sysRunningState;
 	gSciAppProtocolTx_J150.sysStatus2 = gSpwmPara.StepMaxDuty;
-	gSciAppProtocolTx_J150.faultStatus = gSysStateFlag.alarm.all;
+	gSciAppProtocolTx_J150.faultStatus = gSysStateFlag.j150CustAlarm.all;
 	gSciAppProtocolTx_J150.frameCnt = gSciAppProtocolTx_J150.frameCnt + 1;
 	gSciAppProtocolTx_J150.targetSpeed = gSciAppProtocolRx_J150.targetSpeed;
 	gSciAppProtocolTx_J150.currentSpeed = gEcapPara.gMotorSpeedEcap;
