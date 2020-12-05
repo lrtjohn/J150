@@ -470,4 +470,6 @@ Uint32 SYS_ReadFlashUpdateAlarmInfo(void)
 	ret |= flashArrayR[1];
 
 	ENABLE_GLOBAL_INTERRUPT;
+
+	return ret;
 }
