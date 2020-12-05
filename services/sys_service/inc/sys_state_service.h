@@ -159,6 +159,49 @@ typedef union
 	SYS_STATUS_16BIT    bit;
 }J150_SYS_STATUS;
 
+typedef struct _CST_ALARM_32BIT
+{
+	Uint16 WORKINNG  	: 1;/*0*/
+	Uint16 M_TEMP_P     : 1;/*1 暂未使用*/
+	Uint16 D_TEMP_P    	: 1;/*2*/
+	Uint16 B_UVLT_P     : 1;/*3*/
+	Uint16 M_SPED_P		: 1;/*4*/
+	Uint16 B_OVLT_P		: 1;/*5*/
+	Uint16 B_OCRT_P 	: 1;/*6*/
+	Uint16 M_HALL_P    	: 1;/*7*/
+	Uint16 i    		: 1;/*8*/
+	Uint16 j    		: 1;/*9*/
+	Uint16 k   			: 1;/*10*/
+	Uint16 l   			: 1;/*11*/
+	Uint16 m			: 1;/*12*/
+	Uint16 n 			: 1;/*13*/
+	Uint16 o  			: 1;/*14*/
+	Uint16 p      		: 1;/*15*/
+	Uint16 M_TEMP_W		: 1;/*16*/
+	Uint16 D_TEMP_W  	: 1;/*17*/
+	Uint16 B_UVLT_W    	: 1;/*18*/
+	Uint16 M_SPED_W 	: 1;/*19 other ADs except 270V V and I*/
+	Uint16 B_OVLT_W		: 1;/*20*/
+	Uint16 B_OCRT_W		: 1;/*21*/
+	Uint16 q			: 1;/*22 来自PWM报警*/
+	Uint16 r 			: 1;/*23*/
+	Uint16 s 			: 1;/*24*/
+	Uint16 t			: 1;/*25*/
+	Uint16 u      		: 1;/*26*/
+	Uint16 v   			: 1;/*27*/
+	Uint16 w 			: 1;/*28*/
+	Uint16 x 			: 1;/*29*/
+	Uint16 y    		: 1;/*30*/
+	Uint16 z      		: 1;/*31*/
+}CST_ALARM_32BIT;
+
+typedef union
+{
+	Uint32          	all;
+	VAR32BIT        	data;
+	CST_ALARM_32BIT     bit;
+}J150_CST_ALARM;
+
 typedef struct _J150_SYS_INFO
 {
 	/* Just add this data structure in case some special info for J150 */
@@ -174,6 +217,7 @@ typedef struct _SYS_STATE_FLAG
     SYS_RUNNING_STATE 	sysRunningState;
 	J150_SYS_STATUS	  	j150SysStatus;
 	J150_WORK_MODE		j150WorkMode;
+	J150_CST_ALARM		j150CustAlarm;
 }SYS_STATE_FLAG;
 
 #define CNT_INIT_END (200)
@@ -395,6 +439,64 @@ typedef struct _SYS_STATE_FLAG
 #define SET_SYS_TX_QUEUE_FULL_ERROR                     (gSysStateFlag.error.bit.txQFull = 1)
 #define CLEAR_SYS_TX_QUEUE_FULL_ERROR                   (gSysStateFlag.error.bit.txQFull = 0)
 #define IS_SYS_TX_QUEUE_FULL_ERROR                      (gSysStateFlag.error.bit.txQFull | BIT8)
+
+
+/*bit0*/
+#define SET_WORKING_PROT                              	(gSysStateFlag.j150CustAlarm.bit.WORKINNG = 1)
+#define CLEAR_WORKING_PROT                           	(gSysStateFlag.j150CustAlarm.bit.WORKINNG = 0)
+
+/*bit1*/
+#define SET_MOTOR_TEMP_PROT                  			(gSysStateFlag.j150CustAlarm.bit.M_TEMP_P = 1)
+#define CLEAR_MOTOR_TEMP_PROT                			(gSysStateFlag.j150CustAlarm.bit.M_TEMP_P = 0)
+
+/*bit2*/
+#define SET_DRVER_TEMP_PROT                 			(gSysStateFlag.j150CustAlarm.bit.D_TEMP_P = 1)
+#define CLEAR_DRVER_TEMP_PROT               			(gSysStateFlag.j150CustAlarm.bit.D_TEMP_P = 0)
+
+/*bit3*/
+#define SET_BUS_UND_VOLT_PROT             		      	(gSysStateFlag.j150CustAlarm.bit.B_UVLT_P = 1)
+#define CLEAR_BUS_UND_VOLT_PROT           		  		(gSysStateFlag.j150CustAlarm.bit.B_UVLT_P = 0)
+
+/*bit4*/
+#define SET_MOTOR_SPEED_PROT                      		(gSysStateFlag.j150CustAlarm.bit.M_SPED_P = 1)
+#define CLEAR_MOTOR_SPEED_PROT                     		(gSysStateFlag.j150CustAlarm.bit.M_SPED_P = 0)
+
+/*bit5*/
+#define SET_BUS_OVER_VOLT_PROT     	                	(gSysStateFlag.j150CustAlarm.bit.B_OVLT_P = 1)
+#define CLEAR_BUS_OVER_VOLT_PROT       	            	(gSysStateFlag.j150CustAlarm.bit.B_OVLT_P = 0)
+
+/*bit6*/
+#define SET_BUS_OVER_CURT_PROT                   		(gSysStateFlag.j150CustAlarm.bit.B_OCRT_P = 1)
+#define CLEAR_BUS_OVER_CURT_PROT                  		(gSysStateFlag.j150CustAlarm.bit.B_OCRT_P = 0)
+
+/*bit7*/
+#define SET_MOTOR_HALL_PROT                   			(gSysStateFlag.j150CustAlarm.bit.M_HALL_P = 1)
+#define CLEAR_MOTOR_HALL_PROT             				(gSysStateFlag.j150CustAlarm.bit.M_HALL_P = 0)
+
+/*bit16*/
+#define SET_MOTOR_TEMP_WARN                            	(gSysStateFlag.j150CustAlarm.bit.M_TEMP_W = 1)
+#define CLEAR_MOTOR_TEMP_WARN                          	(gSysStateFlag.j150CustAlarm.bit.M_TEMP_W = 0)
+
+/*bit17*/
+#define SET_DRVER_TEMP_WARN                         	(gSysStateFlag.j150CustAlarm.bit.D_TEMP_W = 1)
+#define CLEAR_DRVER_TEMP_WARN                       	(gSysStateFlag.j150CustAlarm.bit.D_TEMP_W = 0)
+
+/*bit18*/
+#define SET_BUS_UNDER_VOLT_WARN                         (gSysStateFlag.j150CustAlarm.bit.B_UVLT_W = 1)
+#define CLEAR_BUS_UNDER_VOLT_WARN                       (gSysStateFlag.j150CustAlarm.bit.B_UVLT_W = 0)
+
+/*bit19*/
+#define SET_MOTOR_SPEED_WARN             				(gSysStateFlag.j150CustAlarm.bit.M_SPED_W = 1)
+#define CLEAR_MOTOR_SPEED_WARN           				(gSysStateFlag.j150CustAlarm.bit.M_SPED_W = 0)
+
+/*bit20*/
+#define SET_BUS_OVER_VOLT_WARN                          (gSysStateFlag.j150CustAlarm.bit.B_OVLT_W = 1)
+#define CLEAR_BUS_OVER_VOLT_WARN                        (gSysStateFlag.j150CustAlarm.bit.B_OVLT_W = 0)
+
+/*bit21*/
+#define SET_BUS_OVER_CURT_WARN             				(gSysStateFlag.j150CustAlarm.bit.B_OCRT_W = 1)
+#define CLEAR_BUS_OVER_CURT_WARN           				(gSysStateFlag.j150CustAlarm.bit.B_OCRT_W = 0)
+
 
 #define SYS_STATE_MACHINE								(*Sys_hlstPtr)()
 
