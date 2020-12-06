@@ -89,11 +89,13 @@ void PwrBusVoltageMonitor(void)
 	static int cnt_VoltageDelta = 0;
 	static int pwrbus_buildup = 0;
 	static int pwrbus_delta = 0;
+	static int cnt_UnderWarnLimit = 0;
 
 	static int tmp_cnt = 0;
 
 	if(gSysAnalogVar.single.var[updatePower270V_M].value > gSysAnalogVar.single.var[updatePower270V_M].min2nd){
 		cnt_UnderVoltage = 0;
+		cnt_UnderWarnLimit = 0;
 		if(pwrbus_buildup == 0){
 			++cnt_NormalVoltage;
 			PwrBusVotlageEnQueue(gSysAnalogVar.single.var[updatePower270V_M].value, pwrBus_Vltge_Que);
@@ -121,6 +123,7 @@ void PwrBusVoltageMonitor(void)
 						SET_J150_POWER_BUS;
 						CLEAR_SYS_BUS_UNDER_VOLTAGE_ALARM;
 						CLEAR_BUS_UND_VOLT_PROT;
+						CLEAR_BUS_UNDER_VOLT_WARN;
 					}
 					else ++cnt_VoltageDelta;
 				}
@@ -130,6 +133,7 @@ void PwrBusVoltageMonitor(void)
 	}
 	else if(gSysAnalogVar.single.var[updatePower270V_M].value < gSysAnalogVar.single.var[updatePower270V_M].min){
 		++cnt_UnderVoltage;
+		++cnt_UnderWarnLimit;
 		cnt_NormalVoltage = 0;
 		cnt_VoltageDelta = 0;
 		if(cnt_UnderVoltage > PWRBUS_UNDERVL_TIMES){
@@ -138,11 +142,17 @@ void PwrBusVoltageMonitor(void)
 			PwrBusVotlageClrQueue(pwrBus_Vltge_Que);
 			SET_SYS_BUS_UNDER_VOLTAGE_ALARM;
 			SET_BUS_UND_VOLT_PROT;
+			SET_BUS_UNDER_VOLT_WARN;
 		}
 	}
 	else{
 		cnt_NormalVoltage = 0;
 		cnt_VoltageDelta = 0;
+		++cnt_UnderWarnLimit;
+		if(cnt_UnderWarnLimit > PWRBUS_UNWARNL_TIMES){
+			SET_BUS_UNDER_VOLT_WARN;
+		}
+
 	}
 }
 

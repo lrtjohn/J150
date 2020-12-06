@@ -48,6 +48,7 @@ void Sys_hlstInit(void)
 	DISABLE_BUSBAR_VOLTAGE;
 	DISABLE_GATE_DRIVER();
 	CLR_J150_MOTOR_STA;
+	CLEAR_WORKING_NORM;
 	if(gSpwmPara.Cnt_PWM_Init_BIT >= CNT_INIT_END){
 		SET_J150_BIT_CMPLT;
 		if(gSysStateFlag.j150WorkMode == NORMAL){
@@ -79,6 +80,7 @@ void Sys_hlsStop(void)
 			Sys_chstAlarm();
 		}
 		else{
+			SET_WORKING_NORM;
 			if(IS_SYS_ENABLE_FORWARD_ROTATE)
 			{
 				if(IS_J150_POWER_NOR && (gTimerCnt.Cnt_SM_Stop_5ms >=4)){
@@ -151,6 +153,7 @@ void Sys_hlstForwardRotate(void) /*运行状态*/
 		/*战时模式*/
 	}
 	SET_J150_MOTOR_STA;
+	SET_WORKING_NORM;
 	updateCtrlStrategyParameters(); /*开闭环用反馈转速，反馈电压更新*/
 	CtrlStrategyCalculation(); /*计算开环，闭环占空比，并赋值目标占空比*/
 }
@@ -158,6 +161,7 @@ void Sys_hlstForwardRotate(void) /*运行状态*/
 void Sys_hlsAlarm(void) /*故障保护状态*/
 {
 	static int cnt_clear = 0;
+	CLEAR_WORKING_NORM;
 	DISABLE_GATE_DRIVER();
 	DISABLE_BUSBAR_VOLTAGE;
 	SET_SYS_ENABLE_STOP_ROTATE;
@@ -198,6 +202,7 @@ void Init_Sys_State_Service(void)
     CLEAR_SYS_ALARM; /*清除故障告警*/
     CLEAR_SYS_WARNING;/*清除预警信号*/
     CLEAR_SYS_ERROR; /*清除错误信号*/
+    CLEAR_CUST_ALARM;
     {/*设置状态机*/
     INIT_SYS_RUNNING_STATE; /*状态机变量设置为为初始化*/
     SYS_STATE_MACHINE_INIT; /*状态机指针设置为初始化*/

@@ -279,6 +279,7 @@ typedef struct _SYS_STATE_FLAG
 #define CLEAR_SYS_ALARM                                 (gSysStateFlag.alarm.all = 0)
 #define CLEAR_SYS_WARNING                               (gSysStateFlag.warning.all = 0)
 #define CLEAR_SYS_ERROR                                 (gSysStateFlag.error.all = 0)
+#define CLEAR_CUST_ALARM								(gSysStateFlag.j150CustAlarm.all = 0)
 
 #define INIT_SYS_RUNNING_STATE                          (gSysStateFlag.sysRunningState = SYS_INIT)
 #define INIT_SYS_ROTATE_DIRECTION                       (gSysStateFlag.rotateDirectoin = STOP)
@@ -442,8 +443,8 @@ typedef struct _SYS_STATE_FLAG
 
 
 /*bit0*/
-#define SET_WORKING_PROT                              	(gSysStateFlag.j150CustAlarm.bit.WORKINNG = 1)
-#define CLEAR_WORKING_PROT                           	(gSysStateFlag.j150CustAlarm.bit.WORKINNG = 0)
+#define SET_WORKING_NORM                              	(gSysStateFlag.j150CustAlarm.bit.WORKINNG = 1)
+#define CLEAR_WORKING_NORM                           	(gSysStateFlag.j150CustAlarm.bit.WORKINNG = 0)
 
 /*bit1*/
 #define SET_MOTOR_TEMP_PROT                  			(gSysStateFlag.j150CustAlarm.bit.M_TEMP_P = 1)
