@@ -103,7 +103,9 @@ void main(void)
         ProcessSciRxPacket(gScibRxQue);
 #else
 		SCI_RX_UnpackData(gScibRxQue);
-//		gSpwmPara.TargetDuty = gDebugDataArray[0];
+		gSpwmPara.DutyMinusInterval = gDebugDataArray[0];
+		gPID_Speed_Para.ka = gDebugDataArray[1];
+		gPID_Speed_Para.kb = gDebugDataArray[2];
 //		gSpwmPara.DutyAddInterval = gDebugDataArray[0];
 
 #endif

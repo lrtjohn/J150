@@ -57,11 +57,11 @@ const Uint16 SDB_SingleAnologMaxMinInit[TOTAL_SNGL_ANAL_CHS][4] =
 	{0,0,0,0},            //3
 	{0,0,0,0},            //4
 	{0,0,0,0},      	  //5
-	{3063,2968,0,0},      //6 320V, 310V, 210V, 215V 2013,2060
+	{3063,2968,2013,2060},      //6 320V, 310V, 210V, 215V 2013,2060
 	{0,0,0,0},            //7
 	{0,0,0,0}, 			  //8
 	{0,0,0,0},            //9
-	{2150,0,980,0},      //10
+	{2628,0,980,0},      //10
 	{0,0,0,0},            //11
 	{650,0,100,0},        //12
 	{0,0,0,0},            //13
@@ -220,7 +220,7 @@ void BridgeABC_Current_Monitor_BIT(void){
 		else gCurrent_Struct.cnt_max_threshold[i] = 0;
 	}
 
-	PwmBusCurrentEnQueue(gCurrent_Struct.I_busCurrent, pwm_busCurrent_Que);
+    gCurrent_Struct.I_bus_RBUF_Sum = PwmBusCurrentEnQueue(gCurrent_Struct.I_busCurrent, pwm_busCurrent_Que);
 
 	if(gCurrent_Struct.I_bridgeSum < 0 ) gCurrent_Struct.I_bridgeSum = - gCurrent_Struct.I_bridgeSum;
 	if(gCurrent_Struct.I_bridgeSum >= gCurrent_Struct.Thr_BridgeSum){
@@ -593,6 +593,7 @@ void Init_ADC_Current(void)
 	gCurrent_Struct.Neg_BridgeSum = 0;
 	gCurrent_Struct.Max_BusCurrent = 0;
 	gCurrent_Struct.I_busCurrent_Ave = 0;
+	gCurrent_Struct.I_bus_RBUF_Sum = 0;
 }
 
 void Init_ADC_Voltage(void)

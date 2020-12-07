@@ -1,7 +1,6 @@
 #include "spwm_service.h"
 #include <string.h>
 #include <stdlib.h>
-#include "kalman_service.h"
 SPWM_PARA gSpwmPara = {0};
 
 #define ZERO_MAX (2250)
@@ -34,27 +33,24 @@ void Init_PWM_Buf(void)
 }
 
 #pragma CODE_SECTION(PwmBusCurrentEnQueue, "ramfuncs")
-int PwmBusCurrentEnQueue(Uint16 e, PWM_CURRENT_QUE *PWMBusCurrentQue)
+int32 PwmBusCurrentEnQueue(Uint16 e, PWM_CURRENT_QUE *PWMBusCurrentQue)
 {
-	static int isfull = 0;
+//	static int isfull = 0;
 	static int32 I_bus_Sum_tmp = 0;
 	if((PWMBusCurrentQue->rear + 1) % (PWMBusCurrentQue->bufferLen) == PWMBusCurrentQue->front)
 	{
 		I_bus_Sum_tmp = I_bus_Sum_tmp - PWMBusCurrentQue->buffer[PWMBusCurrentQue->front];
-		gKF_Current.currentData = I_bus_Sum_tmp >> 3;
-//		gKF_Current.currentData = gCurrent_Struct.I_busCurrent_Ave;
-		gCurrent_Struct.I_busCurrent_Ave = KalmanVarFilter(&gKF_Current);
 		PWMBusCurrentQue->front = (PWMBusCurrentQue->front + 1) % (PWMBusCurrentQue->bufferLen);
-		isfull = 1;
+//		isfull = 1;
 	}
 	else{
-		isfull = 0;
+//		isbfull = 0;
 	}
 
 	PWMBusCurrentQue->buffer[PWMBusCurrentQue->rear] = e;
 	I_bus_Sum_tmp = I_bus_Sum_tmp + PWMBusCurrentQue->buffer[PWMBusCurrentQue->rear];
 	PWMBusCurrentQue->rear = (PWMBusCurrentQue->rear + 1) % (PWMBusCurrentQue->bufferLen);
-	return isfull;
+	return I_bus_Sum_tmp;
 }
 
 inline void openAH(void){
@@ -395,7 +391,14 @@ void Duty_Gradual_Change (SPWM_PARA* spwmPara){
 		}
 
 		if(spwmPara->lastDuty >= spwmPara->Duty_Gradual_mid){
-				spwmPara->Duty_Gradual = spwmPara->Duty_Gradual_mid;
+            spwmPara->DutyMinusIntervalCnt = spwmPara->DutyMinusIntervalCnt + 1;
+            if(spwmPara->DutyMinusIntervalCnt > spwmPara->DutyMinusInterval){
+                spwmPara->DutyMinusIntervalCnt = 0;
+                spwmPara->Duty_Gradual = spwmPara->lastDuty - 1;
+            }
+            else{
+                spwmPara->Duty_Gradual = spwmPara->lastDuty;
+            }
 		}
 		else{
 			spwmPara->DutyAddIntervalCnt = spwmPara->DutyAddIntervalCnt + 1;
@@ -524,6 +527,8 @@ void Init_Spwm_Service(void)
 	gSpwmPara.Duty_Gradual_mid = 0;
 	gSpwmPara.DutyAddInterval = 15;
 	gSpwmPara.DutyAddIntervalCnt = 0;
+    gSpwmPara.DutyMinusInterval = 10;
+    gSpwmPara.DutyMinusIntervalCnt = 0;
 	gSpwmPara.lastDuty = 0;
 	gSpwmPara.StepMaxDuty = 0;
 	gSpwmPara.BusVolt_Ratio = 0.794;

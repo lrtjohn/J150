@@ -188,9 +188,9 @@ void updateCtrlStrategyParameters(void)
 void CtrlStrategyCalculation(void)
 {
 	int16 tmp_TargetDuty;
-	gSpwmPara.CloseLoopDuty = Pid_Process(&gPID_Speed_Para);
-	gSpwmPara.OpenLoopDuty = OpenLoop_Process(&gOpenLoop_Para);
 	gSpwmPara.CurrentCompensateDuty = CurrentCompensate();
+	gSpwmPara.OpenLoopDuty = OpenLoop_Process(&gOpenLoop_Para);
+	gSpwmPara.CloseLoopDuty = Pid_Process(&gPID_Speed_Para);
 	tmp_TargetDuty = gSpwmPara.CloseLoopDuty + gSpwmPara.OpenLoopDuty + gSpwmPara.CurrentCompensateDuty;
 //	tmp_TargetDuty = gSpwmPara.CloseLoopDuty + gSpwmPara.OpenLoopDuty;
 	if(tmp_TargetDuty > 1250) tmp_TargetDuty = 1250;

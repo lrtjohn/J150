@@ -9,9 +9,12 @@ typedef struct _PID_VAR
     double sumErr;
     double currentErrThreshold;
     double sumErrThreshold;
-    double outputThreshold;
-    double kp;
-    double ki;
+    double outputPosThresh;
+    double outputNegThresh;
+    double kp0;
+    double ki0;
+    double ka;
+    double kb;
 }PID_VAR;
 
 typedef struct _OPENLOOP_VAR
