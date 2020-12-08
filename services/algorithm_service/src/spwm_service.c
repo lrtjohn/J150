@@ -527,7 +527,7 @@ void Init_Spwm_Service(void)
 	gSpwmPara.Duty_Gradual_mid = 0;
 	gSpwmPara.DutyAddInterval = 15;
 	gSpwmPara.DutyAddIntervalCnt = 0;
-    gSpwmPara.DutyMinusInterval = 10;
+    gSpwmPara.DutyMinusInterval = 12;   //10
     gSpwmPara.DutyMinusIntervalCnt = 0;
 	gSpwmPara.lastDuty = 0;
 	gSpwmPara.StepMaxDuty = 0;
