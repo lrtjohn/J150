@@ -12,8 +12,8 @@
 #define BUSCURRENT_B (0.1709)
 #define SERVO_TEMP_K (0.026367)
 #define SERVO_TEMP_B (27.738)
-#define MOTOR_TEMP_K (0.13119)
-#define MOTOR_TEMP_B (5.6398)
+#define MOTOR_TEMP_K (0.06265)
+#define MOTOR_TEMP_B (-64.6605)
 
 //single ADC channel
 enum SNGL_ANAL_IDX

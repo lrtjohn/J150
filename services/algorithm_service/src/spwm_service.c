@@ -21,7 +21,7 @@ void Init_PWM_Buf(void)
 		}
 		pwm_busCurrent_Que->front = 0;
 		pwm_busCurrent_Que->rear = 0;
-		pwm_busCurrent_Que->bufferLen = 8;
+		pwm_busCurrent_Que->bufferLen = 128;
 		pwm_busCurrent_Que->buffer = (Uint16*)malloc(sizeof(Uint16) * pwm_busCurrent_Que->bufferLen);
 		if(pwm_busCurrent_Que->buffer == NULL)
 		{
@@ -122,7 +122,9 @@ Uint16 GetCurrentHallValue(void){
 
 	if(temp < 1 || temp >6){
 		SET_HALL_ERROR_ALARM;
-		SET_MOTOR_HALL_PROT;
+	}
+	else{
+		CLEAR_HALL_ERROR_ALARM;
 	}
 	return temp;
 }
@@ -241,7 +243,6 @@ void SwitchDirection(SPWM_PARA* spwmPara){
 			}
 			else{
 				SET_PAHSE_CHANGE_ALARM;
-				SET_MOTOR_HALL_PROT;
 				DIABLE_ALL();
 			}
             break;
@@ -260,7 +261,6 @@ void SwitchDirection(SPWM_PARA* spwmPara){
 			}
 			else{
 				SET_PAHSE_CHANGE_ALARM;
-				SET_MOTOR_HALL_PROT;
 				DIABLE_ALL();
 			}
             break;
@@ -279,7 +279,6 @@ void SwitchDirection(SPWM_PARA* spwmPara){
 			}
 			else{
 				SET_PAHSE_CHANGE_ALARM;
-				SET_MOTOR_HALL_PROT;
 				DIABLE_ALL();
 			}
             break;
@@ -298,7 +297,6 @@ void SwitchDirection(SPWM_PARA* spwmPara){
 			}
 			else{
 				SET_PAHSE_CHANGE_ALARM;
-				SET_MOTOR_HALL_PROT;
 				DIABLE_ALL();
 			}
             break;
@@ -317,7 +315,6 @@ void SwitchDirection(SPWM_PARA* spwmPara){
 			}
 			else{
 				SET_PAHSE_CHANGE_ALARM;
-				SET_MOTOR_HALL_PROT;
 				DIABLE_ALL();
 			}
             break;
@@ -336,14 +333,12 @@ void SwitchDirection(SPWM_PARA* spwmPara){
 			}
 			else{
 				SET_PAHSE_CHANGE_ALARM;
-				SET_MOTOR_HALL_PROT;
 				DIABLE_ALL();
 			}
             break;
         default:
         	Disable_All_Epwms();
         	SET_HALL_ERROR_ALARM;
-        	SET_MOTOR_HALL_PROT;
             break;
     }
 }
@@ -479,6 +474,7 @@ void Spwm_HighSpeed_BIT(SPWM_PARA* spwmPara){
 #pragma CODE_SECTION(Spwm_Output, "ramfuncs")
 void Spwm_Output(SPWM_PARA* spwmPara) /*PWM中断函数*/
 {
+	static int cnt_battle = 0;
 	GpioDataRegs.GPBSET.bit.GPIO50 = 1; /*线程监视*/
 	spwmPara->LastHalllPosition = spwmPara->CurrentHallPosition;
 	spwmPara->CurrentHallPosition = GetCurrentHallValue();
@@ -493,8 +489,11 @@ void Spwm_Output(SPWM_PARA* spwmPara) /*PWM中断函数*/
 
     UpdateSingleAnalog(&gSysAnalogVar); /*读取16通道ADC转换结果*/
 
+    if(IS_HALL_ERROR_ALARM || IS_PAHSE_CHANGE_ALARM) SET_MOTOR_HALL_PROT;
+    else CLEAR_MOTOR_HALL_PROT;
+
 	Spwm_HighSpeed_BIT(spwmPara);
-	if(gSysStateFlag.j150WorkMode == NORMAL){
+	if(gSciAppProtocolRx_J150.workMode == WORK_MODE_NORMAL){
 		if(IS_SYS_ALARM){
 			DIABLE_ALL();
 		}
@@ -510,6 +509,26 @@ void Spwm_Output(SPWM_PARA* spwmPara) /*PWM中断函数*/
 	}
 	else{
 		/*战时*/
+		if(cnt_battle == 0){
+			GpioDataRegs.GPACLEAR.bit.GPIO12 = 1;
+			cnt_battle = 1;
+		}
+		else{
+			GpioDataRegs.GPASET.bit.GPIO12 = 1;
+			cnt_battle = 0;
+		}
+		if(IS_SYS_BUS_CURRENT_ALARM || IS_HALL_ERROR_ALARM){
+			DIABLE_ALL();
+		}
+		else{
+			if(spwmPara->pwmSM == SYS_FORWARD_RUN){
+				Duty_Gradual_Change(spwmPara);
+				SwitchDirection(spwmPara);
+			}
+			else{
+				DIABLE_ALL();
+			}
+		}
 	}
 	GpioDataRegs.GPBCLEAR.bit.GPIO50 = 1; /*线程监视*/
 }

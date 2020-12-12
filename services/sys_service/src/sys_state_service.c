@@ -51,7 +51,7 @@ void Sys_hlstInit(void)
 	CLEAR_WORKING_NORM;
 	if(gSpwmPara.Cnt_PWM_Init_BIT >= CNT_INIT_END){
 		SET_J150_BIT_CMPLT;
-		if(gSysStateFlag.j150WorkMode == NORMAL){
+		if(gSciAppProtocolRx_J150.workMode == WORK_MODE_NORMAL){
 			if(IS_SYS_ALARM) {
 				Sys_chstAlarm();
 			}
@@ -61,6 +61,7 @@ void Sys_hlstInit(void)
 		}
 		else{
 			/*战时模式*/
+			Sys_chstStop();
 		}
 	}
 }
@@ -73,7 +74,7 @@ void Sys_hlsStop(void)
 	if(gTimerCnt.Cnt_SM_Stop_5ms < 10) ++gTimerCnt.Cnt_SM_Stop_5ms;
 	CLR_J150_MOTOR_STA;
 	KeyParametersClear();
-	if(gSysStateFlag.j150WorkMode == NORMAL){
+	if(gSciAppProtocolRx_J150.workMode == WORK_MODE_NORMAL){
 		if(IS_SYS_ALARM){
 			DISABLE_GATE_DRIVER();
 			DISABLE_BUSBAR_VOLTAGE;						
@@ -84,14 +85,9 @@ void Sys_hlsStop(void)
 			if(IS_SYS_ENABLE_FORWARD_ROTATE)
 			{
 				if(IS_J150_POWER_NOR && (gTimerCnt.Cnt_SM_Stop_5ms >=4)){
-//					ENABLE_GATE_DRIVER();
 					ENABLE_BUSBAR_VOLTAGE;
-//					asm (" NOP");
-//					asm (" NOP");
-//					asm (" NOP");
 					if(IS_BUSBAR_ENABLED){
 						ENABLE_GATE_DRIVER();
-//						ENABLE_BUSBAR_VOLTAGE;
 						if(gTimerCnt.Cnt_PwrBus < 5) ++gTimerCnt.Cnt_PwrBus;
 						else{
 							Sys_chstForwardRotate();
@@ -99,7 +95,6 @@ void Sys_hlsStop(void)
 					}
 					else{
 						DISABLE_GATE_DRIVER();
-//						DISABLE_BUSBAR_VOLTAGE;
 						gTimerCnt.Cnt_PwrBus = 0;
 					}
 				}
@@ -107,10 +102,6 @@ void Sys_hlsStop(void)
 					DISABLE_GATE_DRIVER();
 					DISABLE_BUSBAR_VOLTAGE;
 				} 
-				//如果开优化则需要放开等待语句，否则GPIO7的值更改后，不会立即生效
-//				asm (" NOP");
-//				asm (" NOP");
-//				asm (" NOP");
 			}
 			else{
 					DISABLE_GATE_DRIVER();
@@ -121,6 +112,17 @@ void Sys_hlsStop(void)
 	}
 	else{
 		/*战时模式*/
+		if(IS_SYS_ENABLE_FORWARD_ROTATE)
+		{
+			ENABLE_BUSBAR_VOLTAGE;
+			ENABLE_GATE_DRIVER();
+			SET_WORKING_NORM;
+		}
+		else{
+			DISABLE_GATE_DRIVER();
+			DISABLE_BUSBAR_VOLTAGE;
+			gTimerCnt.Cnt_PwrBus = 0;
+		}
 	}
 
 }
@@ -129,7 +131,7 @@ void Sys_hlstForwardRotate(void) /*运行状态*/
 {
 	gTimerCnt.Cnt_SM_Stop_5ms = 0;
 	gTimerCnt.Cnt_SM_Alarm_5ms = 0;
-	if(gSysStateFlag.j150WorkMode == NORMAL){
+	if(gSciAppProtocolRx_J150.workMode == WORK_MODE_NORMAL){
 		if(IS_SYS_ALARM)
 		{
 			DISABLE_GATE_DRIVER();
@@ -151,6 +153,17 @@ void Sys_hlstForwardRotate(void) /*运行状态*/
 	}
 	else{
 		/*战时模式*/
+		if(IS_SYS_ENABLE_STOP_ROTATE)
+		{
+			DISABLE_GATE_DRIVER();
+			DISABLE_BUSBAR_VOLTAGE;
+			KeyParametersClear();
+			Sys_chstStop();
+		}
+		else{
+			ENABLE_GATE_DRIVER();
+			ENABLE_BUSBAR_VOLTAGE;
+		}
 	}
 	SET_J150_MOTOR_STA;
 	SET_WORKING_NORM;
@@ -170,7 +183,7 @@ void Sys_hlsAlarm(void) /*故障保护状态*/
 	KeyParametersClear();
 	gTimerCnt.Cnt_SM_Stop_5ms = 0;
 	if(gTimerCnt.Cnt_SM_Alarm_5ms < 10) ++gTimerCnt.Cnt_SM_Alarm_5ms;
-	if(gSysStateFlag.j150WorkMode == NORMAL){
+	if(gSciAppProtocolRx_J150.workMode == WORK_MODE_NORMAL){
 		if(IS_SYS_ALARM){
 			if(gTimerCnt.Cnt_SM_Alarm_5ms > 4){
 				if(cnt_clear == 0){
@@ -193,7 +206,6 @@ void Sys_hlsAlarm(void) /*故障保护状态*/
 	}
 	else{
 		/*战时模式*/
-		/*HARDWARE_OVER_CURRENT_CLEAR();*/
 	}
 }
 
@@ -206,7 +218,6 @@ void Init_Sys_State_Service(void)
     {/*设置状态机*/
     INIT_SYS_RUNNING_STATE; /*状态机变量设置为为初始化*/
     SYS_STATE_MACHINE_INIT; /*状态机指针设置为初始化*/
-    INIT_SYS_WORK_MODE;
     CLR_J150_BIT_CMPLT;
     CLR_J150_MOTOR_STA;
     INIT_SYS_STATUS;

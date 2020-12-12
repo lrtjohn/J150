@@ -26,7 +26,7 @@ static int J150_TransRxUpdateHeadPos(SCIRXQUE* q);
 /*
 * J150 protocol and transport layer global variable
 */
-Uint16 gTxFrameArray[SCI_TX_ONE_FRAME_LENGTH] = 
+Uint16 gTxFrameArray[SCI_TX_ONE_FRAME_LENGTH] =
 {
     TX_HEAD1_DATA,          // 0
     TX_HEAD2_DATA,          // 1
@@ -59,8 +59,6 @@ Uint16 gTxFrameArray[SCI_TX_ONE_FRAME_LENGTH] =
     0,                      // 28
     0,                      // 29
     0,                      // 30
-    0,                      // 31
-    0                       // 32
 };
 
 SCI_APP_PROTOCOL_RX* pSciRxAppProtocol = NULL;
@@ -148,13 +146,23 @@ Uint16 J150_APP_RX_PROTOCOL_UnpackPayLoad(void)
     workMode       = pSciRxAppProtocol->getWorkMode(pSciRxAppProtocol->goodPacketArray);
     targetSpeed    = pSciRxAppProtocol->getTargetSpeed(pSciRxAppProtocol->goodPacketArray);
 
-#if (0)
-    if(!IS_PAYLOAD_GOOD(pSciAppProtocol->workMode, pSciAppProtocol->command, pSciAppProtocol->targetSpeed))
-    {
-        /* TODO If payload parameters is illeagle, need to generate a warining */
-        return 0;
+    if((pSciRxAppProtocol->workMode == WORK_MODE_NORMAL) || (pSciRxAppProtocol->workMode == WORK_MODE_SPECIAL) &&
+       (pSciRxAppProtocol->command == COMMAND_PARA_CONFIG) || (pSciRxAppProtocol->command == COMMAND_MOTOR_START) || (pSciRxAppProtocol->command == COMMAND_MOTOR_STOP) &&
+	   (pSciRxAppProtocol->targetSpeed >= RX_MIN_TARGET_SPEED && pSciRxAppProtocol->targetSpeed <= RX_MAX_TARGET_SPEED)){
+    	SET_J150_PARA_CONF;
     }
-#endif
+    else{
+    	CLR_J150_PARA_CONF;
+    }
+
+//    if(!IS_PAYLOAD_GOOD(pSciRxAppProtocol->workMode, pSciRxAppProtocol->command, pSciRxAppProtocol->targetSpeed))
+//    {
+//        /* TODO If payload parameters is illeagle, need to generate a warining */
+//    	CLR_J150_PARA_CONF;
+//    }
+//    else{
+//    	SET_J150_PARA_CONF;
+//    }
 
 #if (0)
     if (!IS_COMMAND_GOOD(command))
@@ -414,7 +422,7 @@ static int J150_TransTxUpdatePayLoad(void)
     U16_TO_U8(&(gSciTransTx_J150.mpTxOneFrameArray[TX_WORK_STATUS_POS]), &data->workStatus);
     U16_TO_U8(&(gSciTransTx_J150.mpTxOneFrameArray[TX_SYS_STATUS_1_POS]), &data->sysStatus1);
     U16_TO_U8(&(gSciTransTx_J150.mpTxOneFrameArray[TX_SYS_STATUS_2_POS]), &data->sysStatus2);
-    U32_TO_U8(&(gSciTransTx_J150.mpTxOneFrameArray[TX_FAULT_STATUS_POS]), &data->faultStatus);
+    U16_TO_U8(&(gSciTransTx_J150.mpTxOneFrameArray[TX_FAULT_STATUS_POS]), &data->faultStatus);
     U32_TO_U8(&(gSciTransTx_J150.mpTxOneFrameArray[TX_FRAME_CNT_POS]), &data->frameCnt);
     U16_TO_U8(&(gSciTransTx_J150.mpTxOneFrameArray[TX_TARGET_SPEED_POS]), &data->targetSpeed);
     U16_TO_U8(&(gSciTransTx_J150.mpTxOneFrameArray[TX_CURRENT_SPEED_POS]), &data->currentSpeed);
@@ -454,7 +462,7 @@ static int J150_TransTxEnQueOneFrame(SCITXQUE* txQue)
 {
     int i;
 
-    for (i = 0; i < gSciTransTx_J150.mTxTotalLength; ++i)
+    for (i = 0; i < 31; ++i)
     {
  		if (SciTxEnQueue(gSciTransTx_J150.mpTxOneFrameArray[i], txQue) == 0)
         {

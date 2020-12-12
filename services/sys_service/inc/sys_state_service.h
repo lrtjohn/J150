@@ -138,12 +138,6 @@ typedef enum _ROTATE_DIRECTION
     FORWARD
 }ROTATE_DIRECTION;
 
-typedef enum _WORK_MODE
-{
-    NORMAL,
-    BATTLE
-}J150_WORK_MODE;
-
 typedef enum _SYS_RUNNING_STATE
 {
     SYS_INIT,
@@ -159,7 +153,7 @@ typedef union
 	SYS_STATUS_16BIT    bit;
 }J150_SYS_STATUS;
 
-typedef struct _CST_ALARM_32BIT
+typedef struct _CST_ALARM_16BIT
 {
 	Uint16 WORKINNG  	: 1;/*0*/
 	Uint16 M_TEMP_P     : 1;/*1 暂未使用*/
@@ -169,37 +163,21 @@ typedef struct _CST_ALARM_32BIT
 	Uint16 B_OVLT_P		: 1;/*5*/
 	Uint16 B_OCRT_P 	: 1;/*6*/
 	Uint16 M_HALL_P    	: 1;/*7*/
-	Uint16 i    		: 1;/*8*/
-	Uint16 j    		: 1;/*9*/
-	Uint16 k   			: 1;/*10*/
-	Uint16 l   			: 1;/*11*/
-	Uint16 m			: 1;/*12*/
-	Uint16 n 			: 1;/*13*/
-	Uint16 o  			: 1;/*14*/
-	Uint16 p      		: 1;/*15*/
-	Uint16 M_TEMP_W		: 1;/*16*/
-	Uint16 D_TEMP_W  	: 1;/*17*/
-	Uint16 B_UVLT_W    	: 1;/*18*/
-	Uint16 M_SPED_W 	: 1;/*19 other ADs except 270V V and I*/
-	Uint16 B_OVLT_W		: 1;/*20*/
-	Uint16 B_OCRT_W		: 1;/*21*/
-	Uint16 q			: 1;/*22 来自PWM报警*/
-	Uint16 r 			: 1;/*23*/
-	Uint16 s 			: 1;/*24*/
-	Uint16 t			: 1;/*25*/
-	Uint16 u      		: 1;/*26*/
-	Uint16 v   			: 1;/*27*/
-	Uint16 w 			: 1;/*28*/
-	Uint16 x 			: 1;/*29*/
-	Uint16 y    		: 1;/*30*/
-	Uint16 z      		: 1;/*31*/
-}CST_ALARM_32BIT;
+	Uint16 M_TEMP_W		: 1;/*8*/
+	Uint16 D_TEMP_W  	: 1;/*9*/
+	Uint16 B_UVLT_W    	: 1;/*10*/
+	Uint16 M_SPED_W 	: 1;/*11 other ADs except 270V V and I*/
+	Uint16 B_OVLT_W		: 1;/*12*/
+	Uint16 B_OCRT_W		: 1;/*13*/
+	Uint16 a			: 1;
+	Uint16 b			: 1;
+}CST_ALARM_16BIT;
 
 typedef union
 {
-	Uint32          	all;
-	VAR32BIT        	data;
-	CST_ALARM_32BIT     bit;
+	Uint16          	all;
+	VAR16BIT        	data;
+	CST_ALARM_16BIT     bit;
 }J150_CST_ALARM;
 
 typedef struct _J150_SYS_INFO
@@ -216,7 +194,6 @@ typedef struct _SYS_STATE_FLAG
 	SYSERRO 			error;
     SYS_RUNNING_STATE 	sysRunningState;
 	J150_SYS_STATUS	  	j150SysStatus;
-	J150_WORK_MODE		j150WorkMode;
 	J150_CST_ALARM		j150CustAlarm;
 }SYS_STATE_FLAG;
 
@@ -238,6 +215,8 @@ typedef struct _SYS_STATE_FLAG
 #define CLR_J150_FAULT_EXT								(gSysStateFlag.j150SysStatus.bit.FAULT_EXT = 0)
 #define SET_J150_MOTOR_STA								(gSysStateFlag.j150SysStatus.bit.MOTOR_STA = 1)
 #define CLR_J150_MOTOR_STA								(gSysStateFlag.j150SysStatus.bit.MOTOR_STA = 0)
+#define SET_J150_PARA_CONF								(gSysStateFlag.j150SysStatus.bit.PARA_CONF = 1)
+#define CLR_J150_PARA_CONF								(gSysStateFlag.j150SysStatus.bit.PARA_CONF = 0)
 
 #define IS_J150_BIT_CMPLT								(gSysStateFlag.j150SysStatus.bit.BIT_CMPLT == 1)
 #define IS_J150_POWER_NOR								(gSysStateFlag.j150SysStatus.bit.POWER_BUS == 1)
@@ -283,7 +262,6 @@ typedef struct _SYS_STATE_FLAG
 
 #define INIT_SYS_RUNNING_STATE                          (gSysStateFlag.sysRunningState = SYS_INIT)
 #define INIT_SYS_ROTATE_DIRECTION                       (gSysStateFlag.rotateDirectoin = STOP)
-#define INIT_SYS_WORK_MODE								(gSysStateFlag.j150WorkMode = NORMAL)
 #define INIT_SYS_STATUS									(gSysStateFlag.j150SysStatus.all = 0)
 
 
@@ -350,7 +328,7 @@ typedef struct _SYS_STATE_FLAG
 /*bit12*/
 #define SET_HALL_ERROR_ALARM             				(gSysStateFlag.alarm.bit.hall_error = 1)
 #define CLEAR_HALL_ERROR_ALARM           				(gSysStateFlag.alarm.bit.hall_error = 0)
-#define IS_HALL_ERROR_ALARM          		   	 		(gSysStateFlag.alarm.bit.hall_error | HALL_OUTOF_RANGE_ALARM_MASK)
+#define IS_HALL_ERROR_ALARM          		   	 		(gSysStateFlag.alarm.bit.hall_error == 1)
 
 /*bit13*/
 #define SET_CONTROL_BUS_VOLTAGE_ALARM             		(gSysStateFlag.alarm.bit.ctrlbusVolt = 1)
@@ -415,7 +393,7 @@ typedef struct _SYS_STATE_FLAG
 /*bit25*/
 #define SET_PAHSE_CHANGE_ALARM             				(gSysStateFlag.alarm.bit.pahse_change = 1)
 #define CLEAR_PAHSE_CHANGE_ALARM           				(gSysStateFlag.alarm.bit.pahse_change = 0)
-#define IS_PAHSE_CHANGE_ALARM          		   	 		(gSysStateFlag.alarm.bit.pahse_change | PHASE_CHANGE_ALARM_MASK)
+#define IS_PAHSE_CHANGE_ALARM          		   	 		(gSysStateFlag.alarm.bit.pahse_change == 1)
 
 #define SET_MOTOR_TEMPERATURE_WARNING                   (gSysStateFlag.warning.bit.motortemp = 1)
 #define CLEAR_MOTOR_TEMPERATURE_WARNING                 (gSysStateFlag.warning.bit.motortemp = 0)

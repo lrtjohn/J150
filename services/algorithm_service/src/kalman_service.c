@@ -88,7 +88,7 @@ void Init_gKF_Current(void)
 {
 	gKF_Current.currentData = -1;
 	gKF_Current.ProcessNiose_Q = 1;
-	gKF_Current.MeasureNoise_R = 300; //300 LUG DEBUG
+	gKF_Current.MeasureNoise_R = 157; //300 LUG DEBUG
 	gKF_Current.xlast = 0;
 	gKF_Current.plast = 0;
 	gKF_Current.isFirstTimeExcuted = 1;

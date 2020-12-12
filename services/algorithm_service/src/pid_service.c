@@ -22,7 +22,7 @@ double CurrentCompensate(void){
 	double Compensate_Duty = 0;
 	int16 I_busCurrent = 0;
 
-    gKF_Current.currentData = gCurrent_Struct.I_bus_RBUF_Sum >> 3;
+    gKF_Current.currentData = gCurrent_Struct.I_bus_RBUF_Sum >> 7;
     gCurrent_Struct.I_busCurrent_Ave = KalmanVarFilter(&gKF_Current);
 
 	I_busCurrent = gCurrent_Struct.I_busCurrent_Ave;
@@ -84,8 +84,8 @@ void Init_PID_Service(void)
 	gPID_Speed_Para.outputNegThresh = -200;
 	gPID_Speed_Para.kp0 = 0.3;
 	gPID_Speed_Para.ki0 = 0.0008736;      //0.000672;    //  0.000336;
-    gPID_Speed_Para.ka = 0.1;  //0.1 LUG DEBUG
-    gPID_Speed_Para.kb = 0.1;  //0.1 LUG DEBUG
+    gPID_Speed_Para.ka = 0;  //0.1 LUG DEBUG
+    gPID_Speed_Para.kb = 0;  //0.1 LUG DEBUG
 }
 
 void Init_OpenLoop_Service(void)
