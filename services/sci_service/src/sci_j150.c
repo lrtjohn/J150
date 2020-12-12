@@ -257,7 +257,7 @@ static int J150_TransRxFindHead(SCIRXQUE* q)
 
 static int J150_TransRxCheckLength(SCIRXQUE* q)
 {
-    if (q->buffer[(q->front + TOTAL_LEN_POS) % (q->bufferLen)] != gSciTransRx_J150.mRxTotalLength)
+    if (q->buffer[(q->front + TOTAL_LEN_POS) % (q->bufferLen)] != 0x0D)
     {
         SciRxDeQueue(q);
         return FAIL;
