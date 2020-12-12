@@ -268,62 +268,62 @@ typedef struct _SYS_STATE_FLAG
 /*bit0*/
 #define SET_SYS_INIT_ALARM                              (gSysStateFlag.alarm.bit.init = 1)
 #define CLEAR_SYS_INIT_ALARM                            (gSysStateFlag.alarm.bit.init = 0)
-#define IS_SYS_INIT_ALARM                               (gSysStateFlag.alarm.bit.init | INIT_ALARM_MASK)
+#define IS_SYS_INIT_ALARM                               (gSysStateFlag.alarm.bit.init == 1)
 
 /*bit1*/
 #define SET_SYS_BUS_OVER_VOLTAGE_ALARM                  (gSysStateFlag.alarm.bit.busOV = 1)
 #define CLEAR_SYS_BUS_OVER_VOLTAGE_ALARM                (gSysStateFlag.alarm.bit.busOV = 0)
-#define IS_SYS_BUS_OVER_VOLTAGE_ALARM                   (gSysStateFlag.alarm.bit.busOV | BUS_OVERVOLTAGE_ALARM_MASK)
+#define IS_SYS_BUS_OVER_VOLTAGE_ALARM                   (gSysStateFlag.alarm.bit.busOV == 1)
 
 /*bit2*/
 #define SET_SYS_BUS_UNDER_VOLTAGE_ALARM                 (gSysStateFlag.alarm.bit.busUV = 1)
 #define CLEAR_SYS_BUS_UNDER_VOLTAGE_ALARM               (gSysStateFlag.alarm.bit.busUV = 0)
-#define IS_SYS_BUS_UNDER_VOLTAGE_ALARM                  (gSysStateFlag.alarm.bit.busUV | BUS_UNDERVOLTAGE_ALARM_MASK)
+#define IS_SYS_BUS_UNDER_VOLTAGE_ALARM                  (gSysStateFlag.alarm.bit.busUV == 1)
 
 /*bit3*/
 #define SET_SW_BUS_OV_ALARM             		      	(gSysStateFlag.alarm.bit.swbusOV = 1)
 #define CLEAR_SW_BUS_OV_ALARM           		  		(gSysStateFlag.alarm.bit.swbusOV = 0)
-#define IS_SW_BUS_OV_ALARM          		            (gSysStateFlag.alarm.bit.swbusOV | SW_BUS_OVER_VOLTAGE_ALARM_MASK)
+#define IS_SW_BUS_OV_ALARM          		            (gSysStateFlag.alarm.bit.swbusOV == 1)
 
 /*bit4*/
 #define SET_SYS_BUS_CURRENT_ALARM                       (gSysStateFlag.alarm.bit.busCurrent = 1)
 #define CLEAR_SYS_BUS_CURRENT_ALARM                     (gSysStateFlag.alarm.bit.busCurrent = 0)
-#define IS_SYS_BUS_CURRENT_ALARM                        (gSysStateFlag.alarm.bit.busCurrent | BUS_CURRENT_ALARM_MASK)
+#define IS_SYS_BUS_CURRENT_ALARM                        (gSysStateFlag.alarm.bit.busCurrent == 1)
 
 /*bit5*/
 #define SET_BRIDGE_CURRENT_ALARM     	                (gSysStateFlag.alarm.bit.bridgeCurrent = 1)
 #define CLEAR_BRIDGE_CURRENT_ALARM       	            (gSysStateFlag.alarm.bit.bridgeCurrent = 0)
-#define IS_BRIDGE_CURRENT_ALARM                  	    (gSysStateFlag.alarm.bit.bridgeCurrent | BRIDGE_OVER_CURRENT_ALARM_MASK)
+#define IS_BRIDGE_CURRENT_ALARM                  	    (gSysStateFlag.alarm.bit.bridgeCurrent == 1)
 
 /*bit6*/
 #define SET_BUS_CURRENT_ALARM                   		(gSysStateFlag.alarm.bit.swbusCurrent = 1)
 #define CLEAR_BUS_CURRENT_ALARM                  		(gSysStateFlag.alarm.bit.swbusCurrent = 0)
-#define IS_BUS_CURRENT_ALARM                    		(gSysStateFlag.alarm.bit.swbusCurrent | BUS_OVER_CURRENT_ALARM_MASK)
+#define IS_BUS_CURRENT_ALARM                    		(gSysStateFlag.alarm.bit.swbusCurrent == 1)
 
 /*bit7*/
 #define SET_BRIDGE_CURRENT_SUM_ALARM                   	(gSysStateFlag.alarm.bit.bridgeSum = 1)
 #define CLEAR_BRIDGE_CURRENT_SUM_ALARM             		(gSysStateFlag.alarm.bit.bridgeSum = 0)
-#define IS_BRIDGE_CURRENT_SUM_ALARM                     (gSysStateFlag.alarm.bit.bridgeSum | BRIDGE_CURRENT_SUM_ALARM_MASK)
+#define IS_BRIDGE_CURRENT_SUM_ALARM                     (gSysStateFlag.alarm.bit.bridgeSum == 1)
 
 /*bit8*/
 #define SET_HW_CURRENT_ZERO_ALARM             			(gSysStateFlag.alarm.bit.hw_I_zero = 1)
 #define CLEAR_HW_CURRENT_ZERO_ALARM           			(gSysStateFlag.alarm.bit.hw_I_zero = 0)
-#define IS_HW_CURRENT_ZERO_ALARM          		   	 	(gSysStateFlag.alarm.bit.hw_I_zero | HW_CURRENT_ZERO_ALARM_MASK)
+#define IS_HW_CURRENT_ZERO_ALARM          		   	 	(gSysStateFlag.alarm.bit.hw_I_zero == 1)
 
 /*bit9*/
 #define SET_MOTOR_TEMPERATURE_ALARM                     (gSysStateFlag.alarm.bit.motortemp = 1)
 #define CLEAR_MOTOR_TEMPERATURE_ALARM                   (gSysStateFlag.alarm.bit.motortemp = 0)
-#define IS_MOTOR_TEMPERATURE_ALARM                      (gSysStateFlag.alarm.bit.motortemp | MOTOR_TEMPERATURE_ALARM_MASK)
+#define IS_MOTOR_TEMPERATURE_ALARM                      (gSysStateFlag.alarm.bit.motortemp == 1)
 
 /*bit10*/
 #define SET_DRIVER_TEMPERATURE_ALARM                    (gSysStateFlag.alarm.bit.drivertemp = 1)
 #define CLEAR_DRIVER_TEMPERATURE_ALARM                  (gSysStateFlag.alarm.bit.drivertemp = 0)
-#define IS_DRIVER_TEMPERATURE_ALARM                     (gSysStateFlag.alarm.bit.drivertemp | DRIVER_TEMPERATURE_ALARM_MASK)
+#define IS_DRIVER_TEMPERATURE_ALARM                     (gSysStateFlag.alarm.bit.drivertemp == 1)
 
 /*bit11*/
 #define SET_MOTOR_OVER_SPEED_ALARM             			(gSysStateFlag.alarm.bit.overspeed = 1)
 #define CLEAR_MOTOR_OVER_SPEED_ALARM           			(gSysStateFlag.alarm.bit.overspeed = 0)
-#define IS_MOTOR_OVER_SPEED_ALARM          		   	 	(gSysStateFlag.alarm.bit.overspeed | MOTOR_OVER_SPEED_ALARM_MASK)
+#define IS_MOTOR_OVER_SPEED_ALARM          		   	 	(gSysStateFlag.alarm.bit.overspeed == 1)
 
 /*bit12*/
 #define SET_HALL_ERROR_ALARM             				(gSysStateFlag.alarm.bit.hall_error = 1)
@@ -333,62 +333,62 @@ typedef struct _SYS_STATE_FLAG
 /*bit13*/
 #define SET_CONTROL_BUS_VOLTAGE_ALARM             		(gSysStateFlag.alarm.bit.ctrlbusVolt = 1)
 #define CLEAR_CONTROL_BUS_VOLTAGE_ALARM           		(gSysStateFlag.alarm.bit.ctrlbusVolt = 0)
-#define IS_CONTROL_BUS_VOLTAGE_ALARM          		    (gSysStateFlag.alarm.bit.ctrlbusVolt | CONTROL_VOLTAGE_ALARM_MASK)
+#define IS_CONTROL_BUS_VOLTAGE_ALARM          		    (gSysStateFlag.alarm.bit.ctrlbusVolt == 1)
 
 /*bit14*/
 #define SET_CONTROL_BUS_CURRENT_ALARM             		(gSysStateFlag.alarm.bit.ctrlbusCurr = 1)
 #define CLEAR_CONTROL_BUS_CURRENT_ALARM           		(gSysStateFlag.alarm.bit.ctrlbusCurr = 0)
-#define IS_CONTROL_BUS_CURRENT_ALARM          		    (gSysStateFlag.alarm.bit.ctrlbusCurr | CONTROL_CURRENT_ALARM_MASK)
+#define IS_CONTROL_BUS_CURRENT_ALARM          		    (gSysStateFlag.alarm.bit.ctrlbusCurr == 1)
 
 /*bit15*/
 #define SET_SYS_PG_VCC5V_ALARM                          (gSysStateFlag.alarm.bit.pgVcc5V = 1)
 #define CLEAR_SYS_PG_VCC5V_ALARM                        (gSysStateFlag.alarm.bit.pgVcc5V = 0)
-#define IS_SYS_PG_VCC5V_ALARM                           (gSysStateFlag.alarm.bit.pgVcc5V | POWER_GOOD_VCC5V_ALARM_MASK)
+#define IS_SYS_PG_VCC5V_ALARM                           (gSysStateFlag.alarm.bit.pgVcc5V == 1)
 
 /*bit16*/
 #define SET_SYS_PG_1V9_ALARM                            (gSysStateFlag.alarm.bit.pg1v9 = 1)
 #define CLEAR_SYS_PG_1V9_ALARM                          (gSysStateFlag.alarm.bit.pg1v9 = 0)
-#define IS_SYS_PG_1V9_ALARM                             (gSysStateFlag.alarm.bit.pg1v9 | POWER_GOOD_1V9_ALARM_MASK)
+#define IS_SYS_PG_1V9_ALARM                             (gSysStateFlag.alarm.bit.pg1v9 == 1)
 
 /*bit17*/
 #define SET_SYS_PG_VCC3V3_ALARM                         (gSysStateFlag.alarm.bit.pgVcc3V3 = 1)
 #define CLEAR_SYS_PG_VCC3V3_ALARM                       (gSysStateFlag.alarm.bit.pgVcc3V3 = 0)
-#define IS_SYS_PG_VCC3V3_ALARM                          (gSysStateFlag.alarm.bit.pgVcc3V3 | POWER_GOOD_VCC3V3_ALARM_MASK)
+#define IS_SYS_PG_VCC3V3_ALARM                          (gSysStateFlag.alarm.bit.pgVcc3V3 == 1)
 
 /*bit18*/
 #define SET_SYS_PG_VDD5V_ALARM                          (gSysStateFlag.alarm.bit.pgVdd5V = 1)
 #define CLEAR_SYS_PG_VDD5V_ALARM                        (gSysStateFlag.alarm.bit.pgVdd5V = 0)
-#define IS_SYS_PG_VDD5V_ALARM                           (gSysStateFlag.alarm.bit.pgVdd5V | POWER_GOOD_VDD5V_ALARM_MASK)
+#define IS_SYS_PG_VDD5V_ALARM                           (gSysStateFlag.alarm.bit.pgVdd5V == 1)
 
 /*bit19*/
 #define SET_HW_ANALOG_LEVEL_ALARM             			(gSysStateFlag.alarm.bit.hw_anlg_lvl = 1)
 #define CLEAR_HW_ANALOG_LEVEL_ALARM           			(gSysStateFlag.alarm.bit.hw_anlg_lvl = 0)
-#define IS_HW_ANALOG_LEVEL_ALARM          		   	 	(gSysStateFlag.alarm.bit.hw_anlg_lvl | HW_ANALOG_LEVEL_ALARM_MASK)
+#define IS_HW_ANALOG_LEVEL_ALARM          		   	 	(gSysStateFlag.alarm.bit.hw_anlg_lvl == 1)
 
 /*bit20*/
 #define SET_SYS_HARDWARE_ALARM                          (gSysStateFlag.alarm.bit.hardware = 1)
 #define CLEAR_SYS_HARDWARE_ALARM                        (gSysStateFlag.alarm.bit.hardware = 0)
-#define IS_SYS_HARDWARE_ALARM                           (gSysStateFlag.alarm.bit.hardware | HARDWARE_ALARM_MASK)
+#define IS_SYS_HARDWARE_ALARM                           (gSysStateFlag.alarm.bit.hardware == 1)
 
 /*bit21*/
 #define SET_HW_DIGITAL_LEVEL_ALARM             			(gSysStateFlag.alarm.bit.hw_digit_lvl = 1)
 #define CLEAR_HW_DIGITAL_LEVEL_ALARM           			(gSysStateFlag.alarm.bit.hw_digit_lvl = 0)
-#define IS_HW_DIGITAL_LEVEL_ALARM          		   	 	(gSysStateFlag.alarm.bit.hw_digit_lvl | HW_DIGITAL_LEVEL_ALARM_MASK)
+#define IS_HW_DIGITAL_LEVEL_ALARM          		   	 	(gSysStateFlag.alarm.bit.hw_digit_lvl == 1)
 
 /*bit22*/
 #define SET_SW_PWM_ISR_ALARM             				(gSysStateFlag.alarm.bit.sw_pwm_alarm = 1)
 #define CLEAR_SW_PWM_ISR_ALARM           				(gSysStateFlag.alarm.bit.sw_pwm_alarm = 0)
-#define IS_SW_PWM_ISR_ALARM          		   	 		(gSysStateFlag.alarm.bit.sw_pwm_alarm | SW_PWM_ISR_ALARM_MASK)
+#define IS_SW_PWM_ISR_ALARM          		   	 		(gSysStateFlag.alarm.bit.sw_pwm_alarm == 1)
 
 /*bit23*/
 #define SET_SYS_SOFTWARE_ALARM                          (gSysStateFlag.alarm.bit.software = 1)
 #define CLEAR_SYS_SOFTWARE_ALARM                        (gSysStateFlag.alarm.bit.software = 0)
-#define IS_SYS_SOFTWARE_ALARM                           (gSysStateFlag.alarm.bit.software | SOFTWARE_ALARM_MASK)
+#define IS_SYS_SOFTWARE_ALARM                           (gSysStateFlag.alarm.bit.software == 1)
 
 /*bit24*/
 #define SET_HW_DIGIT_SIGNAL_ALARM             			(gSysStateFlag.alarm.bit.hw_digit_sig = 1)
 #define CLEAR_HW_DIGIT_SIGNAL_ALARM           			(gSysStateFlag.alarm.bit.hw_digit_sig = 0)
-#define IS_HW_DIGIT_SIGNAL_ALARM          		   	 	(gSysStateFlag.alarm.bit.hw_digit_sig | HW_DIGIT_SIGNAL_ALARM_MASK)
+#define IS_HW_DIGIT_SIGNAL_ALARM          		   	 	(gSysStateFlag.alarm.bit.hw_digit_sig == 1)
 
 /*bit25*/
 #define SET_PAHSE_CHANGE_ALARM             				(gSysStateFlag.alarm.bit.pahse_change = 1)

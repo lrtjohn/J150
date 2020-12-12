@@ -117,6 +117,7 @@ void Sys_hlsStop(void)
 			ENABLE_BUSBAR_VOLTAGE;
 			ENABLE_GATE_DRIVER();
 			SET_WORKING_NORM;
+			Sys_chstForwardRotate();
 		}
 		else{
 			DISABLE_GATE_DRIVER();

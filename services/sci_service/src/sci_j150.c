@@ -65,7 +65,7 @@ SCI_APP_PROTOCOL_RX* pSciRxAppProtocol = NULL;
 SCI_APP_PROTOCOL_RX gSciAppProtocolRx_J150 =
 {
     COMMAND_PARA_NONE,
-    WORK_MODE_NORMAL,
+	WORK_MODE_SPECIAL,
     RX_MIN_TARGET_SPEED ,                  /*init target speed*/
     {
         0                                  /* good packet array */
