@@ -27,10 +27,10 @@ double CurrentCompensate(void){
 
 	I_busCurrent = gCurrent_Struct.I_busCurrent_Ave;
 	if(I_busCurrent < 62) I_busCurrent = 0;
-	else if(I_busCurrent > 839) I_busCurrent = 839;
+	else if(I_busCurrent > 1000) I_busCurrent = 1000;
 	else; /*DO NOTHING*/
-	Compensate_Duty = I_busCurrent * COMPENSATE_DUTY_K * 0.7;
-	if(Compensate_Duty > 300) Compensate_Duty = 300;
+	Compensate_Duty = I_busCurrent * COMPENSATE_DUTY_K * 0.805;
+	if(Compensate_Duty > 400) Compensate_Duty = 400;
 	else if(Compensate_Duty < 0) Compensate_Duty = 0;
 	else;/*DO NOTHING*/
 	return Compensate_Duty;
@@ -81,7 +81,7 @@ void Init_PID_Service(void)
 	gPID_Speed_Para.currentErrThreshold = 600;
 	gPID_Speed_Para.sumErrThreshold = 807692;    //1050000;   // 2100000;
 	gPID_Speed_Para.outputPosThresh = 1100;
-	gPID_Speed_Para.outputNegThresh = -200;
+	gPID_Speed_Para.outputNegThresh = -100;
 	gPID_Speed_Para.kp0 = 0.3;
 	gPID_Speed_Para.ki0 = 0.0008736;      //0.000672;    //  0.000336;
     gPID_Speed_Para.ka = 0;  //0.1 LUG DEBUG
