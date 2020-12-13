@@ -112,6 +112,12 @@ void Sys_hlsStop(void)
 	}
 	else{
 		/*战时模式*/
+		if(IS_SYS_ALARM){
+			SET_J150_FAULT_EXT;
+		}
+		else{
+			CLR_J150_FAULT_EXT;
+		}
 		if(IS_SYS_ENABLE_FORWARD_ROTATE)
 		{
 			ENABLE_BUSBAR_VOLTAGE;
@@ -154,6 +160,12 @@ void Sys_hlstForwardRotate(void) /*运行状态*/
 	}
 	else{
 		/*战时模式*/
+		if(IS_SYS_ALARM){
+			SET_J150_FAULT_EXT;
+		}
+		else{
+			CLR_J150_FAULT_EXT;
+		}
 		if(IS_SYS_ENABLE_STOP_ROTATE)
 		{
 			DISABLE_GATE_DRIVER();

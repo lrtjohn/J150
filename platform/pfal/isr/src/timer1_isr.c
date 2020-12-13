@@ -20,7 +20,7 @@ void PFAL_Timer1_ISR(void)
 #endif
 
     duty_ratio = (double)(gSpwmPara.Duty) / 1250;
-    temp_current = ((double)(gCurrent_Struct.I_busCurrent_Ave) * BUSCURRENT_K + BUSCURRENT_B) * 10 * duty_ratio;
+    temp_current = ((double)(gCurrent_Struct.I_busCurrent_Ave) * BUSCURRENT_K + BUSCURRENT_B) * 100 * duty_ratio;
 	gSciAppProtocolTx_J150.workStatus 	= gSysStateFlag.j150SysStatus.all;
 	gSciAppProtocolTx_J150.sysStatus1 	= gSysStateFlag.sysRunningState;
 	gSciAppProtocolTx_J150.sysStatus2 	= (Uint16)((double)(gCurrent_Struct.I_busCurrent_Ave) * BUSCURRENT_K + BUSCURRENT_B);
@@ -28,7 +28,7 @@ void PFAL_Timer1_ISR(void)
 	gSciAppProtocolTx_J150.frameCnt 	= gSciAppProtocolTx_J150.frameCnt + 1;
 	gSciAppProtocolTx_J150.targetSpeed 	= gSciAppProtocolRx_J150.targetSpeed;
 	gSciAppProtocolTx_J150.currentSpeed = gEcapPara.gMotorSpeedEcap;
-	gSciAppProtocolTx_J150.busVoltage 	= (Uint16)((double)(gSysAnalogVar.single.var[updatePower270V_M].value) * BUSVOLTAGE_K + BUSVOLTAGE_B);
+	gSciAppProtocolTx_J150.busVoltage 	= (Uint16)(((double)(gSysAnalogVar.single.var[updatePower270V_M].value) * BUSVOLTAGE_K + BUSVOLTAGE_B) * 10);
 	gSciAppProtocolTx_J150.busCurrent 	= (Uint16)(temp_current);
 	gSciAppProtocolTx_J150.servoTemp 	= (Uint16)((double)(gSysAnalogVar.single.var[updateDriverTemp].value) * SERVO_TEMP_K + SERVO_TEMP_B);
 	gSciAppProtocolTx_J150.motorTemp 	= (Uint16)((double)(gSysAnalogVar.single.var[updateMotorTemp].value) * MOTOR_TEMP_K + MOTOR_TEMP_B);
