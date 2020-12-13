@@ -12,8 +12,10 @@ typedef struct _ECAP_PARA
     Uint32 gECapCount;
     int isEcapRefresh;
     double gMotorSpeedEcap;
-    double SpeedUpperLimit;
-    double SpeedLowerLimit;
+    double SpeedUpperProtectLimit;
+    double SpeedLowerProtectLimit;
+    double SpeedUpperWarnLimit;
+	double SpeedLowerWarnLimit;
 }ECAP_PARA;
 
 void GetECap1Count(void);

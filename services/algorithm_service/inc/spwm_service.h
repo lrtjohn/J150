@@ -38,6 +38,8 @@ typedef struct _SPWM_PARA
 //    int16 Rvdt_Zero;
     int16 DutyAddInterval;
     int16 DutyAddIntervalCnt;
+    int16 DutyMinusInterval;
+    int16 DutyMinusIntervalCnt;
     int16 Duty_Gradual;
     int16 TargetDuty;
     int16 StepMaxDuty;
@@ -58,7 +60,7 @@ typedef struct _SPWM_PARA
 typedef PF_RING_BUFFER PWM_CURRENT_QUE;
 extern PWM_CURRENT_QUE* pwm_busCurrent_Que;
 void Init_PWM_Buf(void);
-int PwmBusCurrentEnQueue(Uint16 e, PWM_CURRENT_QUE *PWMBusCurrentQue);
+int32 PwmBusCurrentEnQueue(Uint16 e, PWM_CURRENT_QUE *PWMBusCurrentQue);
 Uint16 GetCurrentHallValue(void);
 void Spwm_Output(SPWM_PARA* spwmPara);
 void Init_Spwm_Service(void);
