@@ -1,21 +1,15 @@
-/***************************0.0.1*******************************/
-Version Number: 0.0.1
-Date: 2020/09/27
-Author:Simon
-
-What new: 
-	1. Basic function of J150 SCI protocol RX and TX 
-
-/***************************0.0.2*******************************/
-Version Number: 0.0.2
-Date: 2020/10/24
+/***************************0.0.4*******************************/
+Version Number: 0.0.3、4
+Date: 2020/12/13
 Author:Runtian
 
 Whats new: 
-	1. ECAP, speed calculate function added
-	2. ADC and open loop algorithm verified
-	3. Change System CLK to 150MHz
-
+	1. Finish and improve control strategy
+	2. Add customer required alarms and test with 8359
+	3. Add battle mode and test with 8359
+	4. Modify communicate protocal and finish communicate test with 8359 host PC
+	5. Improve Alarm structure
+	6. Finish Voltage, Current and Temperature's calibration
 /***************************0.0.3*******************************/
 Version Number: 0.0.3
 Date: 2020/11/28
@@ -29,3 +23,20 @@ Whats new:
 	5. Improve Alarm structure
 	6. Fix bugs during Rated loading test
 	7. Add BIT systems
+/***************************0.0.2*******************************/
+Version Number: 0.0.2
+Date: 2020/10/24
+Author:Runtian
+
+Whats new: 
+	1. ECAP, speed calculate function added
+	2. ADC and open loop algorithm verified
+	3. Change System CLK to 150MHz
+
+/***************************0.0.1*******************************/
+Version Number: 0.0.1
+Date: 2020/09/27
+Author:Simon
+
+What new: 
+	1. Basic function of J150 SCI protocol RX and TX 
