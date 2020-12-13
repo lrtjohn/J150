@@ -36,6 +36,8 @@ void KeyParametersClear(void){
 	gSpwmPara.Duty = 0;
 	gSpwmPara.TargetDuty = 0;
 	gSpwmPara.StepMaxDuty = 0;
+	gSpwmPara.Duty_Gradual_mid = 0;
+	gSpwmPara.lastDuty = 0;
 }
 
 /*初始化状态*/
@@ -46,9 +48,10 @@ void Sys_hlstInit(void)
 	DISABLE_BUSBAR_VOLTAGE;
 	DISABLE_GATE_DRIVER();
 	CLR_J150_MOTOR_STA;
+	CLEAR_WORKING_NORM;
 	if(gSpwmPara.Cnt_PWM_Init_BIT >= CNT_INIT_END){
 		SET_J150_BIT_CMPLT;
-		if(gSysStateFlag.j150WorkMode == NORMAL){
+		if(gSciAppProtocolRx_J150.workMode == WORK_MODE_NORMAL){
 			if(IS_SYS_ALARM) {
 				Sys_chstAlarm();
 			}
@@ -58,6 +61,7 @@ void Sys_hlstInit(void)
 		}
 		else{
 			/*战时模式*/
+			Sys_chstStop();
 		}
 	}
 }
@@ -70,24 +74,20 @@ void Sys_hlsStop(void)
 	if(gTimerCnt.Cnt_SM_Stop_5ms < 10) ++gTimerCnt.Cnt_SM_Stop_5ms;
 	CLR_J150_MOTOR_STA;
 	KeyParametersClear();
-	if(gSysStateFlag.j150WorkMode == NORMAL){
+	if(gSciAppProtocolRx_J150.workMode == WORK_MODE_NORMAL){
 		if(IS_SYS_ALARM){
 			DISABLE_GATE_DRIVER();
 			DISABLE_BUSBAR_VOLTAGE;						
 			Sys_chstAlarm();
 		}
 		else{
+			SET_WORKING_NORM;
 			if(IS_SYS_ENABLE_FORWARD_ROTATE)
 			{
 				if(IS_J150_POWER_NOR && (gTimerCnt.Cnt_SM_Stop_5ms >=4)){
-//					ENABLE_GATE_DRIVER();
 					ENABLE_BUSBAR_VOLTAGE;
-//					asm (" NOP");
-//					asm (" NOP");
-//					asm (" NOP");
 					if(IS_BUSBAR_ENABLED){
 						ENABLE_GATE_DRIVER();
-//						ENABLE_BUSBAR_VOLTAGE;
 						if(gTimerCnt.Cnt_PwrBus < 5) ++gTimerCnt.Cnt_PwrBus;
 						else{
 							Sys_chstForwardRotate();
@@ -95,7 +95,6 @@ void Sys_hlsStop(void)
 					}
 					else{
 						DISABLE_GATE_DRIVER();
-//						DISABLE_BUSBAR_VOLTAGE;
 						gTimerCnt.Cnt_PwrBus = 0;
 					}
 				}
@@ -103,10 +102,6 @@ void Sys_hlsStop(void)
 					DISABLE_GATE_DRIVER();
 					DISABLE_BUSBAR_VOLTAGE;
 				} 
-				//如果开优化则需要放开等待语句，否则GPIO7的值更改后，不会立即生效
-//				asm (" NOP");
-//				asm (" NOP");
-//				asm (" NOP");
 			}
 			else{
 					DISABLE_GATE_DRIVER();
@@ -117,6 +112,24 @@ void Sys_hlsStop(void)
 	}
 	else{
 		/*战时模式*/
+		if(IS_SYS_ALARM){
+			SET_J150_FAULT_EXT;
+		}
+		else{
+			CLR_J150_FAULT_EXT;
+		}
+		if(IS_SYS_ENABLE_FORWARD_ROTATE)
+		{
+			ENABLE_BUSBAR_VOLTAGE;
+			ENABLE_GATE_DRIVER();
+			SET_WORKING_NORM;
+			Sys_chstForwardRotate();
+		}
+		else{
+			DISABLE_GATE_DRIVER();
+			DISABLE_BUSBAR_VOLTAGE;
+			gTimerCnt.Cnt_PwrBus = 0;
+		}
 	}
 
 }
@@ -125,7 +138,7 @@ void Sys_hlstForwardRotate(void) /*运行状态*/
 {
 	gTimerCnt.Cnt_SM_Stop_5ms = 0;
 	gTimerCnt.Cnt_SM_Alarm_5ms = 0;
-	if(gSysStateFlag.j150WorkMode == NORMAL){
+	if(gSciAppProtocolRx_J150.workMode == WORK_MODE_NORMAL){
 		if(IS_SYS_ALARM)
 		{
 			DISABLE_GATE_DRIVER();
@@ -147,15 +160,34 @@ void Sys_hlstForwardRotate(void) /*运行状态*/
 	}
 	else{
 		/*战时模式*/
+		if(IS_SYS_ALARM){
+			SET_J150_FAULT_EXT;
+		}
+		else{
+			CLR_J150_FAULT_EXT;
+		}
+		if(IS_SYS_ENABLE_STOP_ROTATE)
+		{
+			DISABLE_GATE_DRIVER();
+			DISABLE_BUSBAR_VOLTAGE;
+			KeyParametersClear();
+			Sys_chstStop();
+		}
+		else{
+			ENABLE_GATE_DRIVER();
+			ENABLE_BUSBAR_VOLTAGE;
+		}
 	}
 	SET_J150_MOTOR_STA;
+	SET_WORKING_NORM;
 	updateCtrlStrategyParameters(); /*开闭环用反馈转速，反馈电压更新*/
 	CtrlStrategyCalculation(); /*计算开环，闭环占空比，并赋值目标占空比*/
 }
 
 void Sys_hlsAlarm(void) /*故障保护状态*/
 {
-//	static int cnt_clear = 0;
+	static int cnt_clear = 0;
+	CLEAR_WORKING_NORM;
 	DISABLE_GATE_DRIVER();
 	DISABLE_BUSBAR_VOLTAGE;
 	SET_SYS_ENABLE_STOP_ROTATE;
@@ -164,10 +196,18 @@ void Sys_hlsAlarm(void) /*故障保护状态*/
 	KeyParametersClear();
 	gTimerCnt.Cnt_SM_Stop_5ms = 0;
 	if(gTimerCnt.Cnt_SM_Alarm_5ms < 10) ++gTimerCnt.Cnt_SM_Alarm_5ms;
-	if(gSysStateFlag.j150WorkMode == NORMAL){
+	if(gSciAppProtocolRx_J150.workMode == WORK_MODE_NORMAL){
 		if(IS_SYS_ALARM){
-			if((gTimerCnt.Cnt_SM_Alarm_5ms > 4) && (gDebugDataArray[3] == 555)){
-				HARDWARE_OVER_CURRENT_CLEAR();
+			if(gTimerCnt.Cnt_SM_Alarm_5ms > 4){
+				if(cnt_clear == 0){
+					HARDWARE_OVER_CURRENT_CLEAR();
+					cnt_clear = 1;
+				}
+				else{
+					if(gDebugDataArray[3] == 555){
+						HARDWARE_OVER_CURRENT_CLEAR();
+					}
+				}
 			}
 		}
 		else{
@@ -179,7 +219,6 @@ void Sys_hlsAlarm(void) /*故障保护状态*/
 	}
 	else{
 		/*战时模式*/
-		/*HARDWARE_OVER_CURRENT_CLEAR();*/
 	}
 }
 
@@ -188,17 +227,17 @@ void Init_Sys_State_Service(void)
     CLEAR_SYS_ALARM; /*清除故障告警*/
     CLEAR_SYS_WARNING;/*清除预警信号*/
     CLEAR_SYS_ERROR; /*清除错误信号*/
+    CLEAR_CUST_ALARM;
     {/*设置状态机*/
     INIT_SYS_RUNNING_STATE; /*状态机变量设置为为初始化*/
     SYS_STATE_MACHINE_INIT; /*状态机指针设置为初始化*/
-    INIT_SYS_WORK_MODE;
     CLR_J150_BIT_CMPLT;
     CLR_J150_MOTOR_STA;
     INIT_SYS_STATUS;
     }
     INIT_SYS_ROTATE_DIRECTION; /*电机驱动系统初始化为停止态*/
 //    SET_J150_BIT_ING;
-    gSysVersionNum = 2; /*版本号*/
+    gSysVersionNum = 4; /*版本号*/
 }
 
 int test111 = 0;

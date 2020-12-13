@@ -6,8 +6,10 @@ void InitEcapVar(void){
 	gEcapPara.gMotorSpeedEcap = 0;
 	gEcapPara.isEcapRefresh = 0;
 	gEcapPara.gECapCount = 0;
-	gEcapPara.SpeedUpperLimit = 17200;
-	gEcapPara.SpeedLowerLimit = 6600;
+	gEcapPara.SpeedUpperProtectLimit = 5500;
+	gEcapPara.SpeedLowerProtectLimit = 5300;
+	gEcapPara.SpeedUpperWarnLimit = 5100;
+	gEcapPara.SpeedLowerWarnLimit = 4900;
 //    gECapCount = 0;
 }
 
@@ -45,11 +47,16 @@ void checkMotorSpeed (void){
     static int cnt_alarm_max2nd = 0;
     static int over_alarm_limit_lasttime = 0;
 
+    static int cnt_warn_max = 0;
+    static int cnt_warn_max2nd = 0;
+    static int over_warn_limit_lasttime = 0;
+
     if(over_alarm_limit_lasttime == 1){
-        if(gEcapPara.gMotorSpeedEcap < gEcapPara.SpeedLowerLimit){
+        if(gEcapPara.gMotorSpeedEcap < gEcapPara.SpeedLowerProtectLimit){
             ++cnt_alarm_max2nd;
             if(cnt_alarm_max2nd >300){
             	CLEAR_MOTOR_OVER_SPEED_ALARM;
+            	CLEAR_MOTOR_SPEED_PROT;
             	over_alarm_limit_lasttime = 0;
             }
         }
@@ -57,20 +64,55 @@ void checkMotorSpeed (void){
         	cnt_alarm_max2nd = 0;
             over_alarm_limit_lasttime = 1;
             SET_MOTOR_OVER_SPEED_ALARM;
+            SET_MOTOR_SPEED_PROT;
         }
     }
     else if (over_alarm_limit_lasttime == 0){
-        if(gEcapPara.gMotorSpeedEcap > gEcapPara.SpeedUpperLimit) {
+        if(gEcapPara.gMotorSpeedEcap > gEcapPara.SpeedUpperProtectLimit) {
             ++cnt_alarm_max;
             if(cnt_alarm_max > 300){
                 cnt_alarm_max = 0;
                 SET_MOTOR_OVER_SPEED_ALARM;
+                SET_MOTOR_SPEED_PROT;
                 over_alarm_limit_lasttime = 1;
             }
         }
         else{
             if(cnt_alarm_max >= 1) --cnt_alarm_max;
             else cnt_alarm_max = 0;
+        }
+    }
+    else{
+//    	gSysSWAlarm.bit.updateAndCheckTemperature = 1;
+//    	gSysAlarm.bit.softwareFault = 1;
+    }
+
+    if(over_warn_limit_lasttime == 1){
+        if(gEcapPara.gMotorSpeedEcap < gEcapPara.SpeedLowerWarnLimit){
+            ++cnt_warn_max2nd;
+            if(cnt_warn_max2nd >300){
+            	CLEAR_BUS_OVER_VOLT_WARN;
+            	over_warn_limit_lasttime = 0;
+            }
+        }
+        else{
+        	cnt_warn_max2nd = 0;
+        	over_warn_limit_lasttime = 1;
+        	SET_BUS_OVER_VOLT_WARN;
+        }
+    }
+    else if (over_warn_limit_lasttime == 0){
+        if(gEcapPara.gMotorSpeedEcap > gEcapPara.SpeedUpperWarnLimit) {
+            ++cnt_warn_max;
+            if(cnt_warn_max > 300){
+            	cnt_warn_max = 0;
+            	SET_BUS_OVER_VOLT_WARN;
+                over_warn_limit_lasttime = 1;
+            }
+        }
+        else{
+            if(cnt_warn_max >= 1) --cnt_warn_max;
+            else cnt_warn_max = 0;
         }
     }
     else{

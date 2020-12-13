@@ -97,7 +97,7 @@ typedef struct _SYS_STATUS_16BIT
 	Uint16 POWER_BUS    : 1;
 	Uint16 FAULT_EXT	: 1;
 	Uint16 MOTOR_STA    : 1;
-	Uint16 e			: 1;
+	Uint16 PARA_CONF	: 1;
 	Uint16 f   			: 1;
 	Uint16 g     		: 1;
 	Uint16 h      		: 1;
@@ -138,12 +138,6 @@ typedef enum _ROTATE_DIRECTION
     FORWARD
 }ROTATE_DIRECTION;
 
-typedef enum _WORK_MODE
-{
-    NORMAL,
-    BATTLE
-}J150_WORK_MODE;
-
 typedef enum _SYS_RUNNING_STATE
 {
     SYS_INIT,
@@ -159,6 +153,33 @@ typedef union
 	SYS_STATUS_16BIT    bit;
 }J150_SYS_STATUS;
 
+typedef struct _CST_ALARM_16BIT
+{
+	Uint16 WORKINNG  	: 1;/*0*/
+	Uint16 M_TEMP_P     : 1;/*1 暂未使用*/
+	Uint16 D_TEMP_P    	: 1;/*2*/
+	Uint16 B_UVLT_P     : 1;/*3*/
+	Uint16 M_SPED_P		: 1;/*4*/
+	Uint16 B_OVLT_P		: 1;/*5*/
+	Uint16 B_OCRT_P 	: 1;/*6*/
+	Uint16 M_HALL_P    	: 1;/*7*/
+	Uint16 M_TEMP_W		: 1;/*8*/
+	Uint16 D_TEMP_W  	: 1;/*9*/
+	Uint16 B_UVLT_W    	: 1;/*10*/
+	Uint16 M_SPED_W 	: 1;/*11 other ADs except 270V V and I*/
+	Uint16 B_OVLT_W		: 1;/*12*/
+	Uint16 B_OCRT_W		: 1;/*13*/
+	Uint16 a			: 1;
+	Uint16 b			: 1;
+}CST_ALARM_16BIT;
+
+typedef union
+{
+	Uint16          	all;
+	VAR16BIT        	data;
+	CST_ALARM_16BIT     bit;
+}J150_CST_ALARM;
+
 typedef struct _J150_SYS_INFO
 {
 	/* Just add this data structure in case some special info for J150 */
@@ -173,7 +194,7 @@ typedef struct _SYS_STATE_FLAG
 	SYSERRO 			error;
     SYS_RUNNING_STATE 	sysRunningState;
 	J150_SYS_STATUS	  	j150SysStatus;
-	J150_WORK_MODE		j150WorkMode;
+	J150_CST_ALARM		j150CustAlarm;
 }SYS_STATE_FLAG;
 
 #define CNT_INIT_END (200)
@@ -194,6 +215,8 @@ typedef struct _SYS_STATE_FLAG
 #define CLR_J150_FAULT_EXT								(gSysStateFlag.j150SysStatus.bit.FAULT_EXT = 0)
 #define SET_J150_MOTOR_STA								(gSysStateFlag.j150SysStatus.bit.MOTOR_STA = 1)
 #define CLR_J150_MOTOR_STA								(gSysStateFlag.j150SysStatus.bit.MOTOR_STA = 0)
+#define SET_J150_PARA_CONF								(gSysStateFlag.j150SysStatus.bit.PARA_CONF = 1)
+#define CLR_J150_PARA_CONF								(gSysStateFlag.j150SysStatus.bit.PARA_CONF = 0)
 
 #define IS_J150_BIT_CMPLT								(gSysStateFlag.j150SysStatus.bit.BIT_CMPLT == 1)
 #define IS_J150_POWER_NOR								(gSysStateFlag.j150SysStatus.bit.POWER_BUS == 1)
@@ -235,142 +258,142 @@ typedef struct _SYS_STATE_FLAG
 #define CLEAR_SYS_ALARM                                 (gSysStateFlag.alarm.all = 0)
 #define CLEAR_SYS_WARNING                               (gSysStateFlag.warning.all = 0)
 #define CLEAR_SYS_ERROR                                 (gSysStateFlag.error.all = 0)
+#define CLEAR_CUST_ALARM								(gSysStateFlag.j150CustAlarm.all = 0)
 
 #define INIT_SYS_RUNNING_STATE                          (gSysStateFlag.sysRunningState = SYS_INIT)
 #define INIT_SYS_ROTATE_DIRECTION                       (gSysStateFlag.rotateDirectoin = STOP)
-#define INIT_SYS_WORK_MODE								(gSysStateFlag.j150WorkMode = NORMAL)
 #define INIT_SYS_STATUS									(gSysStateFlag.j150SysStatus.all = 0)
 
 
 /*bit0*/
 #define SET_SYS_INIT_ALARM                              (gSysStateFlag.alarm.bit.init = 1)
 #define CLEAR_SYS_INIT_ALARM                            (gSysStateFlag.alarm.bit.init = 0)
-#define IS_SYS_INIT_ALARM                               (gSysStateFlag.alarm.bit.init | INIT_ALARM_MASK)
+#define IS_SYS_INIT_ALARM                               (gSysStateFlag.alarm.bit.init == 1)
 
 /*bit1*/
 #define SET_SYS_BUS_OVER_VOLTAGE_ALARM                  (gSysStateFlag.alarm.bit.busOV = 1)
 #define CLEAR_SYS_BUS_OVER_VOLTAGE_ALARM                (gSysStateFlag.alarm.bit.busOV = 0)
-#define IS_SYS_BUS_OVER_VOLTAGE_ALARM                   (gSysStateFlag.alarm.bit.busOV | BUS_OVERVOLTAGE_ALARM_MASK)
+#define IS_SYS_BUS_OVER_VOLTAGE_ALARM                   (gSysStateFlag.alarm.bit.busOV == 1)
 
 /*bit2*/
 #define SET_SYS_BUS_UNDER_VOLTAGE_ALARM                 (gSysStateFlag.alarm.bit.busUV = 1)
 #define CLEAR_SYS_BUS_UNDER_VOLTAGE_ALARM               (gSysStateFlag.alarm.bit.busUV = 0)
-#define IS_SYS_BUS_UNDER_VOLTAGE_ALARM                  (gSysStateFlag.alarm.bit.busUV | BUS_UNDERVOLTAGE_ALARM_MASK)
+#define IS_SYS_BUS_UNDER_VOLTAGE_ALARM                  (gSysStateFlag.alarm.bit.busUV == 1)
 
 /*bit3*/
 #define SET_SW_BUS_OV_ALARM             		      	(gSysStateFlag.alarm.bit.swbusOV = 1)
 #define CLEAR_SW_BUS_OV_ALARM           		  		(gSysStateFlag.alarm.bit.swbusOV = 0)
-#define IS_SW_BUS_OV_ALARM          		            (gSysStateFlag.alarm.bit.swbusOV | SW_BUS_OVER_VOLTAGE_ALARM_MASK)
+#define IS_SW_BUS_OV_ALARM          		            (gSysStateFlag.alarm.bit.swbusOV == 1)
 
 /*bit4*/
 #define SET_SYS_BUS_CURRENT_ALARM                       (gSysStateFlag.alarm.bit.busCurrent = 1)
 #define CLEAR_SYS_BUS_CURRENT_ALARM                     (gSysStateFlag.alarm.bit.busCurrent = 0)
-#define IS_SYS_BUS_CURRENT_ALARM                        (gSysStateFlag.alarm.bit.busCurrent | BUS_CURRENT_ALARM_MASK)
+#define IS_SYS_BUS_CURRENT_ALARM                        (gSysStateFlag.alarm.bit.busCurrent == 1)
 
 /*bit5*/
 #define SET_BRIDGE_CURRENT_ALARM     	                (gSysStateFlag.alarm.bit.bridgeCurrent = 1)
 #define CLEAR_BRIDGE_CURRENT_ALARM       	            (gSysStateFlag.alarm.bit.bridgeCurrent = 0)
-#define IS_BRIDGE_CURRENT_ALARM                  	    (gSysStateFlag.alarm.bit.bridgeCurrent | BRIDGE_OVER_CURRENT_ALARM_MASK)
+#define IS_BRIDGE_CURRENT_ALARM                  	    (gSysStateFlag.alarm.bit.bridgeCurrent == 1)
 
 /*bit6*/
 #define SET_BUS_CURRENT_ALARM                   		(gSysStateFlag.alarm.bit.swbusCurrent = 1)
 #define CLEAR_BUS_CURRENT_ALARM                  		(gSysStateFlag.alarm.bit.swbusCurrent = 0)
-#define IS_BUS_CURRENT_ALARM                    		(gSysStateFlag.alarm.bit.swbusCurrent | BUS_OVER_CURRENT_ALARM_MASK)
+#define IS_BUS_CURRENT_ALARM                    		(gSysStateFlag.alarm.bit.swbusCurrent == 1)
 
 /*bit7*/
 #define SET_BRIDGE_CURRENT_SUM_ALARM                   	(gSysStateFlag.alarm.bit.bridgeSum = 1)
 #define CLEAR_BRIDGE_CURRENT_SUM_ALARM             		(gSysStateFlag.alarm.bit.bridgeSum = 0)
-#define IS_BRIDGE_CURRENT_SUM_ALARM                     (gSysStateFlag.alarm.bit.bridgeSum | BRIDGE_CURRENT_SUM_ALARM_MASK)
+#define IS_BRIDGE_CURRENT_SUM_ALARM                     (gSysStateFlag.alarm.bit.bridgeSum == 1)
 
 /*bit8*/
 #define SET_HW_CURRENT_ZERO_ALARM             			(gSysStateFlag.alarm.bit.hw_I_zero = 1)
 #define CLEAR_HW_CURRENT_ZERO_ALARM           			(gSysStateFlag.alarm.bit.hw_I_zero = 0)
-#define IS_HW_CURRENT_ZERO_ALARM          		   	 	(gSysStateFlag.alarm.bit.hw_I_zero | HW_CURRENT_ZERO_ALARM_MASK)
+#define IS_HW_CURRENT_ZERO_ALARM          		   	 	(gSysStateFlag.alarm.bit.hw_I_zero == 1)
 
 /*bit9*/
 #define SET_MOTOR_TEMPERATURE_ALARM                     (gSysStateFlag.alarm.bit.motortemp = 1)
 #define CLEAR_MOTOR_TEMPERATURE_ALARM                   (gSysStateFlag.alarm.bit.motortemp = 0)
-#define IS_MOTOR_TEMPERATURE_ALARM                      (gSysStateFlag.alarm.bit.motortemp | MOTOR_TEMPERATURE_ALARM_MASK)
+#define IS_MOTOR_TEMPERATURE_ALARM                      (gSysStateFlag.alarm.bit.motortemp == 1)
 
 /*bit10*/
 #define SET_DRIVER_TEMPERATURE_ALARM                    (gSysStateFlag.alarm.bit.drivertemp = 1)
 #define CLEAR_DRIVER_TEMPERATURE_ALARM                  (gSysStateFlag.alarm.bit.drivertemp = 0)
-#define IS_DRIVER_TEMPERATURE_ALARM                     (gSysStateFlag.alarm.bit.drivertemp | DRIVER_TEMPERATURE_ALARM_MASK)
+#define IS_DRIVER_TEMPERATURE_ALARM                     (gSysStateFlag.alarm.bit.drivertemp == 1)
 
 /*bit11*/
 #define SET_MOTOR_OVER_SPEED_ALARM             			(gSysStateFlag.alarm.bit.overspeed = 1)
 #define CLEAR_MOTOR_OVER_SPEED_ALARM           			(gSysStateFlag.alarm.bit.overspeed = 0)
-#define IS_MOTOR_OVER_SPEED_ALARM          		   	 	(gSysStateFlag.alarm.bit.overspeed | MOTOR_OVER_SPEED_ALARM_MASK)
+#define IS_MOTOR_OVER_SPEED_ALARM          		   	 	(gSysStateFlag.alarm.bit.overspeed == 1)
 
 /*bit12*/
 #define SET_HALL_ERROR_ALARM             				(gSysStateFlag.alarm.bit.hall_error = 1)
 #define CLEAR_HALL_ERROR_ALARM           				(gSysStateFlag.alarm.bit.hall_error = 0)
-#define IS_HALL_ERROR_ALARM          		   	 		(gSysStateFlag.alarm.bit.hall_error | HALL_OUTOF_RANGE_ALARM_MASK)
+#define IS_HALL_ERROR_ALARM          		   	 		(gSysStateFlag.alarm.bit.hall_error == 1)
 
 /*bit13*/
 #define SET_CONTROL_BUS_VOLTAGE_ALARM             		(gSysStateFlag.alarm.bit.ctrlbusVolt = 1)
 #define CLEAR_CONTROL_BUS_VOLTAGE_ALARM           		(gSysStateFlag.alarm.bit.ctrlbusVolt = 0)
-#define IS_CONTROL_BUS_VOLTAGE_ALARM          		    (gSysStateFlag.alarm.bit.ctrlbusVolt | CONTROL_VOLTAGE_ALARM_MASK)
+#define IS_CONTROL_BUS_VOLTAGE_ALARM          		    (gSysStateFlag.alarm.bit.ctrlbusVolt == 1)
 
 /*bit14*/
 #define SET_CONTROL_BUS_CURRENT_ALARM             		(gSysStateFlag.alarm.bit.ctrlbusCurr = 1)
 #define CLEAR_CONTROL_BUS_CURRENT_ALARM           		(gSysStateFlag.alarm.bit.ctrlbusCurr = 0)
-#define IS_CONTROL_BUS_CURRENT_ALARM          		    (gSysStateFlag.alarm.bit.ctrlbusCurr | CONTROL_CURRENT_ALARM_MASK)
+#define IS_CONTROL_BUS_CURRENT_ALARM          		    (gSysStateFlag.alarm.bit.ctrlbusCurr == 1)
 
 /*bit15*/
 #define SET_SYS_PG_VCC5V_ALARM                          (gSysStateFlag.alarm.bit.pgVcc5V = 1)
 #define CLEAR_SYS_PG_VCC5V_ALARM                        (gSysStateFlag.alarm.bit.pgVcc5V = 0)
-#define IS_SYS_PG_VCC5V_ALARM                           (gSysStateFlag.alarm.bit.pgVcc5V | POWER_GOOD_VCC5V_ALARM_MASK)
+#define IS_SYS_PG_VCC5V_ALARM                           (gSysStateFlag.alarm.bit.pgVcc5V == 1)
 
 /*bit16*/
 #define SET_SYS_PG_1V9_ALARM                            (gSysStateFlag.alarm.bit.pg1v9 = 1)
 #define CLEAR_SYS_PG_1V9_ALARM                          (gSysStateFlag.alarm.bit.pg1v9 = 0)
-#define IS_SYS_PG_1V9_ALARM                             (gSysStateFlag.alarm.bit.pg1v9 | POWER_GOOD_1V9_ALARM_MASK)
+#define IS_SYS_PG_1V9_ALARM                             (gSysStateFlag.alarm.bit.pg1v9 == 1)
 
 /*bit17*/
 #define SET_SYS_PG_VCC3V3_ALARM                         (gSysStateFlag.alarm.bit.pgVcc3V3 = 1)
 #define CLEAR_SYS_PG_VCC3V3_ALARM                       (gSysStateFlag.alarm.bit.pgVcc3V3 = 0)
-#define IS_SYS_PG_VCC3V3_ALARM                          (gSysStateFlag.alarm.bit.pgVcc3V3 | POWER_GOOD_VCC3V3_ALARM_MASK)
+#define IS_SYS_PG_VCC3V3_ALARM                          (gSysStateFlag.alarm.bit.pgVcc3V3 == 1)
 
 /*bit18*/
 #define SET_SYS_PG_VDD5V_ALARM                          (gSysStateFlag.alarm.bit.pgVdd5V = 1)
 #define CLEAR_SYS_PG_VDD5V_ALARM                        (gSysStateFlag.alarm.bit.pgVdd5V = 0)
-#define IS_SYS_PG_VDD5V_ALARM                           (gSysStateFlag.alarm.bit.pgVdd5V | POWER_GOOD_VDD5V_ALARM_MASK)
+#define IS_SYS_PG_VDD5V_ALARM                           (gSysStateFlag.alarm.bit.pgVdd5V == 1)
 
 /*bit19*/
 #define SET_HW_ANALOG_LEVEL_ALARM             			(gSysStateFlag.alarm.bit.hw_anlg_lvl = 1)
 #define CLEAR_HW_ANALOG_LEVEL_ALARM           			(gSysStateFlag.alarm.bit.hw_anlg_lvl = 0)
-#define IS_HW_ANALOG_LEVEL_ALARM          		   	 	(gSysStateFlag.alarm.bit.hw_anlg_lvl | HW_ANALOG_LEVEL_ALARM_MASK)
+#define IS_HW_ANALOG_LEVEL_ALARM          		   	 	(gSysStateFlag.alarm.bit.hw_anlg_lvl == 1)
 
 /*bit20*/
 #define SET_SYS_HARDWARE_ALARM                          (gSysStateFlag.alarm.bit.hardware = 1)
 #define CLEAR_SYS_HARDWARE_ALARM                        (gSysStateFlag.alarm.bit.hardware = 0)
-#define IS_SYS_HARDWARE_ALARM                           (gSysStateFlag.alarm.bit.hardware | HARDWARE_ALARM_MASK)
+#define IS_SYS_HARDWARE_ALARM                           (gSysStateFlag.alarm.bit.hardware == 1)
 
 /*bit21*/
 #define SET_HW_DIGITAL_LEVEL_ALARM             			(gSysStateFlag.alarm.bit.hw_digit_lvl = 1)
 #define CLEAR_HW_DIGITAL_LEVEL_ALARM           			(gSysStateFlag.alarm.bit.hw_digit_lvl = 0)
-#define IS_HW_DIGITAL_LEVEL_ALARM          		   	 	(gSysStateFlag.alarm.bit.hw_digit_lvl | HW_DIGITAL_LEVEL_ALARM_MASK)
+#define IS_HW_DIGITAL_LEVEL_ALARM          		   	 	(gSysStateFlag.alarm.bit.hw_digit_lvl == 1)
 
 /*bit22*/
 #define SET_SW_PWM_ISR_ALARM             				(gSysStateFlag.alarm.bit.sw_pwm_alarm = 1)
 #define CLEAR_SW_PWM_ISR_ALARM           				(gSysStateFlag.alarm.bit.sw_pwm_alarm = 0)
-#define IS_SW_PWM_ISR_ALARM          		   	 		(gSysStateFlag.alarm.bit.sw_pwm_alarm | SW_PWM_ISR_ALARM_MASK)
+#define IS_SW_PWM_ISR_ALARM          		   	 		(gSysStateFlag.alarm.bit.sw_pwm_alarm == 1)
 
 /*bit23*/
 #define SET_SYS_SOFTWARE_ALARM                          (gSysStateFlag.alarm.bit.software = 1)
 #define CLEAR_SYS_SOFTWARE_ALARM                        (gSysStateFlag.alarm.bit.software = 0)
-#define IS_SYS_SOFTWARE_ALARM                           (gSysStateFlag.alarm.bit.software | SOFTWARE_ALARM_MASK)
+#define IS_SYS_SOFTWARE_ALARM                           (gSysStateFlag.alarm.bit.software == 1)
 
 /*bit24*/
 #define SET_HW_DIGIT_SIGNAL_ALARM             			(gSysStateFlag.alarm.bit.hw_digit_sig = 1)
 #define CLEAR_HW_DIGIT_SIGNAL_ALARM           			(gSysStateFlag.alarm.bit.hw_digit_sig = 0)
-#define IS_HW_DIGIT_SIGNAL_ALARM          		   	 	(gSysStateFlag.alarm.bit.hw_digit_sig | HW_DIGIT_SIGNAL_ALARM_MASK)
+#define IS_HW_DIGIT_SIGNAL_ALARM          		   	 	(gSysStateFlag.alarm.bit.hw_digit_sig == 1)
 
 /*bit25*/
 #define SET_PAHSE_CHANGE_ALARM             				(gSysStateFlag.alarm.bit.pahse_change = 1)
 #define CLEAR_PAHSE_CHANGE_ALARM           				(gSysStateFlag.alarm.bit.pahse_change = 0)
-#define IS_PAHSE_CHANGE_ALARM          		   	 		(gSysStateFlag.alarm.bit.pahse_change | PHASE_CHANGE_ALARM_MASK)
+#define IS_PAHSE_CHANGE_ALARM          		   	 		(gSysStateFlag.alarm.bit.pahse_change == 1)
 
 #define SET_MOTOR_TEMPERATURE_WARNING                   (gSysStateFlag.warning.bit.motortemp = 1)
 #define CLEAR_MOTOR_TEMPERATURE_WARNING                 (gSysStateFlag.warning.bit.motortemp = 0)
@@ -395,6 +418,64 @@ typedef struct _SYS_STATE_FLAG
 #define SET_SYS_TX_QUEUE_FULL_ERROR                     (gSysStateFlag.error.bit.txQFull = 1)
 #define CLEAR_SYS_TX_QUEUE_FULL_ERROR                   (gSysStateFlag.error.bit.txQFull = 0)
 #define IS_SYS_TX_QUEUE_FULL_ERROR                      (gSysStateFlag.error.bit.txQFull | BIT8)
+
+
+/*bit0*/
+#define SET_WORKING_NORM                              	(gSysStateFlag.j150CustAlarm.bit.WORKINNG = 1)
+#define CLEAR_WORKING_NORM                           	(gSysStateFlag.j150CustAlarm.bit.WORKINNG = 0)
+
+/*bit1*/
+#define SET_MOTOR_TEMP_PROT                  			(gSysStateFlag.j150CustAlarm.bit.M_TEMP_P = 1)
+#define CLEAR_MOTOR_TEMP_PROT                			(gSysStateFlag.j150CustAlarm.bit.M_TEMP_P = 0)
+
+/*bit2*/
+#define SET_DRVER_TEMP_PROT                 			(gSysStateFlag.j150CustAlarm.bit.D_TEMP_P = 1)
+#define CLEAR_DRVER_TEMP_PROT               			(gSysStateFlag.j150CustAlarm.bit.D_TEMP_P = 0)
+
+/*bit3*/
+#define SET_BUS_UND_VOLT_PROT             		      	(gSysStateFlag.j150CustAlarm.bit.B_UVLT_P = 1)
+#define CLEAR_BUS_UND_VOLT_PROT           		  		(gSysStateFlag.j150CustAlarm.bit.B_UVLT_P = 0)
+
+/*bit4*/
+#define SET_MOTOR_SPEED_PROT                      		(gSysStateFlag.j150CustAlarm.bit.M_SPED_P = 1)
+#define CLEAR_MOTOR_SPEED_PROT                     		(gSysStateFlag.j150CustAlarm.bit.M_SPED_P = 0)
+
+/*bit5*/
+#define SET_BUS_OVER_VOLT_PROT     	                	(gSysStateFlag.j150CustAlarm.bit.B_OVLT_P = 1)
+#define CLEAR_BUS_OVER_VOLT_PROT       	            	(gSysStateFlag.j150CustAlarm.bit.B_OVLT_P = 0)
+
+/*bit6*/
+#define SET_BUS_OVER_CURT_PROT                   		(gSysStateFlag.j150CustAlarm.bit.B_OCRT_P = 1)
+#define CLEAR_BUS_OVER_CURT_PROT                  		(gSysStateFlag.j150CustAlarm.bit.B_OCRT_P = 0)
+
+/*bit7*/
+#define SET_MOTOR_HALL_PROT                   			(gSysStateFlag.j150CustAlarm.bit.M_HALL_P = 1)
+#define CLEAR_MOTOR_HALL_PROT             				(gSysStateFlag.j150CustAlarm.bit.M_HALL_P = 0)
+
+/*bit16*/
+#define SET_MOTOR_TEMP_WARN                            	(gSysStateFlag.j150CustAlarm.bit.M_TEMP_W = 1)
+#define CLEAR_MOTOR_TEMP_WARN                          	(gSysStateFlag.j150CustAlarm.bit.M_TEMP_W = 0)
+
+/*bit17*/
+#define SET_DRVER_TEMP_WARN                         	(gSysStateFlag.j150CustAlarm.bit.D_TEMP_W = 1)
+#define CLEAR_DRVER_TEMP_WARN                       	(gSysStateFlag.j150CustAlarm.bit.D_TEMP_W = 0)
+
+/*bit18*/
+#define SET_BUS_UNDER_VOLT_WARN                         (gSysStateFlag.j150CustAlarm.bit.B_UVLT_W = 1)
+#define CLEAR_BUS_UNDER_VOLT_WARN                       (gSysStateFlag.j150CustAlarm.bit.B_UVLT_W = 0)
+
+/*bit19*/
+#define SET_MOTOR_SPEED_WARN             				(gSysStateFlag.j150CustAlarm.bit.M_SPED_W = 1)
+#define CLEAR_MOTOR_SPEED_WARN           				(gSysStateFlag.j150CustAlarm.bit.M_SPED_W = 0)
+
+/*bit20*/
+#define SET_BUS_OVER_VOLT_WARN                          (gSysStateFlag.j150CustAlarm.bit.B_OVLT_W = 1)
+#define CLEAR_BUS_OVER_VOLT_WARN                        (gSysStateFlag.j150CustAlarm.bit.B_OVLT_W = 0)
+
+/*bit21*/
+#define SET_BUS_OVER_CURT_WARN             				(gSysStateFlag.j150CustAlarm.bit.B_OCRT_W = 1)
+#define CLEAR_BUS_OVER_CURT_WARN           				(gSysStateFlag.j150CustAlarm.bit.B_OCRT_W = 0)
+
 
 #define SYS_STATE_MACHINE								(*Sys_hlstPtr)()
 

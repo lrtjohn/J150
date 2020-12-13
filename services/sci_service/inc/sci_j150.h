@@ -48,7 +48,7 @@
 #define CHECK_SUM_POS_LEN       (1)
 
 #define RX_MIN_TARGET_SPEED     (500)
-#define RX_MAX_TARGET_SPEED     (11000)
+#define RX_MAX_TARGET_SPEED     (5000)
 /******************Data structure*****************/
 typedef enum
 {
@@ -111,7 +111,7 @@ extern SCI_APP_PROTOCOL_RX gSciAppProtocolRx_J150;
 /*******************SCI TX PROTOCOL START HERE********************/
 #define TX_HEAD1_DATA               (0x55)
 #define TX_HEAD2_DATA               (0xAA)
-#define TX_LENGTH_DATA              (0x21)
+#define TX_LENGTH_DATA              (0x1B)
 
 #define TX_HEAD1_POS                (0)
 #define TX_HEAD1_LEN                (1)
@@ -132,7 +132,7 @@ extern SCI_APP_PROTOCOL_RX gSciAppProtocolRx_J150;
 #define TX_SYS_STATUS_2_LEN         (2)
 
 #define TX_FAULT_STATUS_POS         (TX_SYS_STATUS_2_POS + TX_SYS_STATUS_2_LEN)
-#define TX_FAULT_STATUS_LEN         (4)
+#define TX_FAULT_STATUS_LEN         (2)
 
 #define TX_FRAME_CNT_POS            (TX_FAULT_STATUS_POS + TX_FAULT_STATUS_LEN)
 #define TX_FRAME_CNT_LEN            (4)
@@ -167,7 +167,7 @@ extern SCI_APP_PROTOCOL_RX gSciAppProtocolRx_J150;
 #define TX_CHECK_SUM_POS            (TX_RFU_POS + TX_RFU_LEN)
 #define TX_CHECK_SUM_LEN            (1)
 
-#define SCI_TX_ONE_FRAME_LENGTH     (TX_LENGTH_DATA)
+#define SCI_TX_ONE_FRAME_LENGTH     (TX_LENGTH_DATA + 4)
 
 
 typedef struct _SCI_APP_PROTOCOL_TX
@@ -178,7 +178,7 @@ typedef struct _SCI_APP_PROTOCOL_TX
     Uint16 workStatus;  /* 2 byte */
     Uint16 sysStatus1;  /* 2 byte */
     Uint16 sysStatus2;  /* 2 byte */
-    Uint32 faultStatus; /* 4 byte */
+    Uint16 faultStatus; /* 2 byte */
     Uint32 frameCnt;    /* 4 byte */
     Uint16 targetSpeed; /* 2 byte */
     Uint16 currentSpeed;/* 2 byte */

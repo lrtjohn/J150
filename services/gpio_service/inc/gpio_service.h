@@ -84,10 +84,20 @@
 											if(IS_VDD5V_PG) SET_SYS_PG_VDD5V_ALARM;       	   \
 											if(IS_HARDWARE_OC){								   \
 												SET_SYS_BUS_CURRENT_ALARM; 	   				   \
+												SET_BUS_OVER_CURT_PROT;						   \
 											}												   \
-											else CLEAR_SYS_BUS_CURRENT_ALARM;			   	   \
-											if(IS_HARDWARE_OV) SET_SYS_BUS_OVER_VOLTAGE_ALARM; \
-											else CLEAR_SYS_BUS_OVER_VOLTAGE_ALARM;			   \
+											else{											   \
+												CLEAR_SYS_BUS_CURRENT_ALARM;			   	   \
+												CLEAR_BUS_OVER_CURT_PROT;					   \
+											}												   \
+											if(IS_HARDWARE_OV){								   \
+												SET_SYS_BUS_OVER_VOLTAGE_ALARM; 			   \
+												SET_BUS_OVER_VOLT_PROT;						   \
+											}												   \
+											else{											   \
+												CLEAR_SYS_BUS_OVER_VOLTAGE_ALARM;		   	   \
+												CLEAR_BUS_OVER_VOLT_PROT;				   	   \
+											}												   \
                                         }
 
                     

@@ -1,7 +1,6 @@
 #include "spwm_service.h"
 #include <string.h>
 #include <stdlib.h>
-#include "kalman_service.h"
 SPWM_PARA gSpwmPara = {0};
 
 #define ZERO_MAX (2250)
@@ -22,7 +21,7 @@ void Init_PWM_Buf(void)
 		}
 		pwm_busCurrent_Que->front = 0;
 		pwm_busCurrent_Que->rear = 0;
-		pwm_busCurrent_Que->bufferLen = 8;
+		pwm_busCurrent_Que->bufferLen = 128;
 		pwm_busCurrent_Que->buffer = (Uint16*)malloc(sizeof(Uint16) * pwm_busCurrent_Que->bufferLen);
 		if(pwm_busCurrent_Que->buffer == NULL)
 		{
@@ -34,27 +33,24 @@ void Init_PWM_Buf(void)
 }
 
 #pragma CODE_SECTION(PwmBusCurrentEnQueue, "ramfuncs")
-int PwmBusCurrentEnQueue(Uint16 e, PWM_CURRENT_QUE *PWMBusCurrentQue)
+int32 PwmBusCurrentEnQueue(Uint16 e, PWM_CURRENT_QUE *PWMBusCurrentQue)
 {
-	static int isfull = 0;
+//	static int isfull = 0;
 	static int32 I_bus_Sum_tmp = 0;
 	if((PWMBusCurrentQue->rear + 1) % (PWMBusCurrentQue->bufferLen) == PWMBusCurrentQue->front)
 	{
 		I_bus_Sum_tmp = I_bus_Sum_tmp - PWMBusCurrentQue->buffer[PWMBusCurrentQue->front];
-		gKF_Current.currentData = I_bus_Sum_tmp >> 3;
-//		gKF_Current.currentData = gCurrent_Struct.I_busCurrent_Ave;
-		gCurrent_Struct.I_busCurrent_Ave = KalmanVarFilter(&gKF_Current);
 		PWMBusCurrentQue->front = (PWMBusCurrentQue->front + 1) % (PWMBusCurrentQue->bufferLen);
-		isfull = 1;
+//		isfull = 1;
 	}
 	else{
-		isfull = 0;
+//		isbfull = 0;
 	}
 
 	PWMBusCurrentQue->buffer[PWMBusCurrentQue->rear] = e;
 	I_bus_Sum_tmp = I_bus_Sum_tmp + PWMBusCurrentQue->buffer[PWMBusCurrentQue->rear];
 	PWMBusCurrentQue->rear = (PWMBusCurrentQue->rear + 1) % (PWMBusCurrentQue->bufferLen);
-	return isfull;
+	return I_bus_Sum_tmp;
 }
 
 inline void openAH(void){
@@ -126,6 +122,9 @@ Uint16 GetCurrentHallValue(void){
 
 	if(temp < 1 || temp >6){
 		SET_HALL_ERROR_ALARM;
+	}
+	else{
+		CLEAR_HALL_ERROR_ALARM;
 	}
 	return temp;
 }
@@ -387,7 +386,14 @@ void Duty_Gradual_Change (SPWM_PARA* spwmPara){
 		}
 
 		if(spwmPara->lastDuty >= spwmPara->Duty_Gradual_mid){
-				spwmPara->Duty_Gradual = spwmPara->Duty_Gradual_mid;
+            spwmPara->DutyMinusIntervalCnt = spwmPara->DutyMinusIntervalCnt + 1;
+            if(spwmPara->DutyMinusIntervalCnt > spwmPara->DutyMinusInterval){
+                spwmPara->DutyMinusIntervalCnt = 0;
+                spwmPara->Duty_Gradual = spwmPara->lastDuty - 1;
+            }
+            else{
+                spwmPara->Duty_Gradual = spwmPara->lastDuty;
+            }
 		}
 		else{
 			spwmPara->DutyAddIntervalCnt = spwmPara->DutyAddIntervalCnt + 1;
@@ -468,6 +474,7 @@ void Spwm_HighSpeed_BIT(SPWM_PARA* spwmPara){
 #pragma CODE_SECTION(Spwm_Output, "ramfuncs")
 void Spwm_Output(SPWM_PARA* spwmPara) /*PWM中断函数*/
 {
+	static int cnt_battle = 0;
 	GpioDataRegs.GPBSET.bit.GPIO50 = 1; /*线程监视*/
 	spwmPara->LastHalllPosition = spwmPara->CurrentHallPosition;
 	spwmPara->CurrentHallPosition = GetCurrentHallValue();
@@ -475,14 +482,18 @@ void Spwm_Output(SPWM_PARA* spwmPara) /*PWM中断函数*/
 	if(IS_HARDWARE_OC) {
 		DIABLE_ALL();
 		SET_SYS_BUS_CURRENT_ALARM;
+		SET_BUS_OVER_CURT_PROT;
 //		gCnt_Clear = 1;
 //		spwmPara->pwmSM = PWM_ALARM;
 	}
 
     UpdateSingleAnalog(&gSysAnalogVar); /*读取16通道ADC转换结果*/
 
+    if(IS_HALL_ERROR_ALARM || IS_PAHSE_CHANGE_ALARM) SET_MOTOR_HALL_PROT;
+    else CLEAR_MOTOR_HALL_PROT;
+
 	Spwm_HighSpeed_BIT(spwmPara);
-	if(gSysStateFlag.j150WorkMode == NORMAL){
+	if(gSciAppProtocolRx_J150.workMode == WORK_MODE_NORMAL){
 		if(IS_SYS_ALARM){
 			DIABLE_ALL();
 		}
@@ -498,6 +509,26 @@ void Spwm_Output(SPWM_PARA* spwmPara) /*PWM中断函数*/
 	}
 	else{
 		/*战时*/
+		if(cnt_battle == 0){
+			GpioDataRegs.GPACLEAR.bit.GPIO12 = 1;
+			cnt_battle = 1;
+		}
+		else{
+			GpioDataRegs.GPASET.bit.GPIO12 = 1;
+			cnt_battle = 0;
+		}
+		if(IS_SYS_BUS_CURRENT_ALARM || IS_HALL_ERROR_ALARM){
+			DIABLE_ALL();
+		}
+		else{
+			if(spwmPara->pwmSM == SYS_FORWARD_RUN){
+				Duty_Gradual_Change(spwmPara);
+				SwitchDirection(spwmPara);
+			}
+			else{
+				DIABLE_ALL();
+			}
+		}
 	}
 	GpioDataRegs.GPBCLEAR.bit.GPIO50 = 1; /*线程监视*/
 }
@@ -515,6 +546,8 @@ void Init_Spwm_Service(void)
 	gSpwmPara.Duty_Gradual_mid = 0;
 	gSpwmPara.DutyAddInterval = 15;
 	gSpwmPara.DutyAddIntervalCnt = 0;
+    gSpwmPara.DutyMinusInterval = 12;   //10
+    gSpwmPara.DutyMinusIntervalCnt = 0;
 	gSpwmPara.lastDuty = 0;
 	gSpwmPara.StepMaxDuty = 0;
 	gSpwmPara.BusVolt_Ratio = 0.794;
