@@ -237,7 +237,7 @@ void Init_Sys_State_Service(void)
     }
     INIT_SYS_ROTATE_DIRECTION; /*电机驱动系统初始化为停止态*/
 //    SET_J150_BIT_ING;
-    gSysVersionNum = 4; /*版本号*/
+    gSysVersionNum = 5; /*版本号*/
 }
 
 int test111 = 0;

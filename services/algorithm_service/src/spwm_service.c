@@ -544,7 +544,7 @@ void Init_Spwm_Service(void)
 //	gSpwmPara.Rvdt_Zero = 1500;
 	gSpwmPara.Duty_Gradual = 0;
 	gSpwmPara.Duty_Gradual_mid = 0;
-	gSpwmPara.DutyAddInterval = 15;
+	gSpwmPara.DutyAddInterval = 12;//15;
 	gSpwmPara.DutyAddIntervalCnt = 0;
     gSpwmPara.DutyMinusInterval = 12;   //10
     gSpwmPara.DutyMinusIntervalCnt = 0;
