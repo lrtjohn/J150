@@ -41,6 +41,7 @@ double Pid_Process(PID_VAR* pidVar)
     double pidOutput = 0;
     double kp = 0;
     double ki = 0;
+    double kp_ratio = 0;
 
     kp = pidVar->kp0 * (1 + pidVar->ka * (1 + (gCurrent_Struct.I_busCurrent_Ave / 25)));
     ki = pidVar->ki0 * (1 + pidVar->kb * (1 + (gCurrent_Struct.I_busCurrent_Ave / 25)));
@@ -48,17 +49,19 @@ double Pid_Process(PID_VAR* pidVar)
     pidVar->currentErr = (pidVar->targetVal - (pidVar->currentVal));
     if((pidVar->currentErr > -(pidVar->currentErrThreshold)) && (pidVar->currentErr < pidVar->currentErrThreshold))
     {
-        if((( pidVar->currentErr > 0) && (pidVar->sumErr < pidVar->sumErrThreshold)) || ((pidVar->currentErr < 0) && (pidVar->sumErr > -pidVar->sumErrThreshold)))
-        {
-            pidVar->sumErr = pidVar->sumErr + pidVar->currentErr;
-        }
+    	kp_ratio = 1;
+		if((( pidVar->currentErr > 0) && (pidVar->sumErr < pidVar->sumErrThreshold)) || ((pidVar->currentErr < 0) && (pidVar->sumErr > -pidVar->sumErrThreshold)))
+		{
+			pidVar->sumErr = pidVar->sumErr + pidVar->currentErr;
+		}
     }
     else
     {
-         pidVar->sumErr = 0;
+    	kp_ratio = 0;
+        pidVar->sumErr = 0;
     }
     
-    pidOutput = (int)(pidVar->currentErr * kp) + (int)(pidVar->sumErr * ki);
+    pidOutput = (int)(pidVar->currentErr * kp * kp_ratio) + (int)(pidVar->sumErr * ki);
 
     if(pidOutput > pidVar->outputPosThresh)
     {
@@ -78,12 +81,12 @@ void Init_PID_Service(void)
 	gPID_Speed_Para.currentVal = 0;
 	gPID_Speed_Para.currentErr = 0;
 	gPID_Speed_Para.sumErr = 0;
-	gPID_Speed_Para.currentErrThreshold = 600;
-	gPID_Speed_Para.sumErrThreshold = 807692;    //1050000;   // 2100000;
+	gPID_Speed_Para.currentErrThreshold = 200;
+	gPID_Speed_Para.sumErrThreshold = 228938;    //1050000;   // 2100000;
 	gPID_Speed_Para.outputPosThresh = 1100;
 	gPID_Speed_Para.outputNegThresh = -100;
 	gPID_Speed_Para.kp0 = 0.3;
-	gPID_Speed_Para.ki0 = 0.0008736;      //0.000672;    //  0.000336;
+	gPID_Speed_Para.ki0 = 0.0002184;      //0.000672;    //  0.000336;
     gPID_Speed_Para.ka = 0;  //0.1 LUG DEBUG
     gPID_Speed_Para.kb = 0;  //0.1 LUG DEBUG
 }
@@ -94,6 +97,6 @@ void Init_OpenLoop_Service(void)
 	gOpenLoop_Para.nominalBusVoltage = 2585;
 	gOpenLoop_Para.volt_Ratio = 0.794;
 	gOpenLoop_Para.targetSpeed = 0;
-	gOpenLoop_Para.openloop_K = 0.2292;
-	gOpenLoop_Para.openloop_B = -123.83;
+	gOpenLoop_Para.openloop_K = 0.21774;//0.2292;
+	gOpenLoop_Para.openloop_B = 0;//-123.83;
 }
