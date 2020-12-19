@@ -1,3 +1,13 @@
+/***************************0.0.5*******************************/
+Version Number: 0.0.5
+Date: 2020/12/19
+Author:Runtian
+
+Whats new: 
+	1. Don't do PID while Speed error larger than 200
+	2. Decrease PID parameters
+	3. Optimize open loop parameters
+
 /***************************0.0.4*******************************/
 Version Number: 0.0.3、4
 Date: 2020/12/13
