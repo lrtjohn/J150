@@ -117,7 +117,7 @@ void PwrBusVoltageMonitor(void)
 						if(IS_SYS_BUS_CURRENT_ALARM){
 							if(tmp_cnt == 1){
 								tmp_cnt = 0;
-								gDebugDataArray[3] = 555;
+								HARDWARE_OVER_CURRENT_CLEAR();
 							}
 						}
 						SET_J150_POWER_BUS;
