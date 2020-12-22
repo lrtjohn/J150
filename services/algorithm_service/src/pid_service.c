@@ -81,7 +81,7 @@ void Init_PID_Service(void)
 	gPID_Speed_Para.currentVal = 0;
 	gPID_Speed_Para.currentErr = 0;
 	gPID_Speed_Para.sumErr = 0;
-	gPID_Speed_Para.currentErrThreshold = 200;
+	gPID_Speed_Para.currentErrThreshold = 350;
 	gPID_Speed_Para.sumErrThreshold = 228938;    //1050000;   // 2100000;
 	gPID_Speed_Para.outputPosThresh = 1100;
 	gPID_Speed_Para.outputNegThresh = -100;
