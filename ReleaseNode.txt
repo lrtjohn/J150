@@ -1,4 +1,12 @@
 /***************************0.0.5*******************************/
+Version Number: 0.0.6
+Date: 2020/12/19
+Author:Runtian
+
+Whats new: 
+	1. Fix HW OC clear bug in timer0 voltage monitor
+
+/***************************0.0.5*******************************/
 Version Number: 0.0.5
 Date: 2020/12/19
 Author:Runtian
