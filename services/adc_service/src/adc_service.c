@@ -259,7 +259,7 @@ void BridgeABC_Current_Monitor_BIT(void){
 //	gKF_Current.currentData = gCurrent_Struct.I_busCurrent_Ave;
 //	gCurrent_Struct.I_busCurrent_Ave = KalmanVarFilter(&gKF_Current);
 
-	if(gCurrent_Struct.I_busCurrent_Ave > 1000){
+	if(gCurrent_Struct.I_busCurrent_Ave > 1100){
 		gSpwmPara.restrictduty = 1;
 	}
 	else{
