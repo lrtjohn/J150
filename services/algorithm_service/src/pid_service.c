@@ -81,10 +81,10 @@ void Init_PID_Service(void)
 	gPID_Speed_Para.currentVal = 0;
 	gPID_Speed_Para.currentErr = 0;
 	gPID_Speed_Para.sumErr = 0;
-	gPID_Speed_Para.currentErrThreshold = 350;
-	gPID_Speed_Para.sumErrThreshold = 228938;    //1050000;   // 2100000;
+	gPID_Speed_Para.currentErrThreshold = 600;//350;
+	gPID_Speed_Para.sumErrThreshold = 801283;//457876;//228938;    //1050000;   // 2100000;
 	gPID_Speed_Para.outputPosThresh = 1100;
-	gPID_Speed_Para.outputNegThresh = -100;
+	gPID_Speed_Para.outputNegThresh =-400; //-100;
 	gPID_Speed_Para.kp0 = 0.3;
 	gPID_Speed_Para.ki0 = 0.0002184;      //0.000672;    //  0.000336;
     gPID_Speed_Para.ka = 0;  //0.1 LUG DEBUG
