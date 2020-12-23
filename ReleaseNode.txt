@@ -1,3 +1,10 @@
+/***************************0.0.8*******************************/
+Version Number: 0.0.8
+Date: 2020/12/23
+Author:Runtian
+
+Whats new: 
+	1. Edit  PID parameters, to fix light load over limit bug
 /***************************0.0.7*******************************/
 Version Number: 0.0.7
 Date: 2020/12/21
