@@ -22,7 +22,7 @@ double CurrentCompensate(void){
 	double Compensate_Duty = 0;
 	int16 I_busCurrent = 0;
 
-    gKF_Current.currentData = gCurrent_Struct.I_bus_RBUF_Sum >> 7;
+    gKF_Current.currentData = gCurrent_Struct.I_bus_RBUF_Sum >> 8;//7
     gCurrent_Struct.I_busCurrent_Ave = KalmanVarFilter(&gKF_Current);
 
 	I_busCurrent = gCurrent_Struct.I_busCurrent_Ave;
