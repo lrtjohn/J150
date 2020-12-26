@@ -1,6 +1,7 @@
 #ifndef OTA_SERVICE_H
 #define OTA_SERVICE_H
 
+#include "DSP2833x_Device.h"
 #include "prod_defs.h"
 
 /* The h file is for the OTA process definition and declaration */
@@ -17,6 +18,7 @@
 */
 
 #define OTA_SOLUTION_1              INCLUDE_FEATURE
+#define OTA_TEST                    INCLUDE_FEATURE
 
 #define TI_28_START_ADDR            (0x300000)
 #define TI_28_ONE_SECTOR_LEN        (0x7FFFF)
@@ -74,5 +76,65 @@
 #define GLOBAL_SIZE                     (2 * TI_28_ONE_SECTOR_LEN)
 #define GLOBAL_END_ADDR                 (GLOBAL_START_ADDR + GLOBAL_SIZE)
 #endif /* OTA_SOLUTION_1 == INCLUDE_FEATURE */
+
+#define DLETA_BETWEEN_A_AND_B           (0)
+
+#if (OTA_TEST == INCLUDE_FEATURE)
+typedef struct 
+{
+    Uint32 aStart;
+    Uint32 aLen;
+    Uint32 aEnd;
+    
+    Uint32 bStart;
+    Uint32 bLen;
+    Uint32 bEnd;
+
+    Uint32 cStart;
+    Uint32 cLen;
+    Uint32 cEnd;
+
+    Uint32 dStart;
+    Uint32 dLen;
+    Uint32 dEnd;
+
+    Uint32 eStart;
+    Uint32 eLen;
+    Uint32 eEnd;
+
+    Uint32 fStart;
+    Uint32 fLen;
+    Uint32 fEnd;
+
+    Uint32 gStart;
+    Uint32 gLen;
+    Uint32 gEnd;
+
+    Uint32 hStart;
+    Uint32 hLen;
+    Uint32 hEnd;
+
+    Uint32 userBootStart;
+    Uint32 userBootLen;
+    Uint32 userBootEnd;
+
+    Uint32 userAppAStart;
+    Uint32 userAppALen;
+    Uint32 userAppAEnd;
+
+    Uint32 userAppBStart;
+    Uint32 userAppBLen;
+    Uint32 userAppBEnd;
+
+    Uint32 GlobalStart;
+    Uint32 GlobalLen;
+    Uint32 GlobalEnd;
+
+    Uint32 Delta;
+
+}OTA_TEST_VERIFY;
+
+void OTA_SERVICE_TestData(void);
+#endif /* OTA_TEST == INCLUDE_FEATURE */
 
 #endif /* OTA_SERVICE_H */
