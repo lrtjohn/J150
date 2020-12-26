@@ -1,6 +1,8 @@
 #ifndef OTA_SERVICE_H
 #define OTA_SERVICE_H
 
+#include "prod_defs.h"
+
 /* The h file is for the OTA process definition and declaration */
 /* The aim is to support the OTA process in the User application */
 
@@ -13,6 +15,8 @@
 *
 *  For the solution 2, need to decide how to allocate the Flash for different area
 */
+
+#define OTA_SOLUTION_1              INCLUDE_FEATURE
 
 #define TI_28_START_ADDR            (0x300000)
 #define TI_28_ONE_SECTOR_LEN        (0x7FFFF)
@@ -53,22 +57,22 @@
  * Currently it is a little bit to tell which solution is better.
  * So probably the best way is just to pick one and have a try.
 */
+#if (OTA_SOLUTION_1 == INCLUDE_FEATURE)
+#define USER_BOOTLOADER_START_ADDR      (H_SECTOR_28_START)
+#define USER_BOOTLOADER_SIZE            (1 * TI_28_ONE_SECTOR_LEN)
+#define USER_BOOTLOADER_END_ADDR        (USER_BOOTLOADER_START_ADDR + USER_BOOTLOADER_SIZE)
 
-#define USER_BOOTLOADER_START_ADDR
-#define USER_BOOTLOADER_SIZE
-#define USER_BOOTLOADER_END_ADDR
+#define A_APPLICATION_START_ADDR        (G_SECTOR_28_START)
+#define A_APPLICATION_SIZE              (2 * TI_28_ONE_SECTOR_LEN)
+#define A_APPLICATION_END_ADDR          (A_APPLICATION_START_ADDR + A_APPLICATION_SIZE)
 
-#define A_APPLICATION_START_ADDR
-#define A_APPLICATION_SIZE
-#define A_APPLICATION_END_ADDR
+#define B_APPLICATION_START_ADDR        (E_SECTOR_28_START)
+#define B_APPLICATION_SIZE              (2 * TI_28_ONE_SECTOR_LEN)
+#define B_APPLICATION_END_ADDR          (B_APPLICATION_START_ADDR + B_APPLICATION_SIZE)
 
-#define B_APPLICATION_START_ADDR
-#define B_APPLICATION_SIZE
-#define B_APPLICATION_END_ADDR
+#define GLOBAL_START_ADDR               (C_SECTOR_28_START)
+#define GLOBAL_SIZE                     (2 * TI_28_ONE_SECTOR_LEN)
+#define GLOBAL_END_ADDR                 (GLOBAL_START_ADDR + GLOBAL_SIZE)
+#endif /* OTA_SOLUTION_1 == INCLUDE_FEATURE */
 
-#define GLOBAL_START_ADDR
-#define GLOBAL_SIZE
-#define GLOBAL_END_ADDR
-
-
-#endif
+#endif /* OTA_SERVICE_H */

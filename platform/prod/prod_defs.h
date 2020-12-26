@@ -4,6 +4,7 @@
 #define CPU_FREQUENCY (150UL)
 
 #define INCLUDE_FEATURE     0x01
+#define EXCLUDE_FEATURE     0x00
 #define NOT_INCLUDE_FEATURE 0x00
 
 #define TRUE        (1)
