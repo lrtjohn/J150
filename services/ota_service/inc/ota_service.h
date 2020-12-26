@@ -137,4 +137,16 @@ typedef struct
 void OTA_SERVICE_TestData(void);
 #endif /* OTA_TEST == INCLUDE_FEATURE */
 
+typedef enum
+{
+    OTA_SERVICE_IDLE,
+    OTA_SERVICE_RX_START_CMD,
+    OTA_SERVICE_START,
+    OTA_SERVICE_RUNNING,
+    OTA_SERVICE_RX_FINISHED,
+    OTA_SERVICE_END,
+    OTA_SERVICE_FAULT,
+}E_OTA_STATUS;
+
+
 #endif /* OTA_SERVICE_H */
