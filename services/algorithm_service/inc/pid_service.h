@@ -13,8 +13,10 @@ typedef struct _PID_VAR
     double outputNegThresh;
     double kp0;
     double ki0;
-    double ka;
-    double kb;
+    double kpe;
+    double kpn;
+    double kin;
+    double ske;
 }PID_VAR;
 
 typedef struct _OPENLOOP_VAR

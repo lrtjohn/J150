@@ -21,7 +21,7 @@ void Init_PWM_Buf(void)
 		}
 		pwm_busCurrent_Que->front = 0;
 		pwm_busCurrent_Que->rear = 0;
-		pwm_busCurrent_Que->bufferLen = 128;
+		pwm_busCurrent_Que->bufferLen = 256;//V7.128
 		pwm_busCurrent_Que->buffer = (Uint16*)malloc(sizeof(Uint16) * pwm_busCurrent_Que->bufferLen);
 		if(pwm_busCurrent_Que->buffer == NULL)
 		{
