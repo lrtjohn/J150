@@ -189,6 +189,7 @@ void CtrlStrategyCalculation(void)
 {
 	int16 tmp_TargetDuty;
 	gSpwmPara.CurrentCompensateDuty = CurrentCompensate();
+//	gSpwmPara.CurrentCompensateDuty = 0;
 	gSpwmPara.OpenLoopDuty = OpenLoop_Process(&gOpenLoop_Para);
 	gSpwmPara.CloseLoopDuty = Pid_Process(&gPID_Speed_Para);
 //	gSpwmPara.CloseLoopDuty = 0;

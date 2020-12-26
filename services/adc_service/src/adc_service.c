@@ -259,7 +259,7 @@ void BridgeABC_Current_Monitor_BIT(void){
 //	gKF_Current.currentData = gCurrent_Struct.I_busCurrent_Ave;
 //	gCurrent_Struct.I_busCurrent_Ave = KalmanVarFilter(&gKF_Current);
 
-	if(gCurrent_Struct.I_busCurrent_Ave > 1100){
+	if(gCurrent_Struct.I_busCurrent_Ave > 1650){
 		gSpwmPara.restrictduty = 1;
 	}
 	else{
@@ -608,10 +608,10 @@ void Init_ADC_Voltage(void)
 
 void Init_ADC_Temperature(void)
 {
-	gTemperature_Struct.Thr_max_warning_motor_Temp = 3000;    /**/
-	gTemperature_Struct.Thr_max2nd_warning_motor_Temp = 2500; /**/
-	gTemperature_Struct.Thr_max_alarm_motor_Temp = 4000; 		/**/
-	gTemperature_Struct.Thr_max2nd_alarm_motor_Temp = 3500;   /**/
+	gTemperature_Struct.Thr_max_warning_motor_Temp = 2868;    /*115度*/
+	gTemperature_Struct.Thr_max2nd_warning_motor_Temp = 2709; /*105度*/
+	gTemperature_Struct.Thr_max_alarm_motor_Temp = 3188; 		/*135度*/
+	gTemperature_Struct.Thr_max2nd_alarm_motor_Temp = 3028;   /*125度*/
 
 	gTemperature_Struct.Thr_max_warning_driver_Temp = 3000;    /**/
 	gTemperature_Struct.Thr_max2nd_warning_driver_Temp = 2500; /**/
