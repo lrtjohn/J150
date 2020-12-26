@@ -608,10 +608,10 @@ void Init_ADC_Voltage(void)
 
 void Init_ADC_Temperature(void)
 {
-	gTemperature_Struct.Thr_max_warning_motor_Temp = 3000;    /**/
-	gTemperature_Struct.Thr_max2nd_warning_motor_Temp = 2500; /**/
-	gTemperature_Struct.Thr_max_alarm_motor_Temp = 4000; 		/**/
-	gTemperature_Struct.Thr_max2nd_alarm_motor_Temp = 3500;   /**/
+	gTemperature_Struct.Thr_max_warning_motor_Temp = 2868;    /*115度*/
+	gTemperature_Struct.Thr_max2nd_warning_motor_Temp = 2709; /*105度*/
+	gTemperature_Struct.Thr_max_alarm_motor_Temp = 3188; 		/*135度*/
+	gTemperature_Struct.Thr_max2nd_alarm_motor_Temp = 3028;   /*125度*/
 
 	gTemperature_Struct.Thr_max_warning_driver_Temp = 3000;    /**/
 	gTemperature_Struct.Thr_max2nd_warning_driver_Temp = 2500; /**/
