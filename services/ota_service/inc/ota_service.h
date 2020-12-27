@@ -157,6 +157,27 @@ typedef Uint16(*FLASH_LINE_DATA)(Uint16* pDtata);
 
 typedef Uint16(*GET_CURRENT_STATUS)(Uint16* pDtata);
 
+typedef Uint16(*READ_CUR_VER_NUM)(void);
+typedef Uint16(*READ_NEW_VER_NUM)(void);
+
+
+
+typedef Uint16(*FIND_HEADER)(SCIRXQUE* q);
+typedef Uint16(*CHECK_LEN)(SCIRXQUE* q);
+typedef Uint16(*CHECK_SUM)(SCIRXQUE* q);
+typedef Uint16(*UPDATE_FRAME)(SCIRXQUE* q);
+
+typedef struct
+{
+    FIND_HEADER     pfFindHeader;
+    CHECK_LEN       pfCheckLen;
+    CHECK_SUM       pfCheckSum;
+    UPDATE_FRAME    pfUpdateFrame;
+    /* data */
+
+}OTA_SERVICE_RX_ADAPT;
+
+
 typedef enum
 {
     OTA_SERVICE_IDLE,
@@ -183,11 +204,16 @@ typedef struct
     FLASH_LINE_DATA     pfFlashLineData;
     GET_CURRENT_STATUS  pfGetCurrentStatus;
 
+    READ_CUR_VER_NUM    pfReadCurVerNum;
+    READ_NEW_VER_NUM    pfReadNewVerNum;
+
     Uint16*             pImageBitMap;
     Uint16              imageTotalLines;
     Uint16              currentLineNum;
     Uint16              rxLineNum;
     Uint16              lastLineNum;
+
+    OTA_SERVICE_RX_ADAPT    pOtaServiceRxAdapt;
 
 }OTA_SERVICE_ADT;
 

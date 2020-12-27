@@ -166,12 +166,12 @@ void OTA_SERVICE_PROCESS_RX_DATA_ADAPT(SCIRXQUE* q)
 
     if (!OTA_SERVICE_CHECK_RX_LEN_APAPT(q))
     {
-
+        return;
     }
 
     if (!OTA_SERVICE_CHECK_RX_CRC_APAPT(q))
     {
-
+        return;
     }
 
     OTA_SERVICE_UPDATE_PAYLOAD_APAPT(q);
@@ -185,3 +185,23 @@ Uint16 OTA_SERVICE_FindRxHeader(SCIRXQUE* q)
     return ret;
 }
 
+Uint16 OTA_SERVICE_CheckLen(SCIRXQUE* q)
+{
+    Uint16 ret = 0;
+
+    return ret;
+}
+
+Uint16 OTA_SERVICE_CheckSum(SCIRXQUE* q)
+{
+    Uint16 ret = 0;
+
+    return ret;
+}
+
+Uint16 OTA_SERVICE_ProcessOneFrame(SCIRXQUE* q)
+{
+    Uint16 ret = 0;
+
+    return ret;
+}
