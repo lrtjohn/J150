@@ -3,6 +3,7 @@
 
 #include "DSP2833x_Device.h"
 #include "prod_defs.h"
+#include "sci_queue.h"
 
 /* The h file is for the OTA process definition and declaration */
 /* The aim is to support the OTA process in the User application */
@@ -190,4 +191,5 @@ typedef struct
 
 }OTA_SERVICE_ADT;
 
+void OTA_SERVICE_PROCESS_RX_DATA_ADAPT(void);
 #endif /* OTA_SERVICE_H */

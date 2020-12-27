@@ -1,5 +1,6 @@
 #include "ota_service.h"
 
+void OTA_SERVICE_PROCESS_RX_DATA_ADAPT(void);
 
 #if (OTA_TEST == INCLUDE_FEATURE)
 OTA_TEST_VERIFY gOtaServiceTestData = 
@@ -107,5 +108,82 @@ void OTA_SERVICE_TestData(void)
 
     gOtaServiceTestData.Delta               =0;
 }
-
 #endif /* (OTA_TEST == INCLUDE_FEATURE) */
+
+Uint16 OTA_SERVICE_FIND_RX_HEADER_APAPT(SCIRXQUE* q)
+{
+    Uint16 ret = 0;
+
+    // TODO call the real API here
+
+    return ret;
+}
+
+Uint16 OTA_SERVICE_CHECK_RX_LEN_APAPT(SCIRXQUE* q)
+{
+    Uint16 ret = 0;
+
+    // TODO call the real API here
+
+    return ret;
+}
+
+Uint16 OTA_SERVICE_CHECK_RX_CRC_APAPT(SCIRXQUE* q)
+{
+    Uint16 ret = 0;
+
+    // TODO call the real API here
+
+    return ret;
+}
+
+
+Uint16 OTA_SERVICE_UPDATE_PAYLOAD_APAPT(SCIRXQUE* q)
+{
+    Uint16 ret = 0;
+
+    // TODO call the real API here
+
+    return ret;
+}
+/* This function is mainly used for process the rx data for OTA service */
+/* This function should be called in the main loop and after received the OTA start cmd */ 
+void OTA_SERVICE_PROCESS_RX_DATA_ADAPT(SCIRXQUE* q)
+{
+    /*
+     * Step 1: Find Frame header
+     * Step 2: Frame length check
+     * Step 3: CRC or checksum check 
+     * Step 4: Process the payload 
+     * Step 5: Call different API based on the Rx protocol 
+     * Step 6: Update the OTA service status which need to send to the upper layer 
+     * Step 7: Update the state machine of the OTA service 
+     */
+
+    /* The purpose is to never change the adapter function, this is a structure function */
+    if (!OTA_SERVICE_FIND_RX_HEADER_APAPT(q))
+    {
+        return;
+    }
+
+    if (!OTA_SERVICE_CHECK_RX_LEN_APAPT(q))
+    {
+
+    }
+
+    if (!OTA_SERVICE_CHECK_RX_CRC_APAPT(q))
+    {
+
+    }
+
+    OTA_SERVICE_UPDATE_PAYLOAD_APAPT(q);
+    // TODO implement this function later after RX protocol design finished.
+}
+
+Uint16 OTA_SERVICE_FindRxHeader(SCIRXQUE* q)
+{
+    Uint16 ret = 0;
+
+    return ret;
+}
+
