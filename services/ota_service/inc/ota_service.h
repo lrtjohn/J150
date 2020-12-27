@@ -20,6 +20,16 @@
 #define OTA_SOLUTION_1              INCLUDE_FEATURE
 #define OTA_TEST                    INCLUDE_FEATURE
 
+#define A_SECTOR                    BIT_0
+#define B_SECTOR                    BIT_1
+#define C_SECTOR                    BIT_2
+#define D_SECTOR                    BIT_3
+#define E_SECTOR                    BIT_4
+#define F_SECTOR                    BIT_5
+#define G_SECTOR                    BIT_6
+#define H_SECTOR                    BIT_7
+#define ALL_SECTOR                  (A_SECTOR | B_SECTOR | C_SECTOR | D_SECTOR | E_SECTOR | F_SECTOR | G_SECTOR | H_SECTOR) 
+
 #define TI_28_START_ADDR            (0x300000)
 #define TI_28_ONE_SECTOR_LEN        (0x7FFFF)
 
@@ -56,7 +66,7 @@
 #define A_SECTOR_28_END             (A_SECTOR_28_START + A_SECTOR_28_LEN)
 
 /* 
- * Currently it is a little bit to tell which solution is better.
+ * Currently it's a little bit hard to say which solution is better.
  * So probably the best way is just to pick one and have a try.
 */
 #if (OTA_SOLUTION_1 == INCLUDE_FEATURE)
@@ -137,6 +147,15 @@ typedef struct
 void OTA_SERVICE_TestData(void);
 #endif /* OTA_TEST == INCLUDE_FEATURE */
 
+typedef Uint16(*ERASE_FLASH_A)(void);
+typedef Uint16(*ERASE_FLASH_B)(void);
+typedef Uint16(*ERASE_FLASH_G)(void);
+
+typedef Uint16(*IS_OTA_ALLOWED)(void);
+typedef Uint16(*FLASH_LINE_DATA)(Uint16* pDtata);
+
+typedef Uint16(*GET_CURRENT_STATUS)(Uint16* pDtata);
+
 typedef enum
 {
     OTA_SERVICE_IDLE,
@@ -148,5 +167,27 @@ typedef enum
     OTA_SERVICE_FAULT,
 }E_OTA_STATUS;
 
+typedef struct
+{
+    E_OTA_STATUS        currentStatus;
+
+#if (OTA_TEST == INCLUDE_FEATURE)
+    OTA_TEST_VERIFY*    pTestData;
+#endif
+/* Function poniters define here*/
+    ERASE_FLASH_A       pfEraseFlashA;       
+    ERASE_FLASH_B       pfEraseFlashB;       
+    ERASE_FLASH_G       pfEraseFlashG;    
+    IS_OTA_ALLOWED      pfIsOtaAllowed;
+    FLASH_LINE_DATA     pfFlashLineData;
+    GET_CURRENT_STATUS  pfGetCurrentStatus;
+
+    Uint16*             pImageBitMap;
+    Uint16              imageTotalLines;
+    Uint16              currentLineNum;
+    Uint16              rxLineNum;
+    Uint16              lastLineNum;
+
+}OTA_SERVICE_ADT;
 
 #endif /* OTA_SERVICE_H */
