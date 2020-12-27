@@ -608,15 +608,15 @@ void Init_ADC_Voltage(void)
 
 void Init_ADC_Temperature(void)
 {
-	gTemperature_Struct.Thr_max_warning_motor_Temp = 2868;    /*115度*/
-	gTemperature_Struct.Thr_max2nd_warning_motor_Temp = 2709; /*105度*/
-	gTemperature_Struct.Thr_max_alarm_motor_Temp = 3188; 		/*135度*/
-	gTemperature_Struct.Thr_max2nd_alarm_motor_Temp = 3028;   /*125度*/
+	gTemperature_Struct.Thr_max_warning_motor_Temp = 2868;//1831;//2868;    /*115度*/
+	gTemperature_Struct.Thr_max2nd_warning_motor_Temp = 2709;//1672;//2709; /*105度*/
+	gTemperature_Struct.Thr_max_alarm_motor_Temp = 3188;//2150;//3188; 		/*135度*/
+	gTemperature_Struct.Thr_max2nd_alarm_motor_Temp = 3028;//1990;//3028;   /*125度*/
 
-	gTemperature_Struct.Thr_max_warning_driver_Temp = 3000;    /**/
-	gTemperature_Struct.Thr_max2nd_warning_driver_Temp = 2500; /**/
-	gTemperature_Struct.Thr_max_alarm_driver_Temp = 4000; 		/**/
-	gTemperature_Struct.Thr_max2nd_alarm_driver_Temp = 3500;   /**/
+	gTemperature_Struct.Thr_max_warning_driver_Temp = 2741;//3000;    /*100度*/
+	gTemperature_Struct.Thr_max2nd_warning_driver_Temp = 1983;//2500; /*80度*/
+	gTemperature_Struct.Thr_max_alarm_driver_Temp = 3500;//4000; 		/*120度*/
+	gTemperature_Struct.Thr_max2nd_alarm_driver_Temp = 2741;//3500;   /*100度*/
 }
 
 void Init_Analog_Ref(void)
