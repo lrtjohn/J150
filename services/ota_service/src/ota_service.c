@@ -1,7 +1,5 @@
 #include "ota_service.h"
 
-void OTA_SERVICE_PROCESS_RX_DATA_ADAPT(void);
-
 #if (OTA_TEST == INCLUDE_FEATURE)
 OTA_TEST_VERIFY gOtaServiceTestData = 
 {
