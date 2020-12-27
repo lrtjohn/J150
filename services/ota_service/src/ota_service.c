@@ -180,23 +180,76 @@ void OTA_SERVICE_PROCESS_RX_DATA_ADAPT(SCIRXQUE* q)
 
 Uint16 OTA_SERVICE_FindRxHeader(SCIRXQUE* q)
 {
-    Uint16 ret = 0;
+    while (1)
+    {
+        // TODO determin the header length and header value
+        if (q->buffer[(q->front) % (q->bufferLen)] != 0) 
+        {
+            if (SciRxDeQueue(q) == 0)
+            {
+                return FAIL;
+            }
+            break;
+        }
+    }
 
-    return ret;
+    return SUCCESS;
 }
 
 Uint16 OTA_SERVICE_CheckLen(SCIRXQUE* q)
 {
-    Uint16 ret = 0;
+    /* Decide to use dynamic length instead of fixed length  */
 
-    return ret;
+    // TODO determine the length position
+    // Should get the dynamic length here and update the length value,
+    // then just wait until meet the length requirement
+    Uint16 length;
+
+    length = q->buffer[(q->front + 0) % (q->bufferLen)];
+
+    // This is a potencial check if the length valude is too big
+    if (length > 0xFF)
+    {
+        return FAIL;
+    }
+
+    // TODO determine the length value 
+    // Maybe there should be a extra lenght here
+    if (GetSciRxQueLength(q) >= length)
+    {
+        return SUCCESS;
+    }
+    else
+    {
+        return FAIL;
+    }
 }
 
 Uint16 OTA_SERVICE_CheckSum(SCIRXQUE* q)
 {
-    Uint16 ret = 0;
+    int i;
+    Uint16 sum = 0;
+    Uint16 checkSumPos = 0;
 
-    return ret;
+    // TODO correct the start position when calculate the check sum
+    // TODO get the dynamic length
+    for (i = 0; i < 0; ++i)
+    {
+        sum += q->buffer[(q->front + i) % (q->bufferLen)];
+    }
+
+    sum &= 0x00ff;
+
+    checkSumPos = q->buffer[(q->front + 0) % (q->bufferLen)];
+
+    if (sum == q->buffer[((q->front) + checkSumPos) % (q->bufferLen)])
+    {
+        return SUCCESS;
+    }
+    else
+    {
+        return FAIL;
+    }
 }
 
 Uint16 OTA_SERVICE_ProcessOneFrame(SCIRXQUE* q)
