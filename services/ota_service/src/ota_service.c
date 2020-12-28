@@ -255,6 +255,35 @@ Uint16 OTA_SERVICE_CheckSum(SCIRXQUE* q)
 Uint16 OTA_SERVICE_ProcessOneFrame(SCIRXQUE* q)
 {
     Uint16 ret = 0;
+    Uint16 opcode = 0;
 
+    switch(opcode)
+    {
+        case OTA_UD_H_ADDR:
+            break;
+        case OTA_UD_F_DATA:
+            break;
+
+        case OTA_RX_S_CMD:
+            break;
+
+        case OTA_RX_E_CMD:
+            break;
+
+        case OTA_RX_RFU1:
+            break;
+
+        case OTA_RX_RFU2:
+            break;
+
+        case OTA_RX_RFU3:
+            break;
+
+        case OTA_RX_RFU4:
+            break;
+
+        default:
+            break;
+    }
     return ret;
 }
