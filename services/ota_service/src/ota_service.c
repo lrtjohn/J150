@@ -164,7 +164,7 @@ OTA_SERVICE_ADT gOtaServiceAdt =
 
 OTA_SERVICE_ADT* pgOtaServiceAdt = NULL;
 
-Uint16 OTA_SERVICE_FIND_RX_HEADER_APAPT(SCIRXQUE* q)
+Uint16 OTA_SERVICE_FIND_RX_HEADER_ADAPT(SCIRXQUE* q)
 {
     Uint16 ret = 0;
 
@@ -173,7 +173,7 @@ Uint16 OTA_SERVICE_FIND_RX_HEADER_APAPT(SCIRXQUE* q)
     return ret;
 }
 
-Uint16 OTA_SERVICE_CHECK_RX_LEN_APAPT(SCIRXQUE* q)
+Uint16 OTA_SERVICE_CHECK_RX_LEN_ADAPT(SCIRXQUE* q)
 {
     Uint16 ret = 0;
 
@@ -182,7 +182,7 @@ Uint16 OTA_SERVICE_CHECK_RX_LEN_APAPT(SCIRXQUE* q)
     return ret;
 }
 
-Uint16 OTA_SERVICE_CHECK_RX_CRC_APAPT(SCIRXQUE* q)
+Uint16 OTA_SERVICE_CHECK_RX_CRC_ADAPT(SCIRXQUE* q)
 {
     Uint16 ret = 0;
 
@@ -192,7 +192,7 @@ Uint16 OTA_SERVICE_CHECK_RX_CRC_APAPT(SCIRXQUE* q)
 }
 
 
-Uint16 OTA_SERVICE_UPDATE_PAYLOAD_APAPT(SCIRXQUE* q)
+Uint16 OTA_SERVICE_UPDATE_PAYLOAD_ADAPT(SCIRXQUE* q)
 {
     Uint16 ret = 0;
 
@@ -215,22 +215,22 @@ void OTA_SERVICE_PROCESS_RX_DATA_ADAPT(SCIRXQUE* q)
      */
 
     /* The purpose is to never change the adapter function, this is a structure function */
-    if (!OTA_SERVICE_FIND_RX_HEADER_APAPT(q))
+    if (!OTA_SERVICE_FIND_RX_HEADER_ADAPT(q))
     {
         return;
     }
 
-    if (!OTA_SERVICE_CHECK_RX_LEN_APAPT(q))
+    if (!OTA_SERVICE_CHECK_RX_LEN_ADAPT(q))
     {
         return;
     }
 
-    if (!OTA_SERVICE_CHECK_RX_CRC_APAPT(q))
+    if (!OTA_SERVICE_CHECK_RX_CRC_ADAPT(q))
     {
         return;
     }
 
-    OTA_SERVICE_UPDATE_PAYLOAD_APAPT(q);
+    OTA_SERVICE_UPDATE_PAYLOAD_ADAPT(q);
     // TODO implement this function later after RX protocol design finished.
 }
 
@@ -376,5 +376,6 @@ Uint16 OTA_SERVICE_ProcessOneFrame(SCIRXQUE* q)
         default:
             break;
     }
+
     return ret;
 }
