@@ -316,13 +316,36 @@ Uint16 OTA_SERVICE_ProcessOneFrame(SCIRXQUE* q)
 
     pOtaAdt = PTR_OTA_SERVICE_ADT;
 
+    if(pOtaAdt == NULL)
+    {            
+        return 0;
+    }
+
     switch(opcode)
     {
         case OTA_UD_H_ADDR:
+            if (pOtaAdt->currentStatus == OTA_SERVICE_RX_START_CMD)
+            {
+                pOtaAdt->currentStatus = OTA_SERVICE_RUNNING;
+            }
+
+            if (pOtaAdt->currentStatus != OTA_SERVICE_RUNNING)
+            {
+                return 0;
+            }
+
             break;
         case OTA_UD_F_DATA:
-            break;
+            if (pOtaAdt->currentStatus == OTA_SERVICE_RX_START_CMD)
+            {
+                pOtaAdt->currentStatus = OTA_SERVICE_RUNNING;
+            }
 
+            if (pOtaAdt->currentStatus != OTA_SERVICE_RUNNING)
+            {
+                return 0;
+            }
+            break;
         case OTA_RX_S_CMD:
             if (pOtaAdt->currentStatus != OTA_SERVICE_IDLE)
             {
@@ -331,23 +354,25 @@ Uint16 OTA_SERVICE_ProcessOneFrame(SCIRXQUE* q)
 
                 return 0;
             }
+            // TODO need to check the system state machine state is stop or not
+            pOtaAdt->currentStatus = OTA_SERVICE_RX_START_CMD;
             break;
-
         case OTA_RX_E_CMD:
+            if (pOtaAdt->currentStatus != OTA_SERVICE_RUNNING)
+            {
+                return 0;
+            }
+            pOtaAdt->currentStatus = OTA_SERVICE_END;
+ 
             break;
-
         case OTA_RX_RFU1:
             break;
-
         case OTA_RX_RFU2:
             break;
-
         case OTA_RX_RFU3:
             break;
-
         case OTA_RX_RFU4:
             break;
-
         default:
             break;
     }
