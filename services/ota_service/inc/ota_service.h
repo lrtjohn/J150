@@ -2,8 +2,10 @@
 #define OTA_SERVICE_H
 
 #include "DSP2833x_Device.h"
+#include "DSP2833x_Examples.h"   // DSP2833x Examples Include File
 #include "prod_defs.h"
 #include "sci_queue.h"
+#include <stdlib.h>
 
 /* The h file is for the OTA process definition and declaration */
 /* The aim is to support the OTA process in the User application */
@@ -225,7 +227,7 @@ typedef struct
     Uint16              rxLineNum;
     Uint16              lastLineNum;
 
-    OTA_SERVICE_RX_ADAPT    pOtaServiceRxAdapt;
+    OTA_SERVICE_RX_ADAPT*    pOtaServiceRxAdapt;
 
 }OTA_SERVICE_ADT;
 
