@@ -162,7 +162,7 @@ OTA_SERVICE_ADT gOtaServiceAdt =
     NULL,
 };
 
-OTA_SERVICE_ADT* pOtaServiceAdt = NULL;
+OTA_SERVICE_ADT* pgOtaServiceAdt = NULL;
 
 Uint16 OTA_SERVICE_FIND_RX_HEADER_APAPT(SCIRXQUE* q)
 {
@@ -312,6 +312,9 @@ Uint16 OTA_SERVICE_ProcessOneFrame(SCIRXQUE* q)
 {
     Uint16 ret = 0;
     Uint16 opcode = 0;
+    OTA_SERVICE_ADT* pOtaAdt;
+
+    pOtaAdt = PTR_OTA_SERVICE_ADT;
 
     switch(opcode)
     {
@@ -321,7 +324,13 @@ Uint16 OTA_SERVICE_ProcessOneFrame(SCIRXQUE* q)
             break;
 
         case OTA_RX_S_CMD:
-            
+            if (pOtaAdt->currentStatus != OTA_SERVICE_IDLE)
+            {
+                /* The S CMD could be recived only when status is IDLE */
+                // TODO may need to generate a error code here
+
+                return 0;
+            }
             break;
 
         case OTA_RX_E_CMD:

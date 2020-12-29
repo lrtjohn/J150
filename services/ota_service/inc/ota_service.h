@@ -232,4 +232,8 @@ typedef struct
 }OTA_SERVICE_ADT;
 
 void OTA_SERVICE_PROCESS_RX_DATA_ADAPT(SCIRXQUE* q);
+
+extern OTA_SERVICE_ADT  gOtaServiceAdt;
+extern OTA_SERVICE_ADT* pgOtaServiceAdt;
+#define PTR_OTA_SERVICE_ADT (&gOtaServiceAdt)
 #endif /* OTA_SERVICE_H */
