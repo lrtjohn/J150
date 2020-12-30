@@ -1,9 +1,17 @@
 #include "ota_service.h"
 
-#define OTA_SERVICE_FRAME_ARRAY_LEN     (20)
+/*********************************************************************************
+ ██████  ████████  █████      ███████ ███████ ██████  ██    ██ ██  ██████ ███████ 
+██    ██    ██    ██   ██     ██      ██      ██   ██ ██    ██ ██ ██      ██      
+██    ██    ██    ███████     ███████ █████   ██████  ██    ██ ██ ██      █████   
+██    ██    ██    ██   ██          ██ ██      ██   ██  ██  ██  ██ ██      ██      
+ ██████     ██    ██   ██     ███████ ███████ ██   ██   ████   ██  ██████ ███████ 
+*********************************************************************************/
+#define OTA_SERVICE_FRAME_ARRAY_LEN     (80)
 
 Uint16 gFrameArray[OTA_SERVICE_FRAME_ARRAY_LEN];
 
+Uint16 OTA_SERVICE_FlashImageData(Uint16 hAddr, Uint16 lAddr, Uint16* flashData, Uint16 len);
 #if (OTA_TEST == INCLUDE_FEATURE)
 OTA_TEST_VERIFY gOtaServiceTestData = 
 {
@@ -434,6 +442,16 @@ Uint16 OTA_SERVICE_ProcessOneFrame(SCIRXQUE* q)
         default:
             break;
     }
+
+    return 1;
+}
+
+Uint16 OTA_SERVICE_FlashImageData(Uint16 hAddr, Uint16 lAddr, Uint16* flashData, Uint16 len)
+{
+    // TODO implement this function later
+    Uint32 addr;
+
+    addr = (hAddr << 16 | lAddr);
 
     return 1;
 }
