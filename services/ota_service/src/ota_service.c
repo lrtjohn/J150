@@ -1,5 +1,9 @@
 #include "ota_service.h"
 
+#define OTA_SERVICE_FRAME_ARRAY_LEN     (20)
+
+Uint16 gFrameArray[OTA_SERVICE_FRAME_ARRAY_LEN];
+
 #if (OTA_TEST == INCLUDE_FEATURE)
 OTA_TEST_VERIFY gOtaServiceTestData = 
 {
@@ -340,24 +344,37 @@ Uint16 OTA_SERVICE_CheckSum(SCIRXQUE* q)
 
 Uint16 OTA_SERVICE_ProcessOneFrame(SCIRXQUE* q)
 {
-    Uint16 ret = 0;
-    Uint16 opcode = 0;
+    Uint16 opcode;
     OTA_SERVICE_ADT* pOtaAdt;
     OTA_SERVICE_RX_APP *pOtaRxApp;
+    // May use global variable to esay to debug
+    OTA_SERVICE_RX_ADAPT* pOtaAdtRxAdapt;
+    int i;
 
     pOtaAdt = PTR_OTA_SERVICE_ADT;
     pOtaRxApp = PTR_OTA_SERVICE_ADT_RX_APP;
+    pOtaAdtRxAdapt = PTR_OTA_SERVICE_ADT_RX_ADAPT;
 
-    if ((pOtaAdt == NULL) || (pOtaRxApp == NULL))
+# if(1)
+    if ((pOtaAdt == NULL) || (pOtaRxApp == NULL) || (pOtaAdtRxAdapt))
     {            
         return 0;
     }
 
-    //TODO replace NULL later
-    opcode = pOtaAdt->pOtaServiceRxAdapt->pOtaServiceRxApp->pfGetOpcode(NULL);
+    if (pOtaAdtRxAdapt->frameLen > OTA_SERVICE_FRAME_ARRAY_LEN)
+    {
+        return 0;
+    }
 
-    //TODO replace NULL later
-    if (!(pOtaRxApp->pfIsOpcodeValid(NULL)))
+    for (i = 0; i < pOtaAdtRxAdapt->frameLen; ++i)
+    {
+        gFrameArray[i] = q->buffer[(q->front + i) % (q->bufferLen)];
+    }
+#endif
+
+    opcode = pOtaAdt->pOtaServiceRxAdapt->pOtaServiceRxApp->pfGetOpcode(gFrameArray);
+
+    if (!(pOtaRxApp->pfIsOpcodeValid(gFrameArray)))
     {
         return 0;
     }
@@ -418,5 +435,5 @@ Uint16 OTA_SERVICE_ProcessOneFrame(SCIRXQUE* q)
             break;
     }
 
-    return ret;
+    return 1;
 }
