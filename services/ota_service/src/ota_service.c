@@ -280,6 +280,14 @@ Uint16 OTA_SERVICE_CheckLen(SCIRXQUE* q)
     // Should get the dynamic length here and update the length value,
     // then just wait until meet the length requirement
     Uint16 length;
+    OTA_SERVICE_RX_ADAPT* pOtaAdtRxAdapt;
+
+    pOtaAdtRxAdapt = PTR_OTA_SERVICE_ADT_RX_ADAPT;
+
+    if(pOtaAdtRxAdapt == NULL)
+    {            
+        return 0;
+    }
 
     length = q->buffer[(q->front + 0) % (q->bufferLen)];
 
@@ -288,6 +296,8 @@ Uint16 OTA_SERVICE_CheckLen(SCIRXQUE* q)
     {
         return FAIL;
     }
+
+    pOtaAdtRxAdapt->frameLen = length;
 
     // TODO determine the length value 
     // Maybe there should be a extra lenght here

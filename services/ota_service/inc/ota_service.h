@@ -178,6 +178,7 @@ typedef struct
 {
     Uint16(*pfGetOpcode)(Uint16* array);
     Uint16(*pfIsOpcodeValid)(Uint16* array);
+    Uint16 opcode;
 
 }OTA_SERVICE_RX_APP;
 
@@ -190,6 +191,7 @@ typedef struct
     void(*pfRxAdapt)(SCIRXQUE* q);
     /* data */
     OTA_SERVICE_RX_APP* pOtaServiceRxApp;
+    Uint16          frameLen;
 
 }OTA_SERVICE_RX_ADAPT;
 
