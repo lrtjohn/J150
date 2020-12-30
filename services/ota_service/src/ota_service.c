@@ -166,39 +166,59 @@ OTA_SERVICE_ADT* pgOtaServiceAdt = NULL;
 
 Uint16 OTA_SERVICE_FIND_RX_HEADER_ADAPT(SCIRXQUE* q)
 {
-    Uint16 ret = 0;
+    OTA_SERVICE_RX_ADAPT* pOtaAdtRxAdapt;
 
-    // TODO call the real API here
+    pOtaAdtRxAdapt = PTR_OTA_SERVICE_ADT_RX_ADAPT;
 
-    return ret;
+    if(pOtaAdtRxAdapt == NULL)
+    {            
+        return 0;
+    }
+
+    return pOtaAdtRxAdapt->pfFindHeader(q);
 }
 
 Uint16 OTA_SERVICE_CHECK_RX_LEN_ADAPT(SCIRXQUE* q)
 {
-    Uint16 ret = 0;
+    OTA_SERVICE_RX_ADAPT* pOtaAdtRxAdapt;
 
-    // TODO call the real API here
+    pOtaAdtRxAdapt = PTR_OTA_SERVICE_ADT_RX_ADAPT;
 
-    return ret;
+    if(pOtaAdtRxAdapt == NULL)
+    {            
+        return 0;
+    }
+
+    return pOtaAdtRxAdapt->pfCheckLen(q);
 }
 
 Uint16 OTA_SERVICE_CHECK_RX_CRC_ADAPT(SCIRXQUE* q)
 {
-    Uint16 ret = 0;
+    OTA_SERVICE_RX_ADAPT* pOtaAdtRxAdapt;
 
-    // TODO call the real API here
+    pOtaAdtRxAdapt = PTR_OTA_SERVICE_ADT_RX_ADAPT;
 
-    return ret;
+    if(pOtaAdtRxAdapt == NULL)
+    {            
+        return 0;
+    }
+
+    return pOtaAdtRxAdapt->pfCheckSum(q);
 }
 
 
 Uint16 OTA_SERVICE_UPDATE_PAYLOAD_ADAPT(SCIRXQUE* q)
 {
-    Uint16 ret = 0;
+    OTA_SERVICE_RX_ADAPT* pOtaAdtRxAdapt;
 
-    // TODO call the real API here
+    pOtaAdtRxAdapt = PTR_OTA_SERVICE_ADT_RX_ADAPT;
 
-    return ret;
+    if(pOtaAdtRxAdapt == NULL)
+    {            
+        return 0;
+    }
+
+    return pOtaAdtRxAdapt->pfUpdateFrame(q);
 }
 /* This function is mainly used for process the rx data for OTA service */
 /* This function should be called in the main loop and after received the OTA start cmd */ 

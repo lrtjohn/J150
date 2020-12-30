@@ -175,6 +175,7 @@ typedef struct
     CHECK_LEN       pfCheckLen;
     CHECK_SUM       pfCheckSum;
     UPDATE_FRAME    pfUpdateFrame;
+    void(*pfRxAdapt)(SCIRXQUE* q);
     /* data */
 
 }OTA_SERVICE_RX_ADAPT;
@@ -236,4 +237,5 @@ void OTA_SERVICE_PROCESS_RX_DATA_ADAPT(SCIRXQUE* q);
 extern OTA_SERVICE_ADT  gOtaServiceAdt;
 extern OTA_SERVICE_ADT* pgOtaServiceAdt;
 #define PTR_OTA_SERVICE_ADT (&gOtaServiceAdt)
+#define PTR_OTA_SERVICE_ADT_RX_ADAPT (gOtaServiceAdt.pOtaServiceRxAdapt)
 #endif /* OTA_SERVICE_H */
