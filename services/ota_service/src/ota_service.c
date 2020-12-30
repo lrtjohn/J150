@@ -182,7 +182,7 @@ Uint16 OTA_SERVICE_FIND_RX_HEADER_ADAPT(SCIRXQUE* q)
 
     pOtaAdtRxAdapt = PTR_OTA_SERVICE_ADT_RX_ADAPT;
 
-    if(pOtaAdtRxAdapt == NULL)
+    if (pOtaAdtRxAdapt == NULL)
     {            
         return 0;
     }
@@ -196,7 +196,7 @@ Uint16 OTA_SERVICE_CHECK_RX_LEN_ADAPT(SCIRXQUE* q)
 
     pOtaAdtRxAdapt = PTR_OTA_SERVICE_ADT_RX_ADAPT;
 
-    if(pOtaAdtRxAdapt == NULL)
+    if (pOtaAdtRxAdapt == NULL)
     {            
         return 0;
     }
@@ -210,7 +210,7 @@ Uint16 OTA_SERVICE_CHECK_RX_CRC_ADAPT(SCIRXQUE* q)
 
     pOtaAdtRxAdapt = PTR_OTA_SERVICE_ADT_RX_ADAPT;
 
-    if(pOtaAdtRxAdapt == NULL)
+    if (pOtaAdtRxAdapt == NULL)
     {            
         return 0;
     }
@@ -225,7 +225,7 @@ Uint16 OTA_SERVICE_UPDATE_PAYLOAD_ADAPT(SCIRXQUE* q)
 
     pOtaAdtRxAdapt = PTR_OTA_SERVICE_ADT_RX_ADAPT;
 
-    if(pOtaAdtRxAdapt == NULL)
+    if (pOtaAdtRxAdapt == NULL)
     {            
         return 0;
     }
@@ -246,32 +246,32 @@ void OTA_SERVICE_PROCESS_RX_DATA_ADAPT(SCIRXQUE* q)
      * Step 7: Update the state machine of the OTA service 
      */
 
-    /* The purpose is to never change the adapter function, this is a structure function */
-    if (!OTA_SERVICE_FIND_RX_HEADER_ADAPT(q))
+    while (GetSciRxQueLength(q) >= OTA_SERVICE_RX_EXTRA_LEN)
     {
-        return;
-    }
+        if (!OTA_SERVICE_FIND_RX_HEADER_ADAPT(q))
+        {
+            return;
+        }
 
-    if (!OTA_SERVICE_CHECK_RX_LEN_ADAPT(q))
-    {
-        return;
-    }
+        if (!OTA_SERVICE_CHECK_RX_LEN_ADAPT(q))
+        {
+            return;
+        }
 
-    if (!OTA_SERVICE_CHECK_RX_CRC_ADAPT(q))
-    {
-        return;
-    }
+        if (!OTA_SERVICE_CHECK_RX_CRC_ADAPT(q))
+        {
+            return;
+        }
 
-    OTA_SERVICE_UPDATE_PAYLOAD_ADAPT(q);
-    // TODO implement this function later after RX protocol design finished.
+        OTA_SERVICE_UPDATE_PAYLOAD_ADAPT(q);
+    }
 }
 
 Uint16 OTA_SERVICE_FindRxHeader(SCIRXQUE* q)
 {
     while (1)
     {
-        // TODO determin the header length and header value
-        if (q->buffer[(q->front) % (q->bufferLen)] != 0) 
+        if (q->buffer[(q->front) % (q->bufferLen)] != 0x3a) 
         {
             if (SciRxDeQueue(q) == 0)
             {
@@ -296,7 +296,7 @@ Uint16 OTA_SERVICE_CheckLen(SCIRXQUE* q)
 
     pOtaAdtRxAdapt = PTR_OTA_SERVICE_ADT_RX_ADAPT;
 
-    if(pOtaAdtRxAdapt == NULL)
+    if (pOtaAdtRxAdapt == NULL)
     {            
         return 0;
     }
@@ -363,7 +363,7 @@ Uint16 OTA_SERVICE_ProcessOneFrame(SCIRXQUE* q)
     pOtaRxApp = PTR_OTA_SERVICE_ADT_RX_APP;
     pOtaAdtRxAdapt = PTR_OTA_SERVICE_ADT_RX_ADAPT;
 
-# if(1)
+#if (1)
     if ((pOtaAdt == NULL) || (pOtaRxApp == NULL) || (pOtaAdtRxAdapt))
     {            
         return 0;

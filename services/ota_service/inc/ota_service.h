@@ -92,6 +92,8 @@
 
 #define DLETA_BETWEEN_A_AND_B           (0)
 
+#define OTA_SERVICE_RX_EXTRA_LEN        (6)
+
 #if (OTA_TEST == INCLUDE_FEATURE)
 typedef struct 
 {
