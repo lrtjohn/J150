@@ -151,23 +151,35 @@ void OTA_SERVICE_TestData(void);
 #endif /* OTA_TEST == INCLUDE_FEATURE */
 
 typedef Uint16(*ERASE_FLASH_A)(void);
+
 typedef Uint16(*ERASE_FLASH_B)(void);
+
 typedef Uint16(*ERASE_FLASH_G)(void);
 
 typedef Uint16(*IS_OTA_ALLOWED)(void);
+
 typedef Uint16(*FLASH_LINE_DATA)(Uint16* pDtata);
 
 typedef Uint16(*GET_CURRENT_STATUS)(Uint16* pDtata);
 
 typedef Uint16(*READ_CUR_VER_NUM)(void);
+
 typedef Uint16(*READ_NEW_VER_NUM)(void);
 
-
-
 typedef Uint16(*FIND_HEADER)(SCIRXQUE* q);
+
 typedef Uint16(*CHECK_LEN)(SCIRXQUE* q);
+
 typedef Uint16(*CHECK_SUM)(SCIRXQUE* q);
+
 typedef Uint16(*UPDATE_FRAME)(SCIRXQUE* q);
+
+typedef struct 
+{
+    Uint16(*pfGetOpcode)(Uint16* array);
+    Uint16(*pfIsOpcodeValid)(Uint16* array);
+
+}OTA_SERVICE_RX_APP;
 
 typedef struct
 {
@@ -177,6 +189,7 @@ typedef struct
     UPDATE_FRAME    pfUpdateFrame;
     void(*pfRxAdapt)(SCIRXQUE* q);
     /* data */
+    OTA_SERVICE_RX_APP* pOtaServiceRxApp;
 
 }OTA_SERVICE_RX_ADAPT;
 
@@ -238,4 +251,5 @@ extern OTA_SERVICE_ADT  gOtaServiceAdt;
 extern OTA_SERVICE_ADT* pgOtaServiceAdt;
 #define PTR_OTA_SERVICE_ADT (&gOtaServiceAdt)
 #define PTR_OTA_SERVICE_ADT_RX_ADAPT (gOtaServiceAdt.pOtaServiceRxAdapt)
+#define PTR_OTA_SERVICE_ADT_RX_APP (gOtaServiceAdt.pOtaServiceRxAdapt->pOtaServiceRxApp)
 #endif /* OTA_SERVICE_H */

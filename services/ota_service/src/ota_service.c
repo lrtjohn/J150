@@ -333,11 +333,22 @@ Uint16 OTA_SERVICE_ProcessOneFrame(SCIRXQUE* q)
     Uint16 ret = 0;
     Uint16 opcode = 0;
     OTA_SERVICE_ADT* pOtaAdt;
+    OTA_SERVICE_RX_APP *pOtaRxApp;
 
     pOtaAdt = PTR_OTA_SERVICE_ADT;
+    pOtaRxApp = PTR_OTA_SERVICE_ADT_RX_APP;
 
-    if(pOtaAdt == NULL)
+    if ((pOtaAdt == NULL) || (pOtaRxApp == NULL))
     {            
+        return 0;
+    }
+
+    //TODO replace NULL later
+    opcode = pOtaAdt->pOtaServiceRxAdapt->pOtaServiceRxApp->pfGetOpcode(NULL);
+
+    //TODO replace NULL later
+    if (!(pOtaRxApp->pfIsOpcodeValid(NULL)))
+    {
         return 0;
     }
 
