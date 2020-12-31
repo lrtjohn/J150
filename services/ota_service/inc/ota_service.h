@@ -176,6 +176,7 @@ typedef Uint16(*CHECK_SUM)(SCIRXQUE* q);
 
 typedef Uint16(*UPDATE_FRAME)(SCIRXQUE* q);
 
+typedef Uint16(*UPDATE_HEAD_POS)(SCIRXQUE* q);
 typedef struct 
 {
     Uint16(*pfGetOpcode)(Uint16* array);
@@ -192,6 +193,7 @@ typedef struct
     CHECK_LEN       pfCheckLen;
     CHECK_SUM       pfCheckSum;
     UPDATE_FRAME    pfUpdateFrame;
+    UPDATE_HEAD_POS pfUpdateHeadPos;
     void(*pfRxAdapt)(SCIRXQUE* q);
     /* data */
     OTA_SERVICE_RX_APP* pOtaServiceRxApp;

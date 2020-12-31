@@ -232,6 +232,20 @@ Uint16 OTA_SERVICE_UPDATE_PAYLOAD_ADAPT(SCIRXQUE* q)
 
     return pOtaAdtRxAdapt->pfUpdateFrame(q);
 }
+
+Uint16 OTA_SERVICE_UPDATE_HEAD_POS_ADAPT(SCIRXQUE* q)
+{
+    OTA_SERVICE_RX_ADAPT* pOtaAdtRxAdapt;
+
+    pOtaAdtRxAdapt = PTR_OTA_SERVICE_ADT_RX_ADAPT;
+
+    if (pOtaAdtRxAdapt == NULL)
+    {            
+        return 0;
+    }
+
+    return pOtaAdtRxAdapt->pfUpdateHeadPos(q);
+}
 /* This function is mainly used for process the rx data for OTA service */
 /* This function should be called in the main loop and after received the OTA start cmd */ 
 void OTA_SERVICE_PROCESS_RX_DATA_ADAPT(SCIRXQUE* q)
@@ -264,6 +278,8 @@ void OTA_SERVICE_PROCESS_RX_DATA_ADAPT(SCIRXQUE* q)
         }
 
         OTA_SERVICE_UPDATE_PAYLOAD_ADAPT(q);
+
+        OTA_SERVICE_UPDATE_HEAD_POS_ADAPT(q);
     }
 }
 
@@ -451,7 +467,7 @@ Uint16 OTA_SERVICE_FlashImageData(Uint16 hAddr, Uint16 lAddr, Uint16* flashData,
     // TODO implement this function later
     Uint32 addr;
 
-    addr = (hAddr << 16 | lAddr);
+    addr = (hAddr << 16) | lAddr;
 
     return 1;
 }
