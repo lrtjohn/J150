@@ -5,6 +5,7 @@
 #include "DSP2833x_Examples.h"   // DSP2833x Examples Include File
 #include "prod_defs.h"
 #include "sci_queue.h"
+#include "Flash2833x_API_Library.h"
 #include <stdlib.h>
 
 /* The h file is for the OTA process definition and declaration */

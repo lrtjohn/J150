@@ -12,6 +12,13 @@
 Uint16 gFrameArray[OTA_SERVICE_FRAME_ARRAY_LEN];
 
 Uint16 OTA_SERVICE_FlashImageData(Uint16 hAddr, Uint16 lAddr, Uint16* flashData, Uint16 len);
+
+static Uint16 OTA_SERVICE_FIND_RX_HEADER_ADAPT(SCIRXQUE* q);
+static Uint16 OTA_SERVICE_CHECK_RX_LEN_ADAPT(SCIRXQUE* q);
+static Uint16 OTA_SERVICE_CHECK_RX_CRC_ADAPT(SCIRXQUE* q);
+static Uint16 OTA_SERVICE_UPDATE_PAYLOAD_ADAPT(SCIRXQUE* q);
+static Uint16 OTA_SERVICE_UPDATE_HEAD_POS_ADAPT(SCIRXQUE* q);
+
 #if (OTA_TEST == INCLUDE_FEATURE)
 OTA_TEST_VERIFY gOtaServiceTestData = 
 {
@@ -176,7 +183,7 @@ OTA_SERVICE_ADT gOtaServiceAdt =
 
 OTA_SERVICE_ADT* pgOtaServiceAdt = NULL;
 
-Uint16 OTA_SERVICE_FIND_RX_HEADER_ADAPT(SCIRXQUE* q)
+static Uint16 OTA_SERVICE_FIND_RX_HEADER_ADAPT(SCIRXQUE* q)
 {
     OTA_SERVICE_RX_ADAPT* pOtaAdtRxAdapt;
 
@@ -190,7 +197,7 @@ Uint16 OTA_SERVICE_FIND_RX_HEADER_ADAPT(SCIRXQUE* q)
     return pOtaAdtRxAdapt->pfFindHeader(q);
 }
 
-Uint16 OTA_SERVICE_CHECK_RX_LEN_ADAPT(SCIRXQUE* q)
+static Uint16 OTA_SERVICE_CHECK_RX_LEN_ADAPT(SCIRXQUE* q)
 {
     OTA_SERVICE_RX_ADAPT* pOtaAdtRxAdapt;
 
@@ -204,7 +211,7 @@ Uint16 OTA_SERVICE_CHECK_RX_LEN_ADAPT(SCIRXQUE* q)
     return pOtaAdtRxAdapt->pfCheckLen(q);
 }
 
-Uint16 OTA_SERVICE_CHECK_RX_CRC_ADAPT(SCIRXQUE* q)
+static Uint16 OTA_SERVICE_CHECK_RX_CRC_ADAPT(SCIRXQUE* q)
 {
     OTA_SERVICE_RX_ADAPT* pOtaAdtRxAdapt;
 
@@ -219,7 +226,7 @@ Uint16 OTA_SERVICE_CHECK_RX_CRC_ADAPT(SCIRXQUE* q)
 }
 
 
-Uint16 OTA_SERVICE_UPDATE_PAYLOAD_ADAPT(SCIRXQUE* q)
+static Uint16 OTA_SERVICE_UPDATE_PAYLOAD_ADAPT(SCIRXQUE* q)
 {
     OTA_SERVICE_RX_ADAPT* pOtaAdtRxAdapt;
 
@@ -233,7 +240,7 @@ Uint16 OTA_SERVICE_UPDATE_PAYLOAD_ADAPT(SCIRXQUE* q)
     return pOtaAdtRxAdapt->pfUpdateFrame(q);
 }
 
-Uint16 OTA_SERVICE_UPDATE_HEAD_POS_ADAPT(SCIRXQUE* q)
+static Uint16 OTA_SERVICE_UPDATE_HEAD_POS_ADAPT(SCIRXQUE* q)
 {
     OTA_SERVICE_RX_ADAPT* pOtaAdtRxAdapt;
 
@@ -259,7 +266,6 @@ void OTA_SERVICE_PROCESS_RX_DATA_ADAPT(SCIRXQUE* q)
      * Step 6: Update the OTA service status which need to send to the upper layer 
      * Step 7: Update the state machine of the OTA service 
      */
-
     while (GetSciRxQueLength(q) >= OTA_SERVICE_RX_EXTRA_LEN)
     {
         if (!OTA_SERVICE_FIND_RX_HEADER_ADAPT(q))
@@ -465,9 +471,26 @@ Uint16 OTA_SERVICE_ProcessOneFrame(SCIRXQUE* q)
 Uint16 OTA_SERVICE_FlashImageData(Uint16 hAddr, Uint16 lAddr, Uint16* flashData, Uint16 len)
 {
     // TODO implement this function later
+
+#if (0)
     Uint32 addr;
 
-    addr = (hAddr << 16) | lAddr;
+    addr = ((Uint32)hAddr << 16) | lAddr;
+#endif
 
     return 1;
+}
+
+Uint16 OTA_SERVICE_EraseFlash(Uint16 sector)
+{
+    Uint16 ret;
+    FLASH_ST flashStatus;
+
+    // TODO disable interrupt
+
+    ret = Flash_Erase(sector, &flashStatus);
+
+    // TODO enable interrupt
+
+    return ret;
 }
