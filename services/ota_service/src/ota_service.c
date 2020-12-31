@@ -12,6 +12,7 @@
 Uint16 gFrameArray[OTA_SERVICE_FRAME_ARRAY_LEN];
 
 Uint16 OTA_SERVICE_FlashImageData(Uint16 hAddr, Uint16 lAddr, Uint16* flashData, Uint16 len);
+Uint16 OTA_SERVICE_EraseFlash(Uint16 sector);
 
 static Uint16 OTA_SERVICE_FIND_RX_HEADER_ADAPT(SCIRXQUE* q);
 static Uint16 OTA_SERVICE_CHECK_RX_LEN_ADAPT(SCIRXQUE* q);
@@ -177,6 +178,9 @@ OTA_SERVICE_ADT gOtaServiceAdt =
     0,
     0,
     0,
+    0,
+    .areaSectorB = OTA_SERVICE_B_AREA_SECTOR,
+    .areaSectorA = OTA_SERVICE_A_AREA_SECTOR,
 
     NULL,
 };
@@ -313,8 +317,8 @@ Uint16 OTA_SERVICE_CheckLen(SCIRXQUE* q)
     // TODO determine the length position
     // Should get the dynamic length here and update the length value,
     // then just wait until meet the length requirement
-    Uint16 length;
-    OTA_SERVICE_RX_ADAPT* pOtaAdtRxAdapt;
+    Uint16                  length;
+    OTA_SERVICE_RX_ADAPT    *pOtaAdtRxAdapt;
 
     pOtaAdtRxAdapt = PTR_OTA_SERVICE_ADT_RX_ADAPT;
 
@@ -347,7 +351,7 @@ Uint16 OTA_SERVICE_CheckLen(SCIRXQUE* q)
 
 Uint16 OTA_SERVICE_CheckSum(SCIRXQUE* q)
 {
-    int i;
+    Uint16 i;
     Uint16 sum = 0;
     Uint16 checkSumPos = 0;
 
@@ -374,16 +378,15 @@ Uint16 OTA_SERVICE_CheckSum(SCIRXQUE* q)
 
 Uint16 OTA_SERVICE_ProcessOneFrame(SCIRXQUE* q)
 {
-    Uint16 opcode;
-    OTA_SERVICE_ADT* pOtaAdt;
-    OTA_SERVICE_RX_APP *pOtaRxApp;
-    // May use global variable to esay to debug
-    OTA_SERVICE_RX_ADAPT* pOtaAdtRxAdapt;
-    int i;
+    Uint16                  i;
+    Uint16                  opcode;
+    OTA_SERVICE_ADT         *pOtaAdt;
+    OTA_SERVICE_RX_APP      *pOtaRxApp;
+    OTA_SERVICE_RX_ADAPT    *pOtaAdtRxAdapt;
 
-    pOtaAdt = PTR_OTA_SERVICE_ADT;
-    pOtaRxApp = PTR_OTA_SERVICE_ADT_RX_APP;
-    pOtaAdtRxAdapt = PTR_OTA_SERVICE_ADT_RX_ADAPT;
+    pOtaAdt         = PTR_OTA_SERVICE_ADT;
+    pOtaRxApp       = PTR_OTA_SERVICE_ADT_RX_APP;
+    pOtaAdtRxAdapt  = PTR_OTA_SERVICE_ADT_RX_ADAPT;
 
 #if (1)
     if ((pOtaAdt == NULL) || (pOtaRxApp == NULL) || (pOtaAdtRxAdapt))
@@ -395,12 +398,12 @@ Uint16 OTA_SERVICE_ProcessOneFrame(SCIRXQUE* q)
     {
         return 0;
     }
+#endif
 
     for (i = 0; i < pOtaAdtRxAdapt->frameLen; ++i)
     {
         gFrameArray[i] = q->buffer[(q->front + i) % (q->bufferLen)];
     }
-#endif
 
     opcode = pOtaAdt->pOtaServiceRxAdapt->pOtaServiceRxApp->pfGetOpcode(gFrameArray);
 
@@ -444,6 +447,12 @@ Uint16 OTA_SERVICE_ProcessOneFrame(SCIRXQUE* q)
             }
             // TODO need to check the system state machine state is stop or not
             pOtaAdt->currentStatus = OTA_SERVICE_RX_START_CMD;
+
+            if(!(pOtaAdt->pfEraseFlashB()))
+            {
+                // TODO What should FW do if erase flash failed?
+                return 0;
+            }
             break;
         case OTA_RX_E_CMD:
             if (pOtaAdt->currentStatus != OTA_SERVICE_RUNNING)
@@ -451,7 +460,6 @@ Uint16 OTA_SERVICE_ProcessOneFrame(SCIRXQUE* q)
                 return 0;
             }
             pOtaAdt->currentStatus = OTA_SERVICE_END;
- 
             break;
         case OTA_RX_RFU1:
             break;
@@ -493,4 +501,17 @@ Uint16 OTA_SERVICE_EraseFlash(Uint16 sector)
     // TODO enable interrupt
 
     return ret;
+}
+
+
+Uint16 OTA_SERVICE_EraseA(void)
+{
+    // TODO need more check for the pointer
+    return OTA_SERVICE_EraseFlash(PTR_OTA_SERVICE_ADT->areaSectorA);
+}
+
+Uint16 OTA_SERVICE_EraseB(void)
+{
+    // TODO need more check for the pointer
+    return OTA_SERVICE_EraseFlash(PTR_OTA_SERVICE_ADT->areaSectorB);
 }

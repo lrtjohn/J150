@@ -33,6 +33,8 @@
 #define G_SECTOR                    BIT_6
 #define H_SECTOR                    BIT_7
 #define ALL_SECTOR                  (A_SECTOR | B_SECTOR | C_SECTOR | D_SECTOR | E_SECTOR | F_SECTOR | G_SECTOR | H_SECTOR) 
+#define OTA_SERVICE_B_AREA_SECTOR   (G_SECTOR | F_SECTOR)
+#define OTA_SERVICE_A_AREA_SECTOR   (E_SECTOR | D_SECTOR)
 
 #define TI_28_START_ADDR            (0x300000)
 #define TI_28_ONE_SECTOR_LEN        (0x7FFFF)
@@ -252,6 +254,9 @@ typedef struct
     Uint16              currentLineNum;
     Uint16              rxLineNum;
     Uint16              lastLineNum;
+
+    Uint32              areaSectorB;
+    Uint32              areaSectorA;
 
     OTA_SERVICE_RX_ADAPT*    pOtaServiceRxAdapt;
 
