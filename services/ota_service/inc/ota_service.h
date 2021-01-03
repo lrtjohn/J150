@@ -217,6 +217,7 @@ typedef struct
     Uint16(*pfIsOpcodeValid)(Uint16* array);
     Uint16(*pfFlashImageData)(Uint16 lAddr, Uint16 hAddr, Uint16* data, Uint16 len);
     Uint16(*pfUpdateHighAddr)(Uint16* data, Uint16 len);
+    Uint16(*pfUpdateLowAddr)(Uint16* data, Uint16 len);
     Uint16 opcode;
     Uint16 lAddr;
     Uint16 hAddr;
@@ -303,6 +304,7 @@ extern OTA_SERVICE_ADT* pgOtaServiceAdt;
 #define PTR_OTA_SERVICE_ADT (&gOtaServiceAdt)
 #define PTR_OTA_SERVICE_ADT_RX_ADAPT (gOtaServiceAdt.pOtaServiceRxAdapt)
 #define PTR_OTA_SERVICE_ADT_RX_APP (gOtaServiceAdt.pOtaServiceRxAdapt->pOtaServiceRxApp)
+#define PTR_OTA_SERVICE_ADT_LOG_CNT (gOtaServiceAdt.pOtaSeviceLogCnt)
 
 static inline void OTA_SERVICE_INTERRUPT_DISABLE(void)
 {
