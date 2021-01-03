@@ -97,6 +97,8 @@
 
 #define OTA_SERVICE_RX_EXTRA_LEN        (6)
 
+#define OTA_SERVICE_RX_HEAD_DATA        (0x3a)
+
 #if (OTA_TEST == INCLUDE_FEATURE)
 typedef struct 
 {

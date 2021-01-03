@@ -297,7 +297,7 @@ Uint16 OTA_SERVICE_FindRxHeader(SCIRXQUE* q)
 {
     while (1)
     {
-        if (q->buffer[(q->front) % (q->bufferLen)] != 0x3a) 
+        if (q->buffer[(q->front) % (q->bufferLen)] != OTA_SERVICE_RX_HEAD_DATA) 
         {
             if (SciRxDeQueue(q) == 0)
             {
