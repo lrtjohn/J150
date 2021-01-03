@@ -31,6 +31,7 @@
 
 #define OTA_SOLUTION_1              INCLUDE_FEATURE
 #define OTA_TEST                    INCLUDE_FEATURE
+#define OTA_PTR_NULL_CHECK          INCLUDE_FEATURE
 
 #define A_SECTOR                    BIT_0
 #define B_SECTOR                    BIT_1
@@ -215,7 +216,7 @@ typedef struct
 {
     Uint16(*pfGetOpcode)(Uint16* array);
     Uint16(*pfIsOpcodeValid)(Uint16* array);
-    Uint16(*pfFlashImageData)(Uint16 lAddr, Uint16 hAddr, Uint16* data, Uint16 len);
+    Uint16(*pfFlashImageData)(Uint32 addr, Uint16* data, Uint16 len);
     Uint16(*pfUpdateHighAddr)(Uint16* data, Uint16 len);
     Uint16(*pfUpdateLowAddr)(Uint16* data, Uint16 len);
     Uint16 opcode;

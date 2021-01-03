@@ -390,7 +390,7 @@ Uint16 OTA_SERVICE_ProcessOneFrame(SCIRXQUE* q)
     pOtaRxApp       = PTR_OTA_SERVICE_ADT_RX_APP;
     pOtaAdtRxAdapt  = PTR_OTA_SERVICE_ADT_RX_ADAPT;
 
-#if (1)
+#if (OTA_PTR_NULL_CHECK == INCLUDE_FEATURE)
     if ((pOtaAdt == NULL) || (pOtaRxApp == NULL) || (pOtaAdtRxAdapt))
     {            
         return 0;
@@ -428,7 +428,7 @@ Uint16 OTA_SERVICE_ProcessOneFrame(SCIRXQUE* q)
             }
 
             // TODO FW need to add a offset of the data buffer
-            pOtaAdtRxAdapt->pOtaServiceRxApp->pfUpdateHighAddr(gFrameArray, pOtaAdtRxAdapt->rxFrameLen);
+            pOtaRxApp->pfUpdateHighAddr(gFrameArray, pOtaAdtRxAdapt->rxFrameLen);
 
             break;
         case OTA_UD_F_DATA:
@@ -443,7 +443,8 @@ Uint16 OTA_SERVICE_ProcessOneFrame(SCIRXQUE* q)
             }
 
             // TODO FW need to add a offset of the data buffer
-            pOtaAdtRxAdapt->pOtaServiceRxApp->pfUpdateLowAddr(gFrameArray, pOtaAdtRxAdapt->rxFrameLen);
+            pOtaRxApp->pfUpdateLowAddr(gFrameArray, pOtaAdtRxAdapt->rxFrameLen);
+            pOtaRxApp->pfFlashImageData(pOtaRxApp->addr.value, gFrameArray, pOtaAdtRxAdapt->rxFrameLen);
 
             break;
         case OTA_RX_S_CMD:
@@ -451,17 +452,17 @@ Uint16 OTA_SERVICE_ProcessOneFrame(SCIRXQUE* q)
             {
                 /* The S CMD could be recived only when status is IDLE */
                 // TODO may need to generate a error code here
-
                 return 0;
             }
-            // TODO need to check the system state machine state is stop or not
-            pOtaAdt->currentStatus = OTA_SERVICE_RX_START_CMD;
 
             if (!(pOtaAdt->pfEraseFlashB()))
             {
                 // TODO What should FW do if erase flash failed?
                 return 0;
             }
+
+            // TODO need to check the system state machine state is stop or not
+            pOtaAdt->currentStatus = OTA_SERVICE_RX_START_CMD;
             break;
         case OTA_RX_E_CMD:
             if (pOtaAdt->currentStatus != OTA_SERVICE_RUNNING)
