@@ -129,65 +129,36 @@ void OTA_SERVICE_TestData(void)
     gOtaServiceTestData.Delta               =0;
 }
 #endif /* (OTA_TEST == INCLUDE_FEATURE) */
-#if (0)
-typedef struct
-{
-    E_OTA_STATUS        currentStatus;
-
-#if (OTA_TEST == INCLUDE_FEATURE)
-    OTA_TEST_VERIFY*    pTestData;
-#endif
-/* Function poniters define here*/
-    ERASE_FLASH_A       pfEraseFlashA;       
-    ERASE_FLASH_B       pfEraseFlashB;       
-    ERASE_FLASH_G       pfEraseFlashG;    
-    IS_OTA_ALLOWED      pfIsOtaAllowed;
-    FLASH_LINE_DATA     pfFlashLineData;
-    GET_CURRENT_STATUS  pfGetCurrentStatus;
-
-    READ_CUR_VER_NUM    pfReadCurVerNum;
-    READ_NEW_VER_NUM    pfReadNewVerNum;
-
-    Uint16*             pImageBitMap;
-    Uint16              imageTotalLines;
-    Uint16              currentLineNum;
-    Uint16              rxLineNum;
-    Uint16              lastLineNum;
-
-    OTA_SERVICE_RX_ADAPT    pOtaServiceRxAdapt;
-
-}OTA_SERVICE_ADT;
-#endif
 
 OTA_SERVICE_ADT gOtaServiceAdt = 
 {
-    OTA_SERVICE_IDLE,
+    .currentStatus      = OTA_SERVICE_IDLE,
 #if (OTA_TEST == INCLUDE_FEATURE)
-    NULL,
+    .pTestData          = NULL,
 #endif
-    NULL,
-    NULL,
-    NULL,
-    NULL,
-    NULL,
-    NULL,
-    .pfSystemReboot = NULL,
+    .pfEraseFlashA      = NULL,
+    .pfEraseFlashB      = NULL,
+    .pfEraseFlashG      = NULL,
+    .pfIsOtaAllowed     = NULL,
+    .pfFlashLineData    = NULL,
+    .pfGetCurrentStatus = NULL,
+    .pfSystemReboot     = NULL,
 
-    NULL,
-    NULL,
+    .pfReadCurVerNum    = NULL,
+    .pfReadNewVerNum    = NULL,
 
-    NULL,
+    .pImageBitMap       = NULL,
+    .imageTotalLines    = 0,
+    .currentLineNum     = 0,
+    .rxLineNum          = 0,
+    .lastLineNum        = 0,
 
-    0,
-    0,
-    0,
-    0,
-    .areaSectorB = OTA_SERVICE_B_AREA_SECTOR,
-    .areaSectorA = OTA_SERVICE_A_AREA_SECTOR,
-    .areaSectorG = OTA_SERVICE_G_AREA_SECTOR,
+    .areaSectorB        = OTA_SERVICE_B_AREA_SECTOR,
+    .areaSectorA        = OTA_SERVICE_A_AREA_SECTOR,
+    .areaSectorG        = OTA_SERVICE_G_AREA_SECTOR,
 
-    NULL,
-    .pOtaSeviceLogCnt = NULL,
+    .pOtaServiceRxAdapt = NULL,
+    .pOtaSeviceLogCnt   = NULL,
 };
 
 OTA_SERVICE_ADT* pgOtaServiceAdt = NULL;
@@ -473,6 +444,7 @@ Uint16 OTA_SERVICE_ProcessOneFrame(SCIRXQUE* q)
                 return 0;
             }
             pOtaAdt->currentStatus = OTA_SERVICE_END;
+            pOtaAdt->pfSystemReboot();
             break;
         case OTA_RX_RFU1:
             break;

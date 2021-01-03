@@ -102,7 +102,7 @@
 #define GLOBAL_START_ADDR               (C_SECTOR_28_START)
 #define GLOBAL_LEN                      (2 * TI_28_ONE_SECTOR_LEN)
 #define GLOBAL_END_ADDR                 (GLOBAL_START_ADDR + GLOBAL_LEN)
-#endif /* OTA_SOLUTION_1 == INCLUDE_FEATURE */
+#endif /* #if (OTA_SOLUTION_1 == INCLUDE_FEATURE) */
 
 #define DLETA_BETWEEN_A_AND_B           (0)
 
@@ -188,7 +188,7 @@ typedef struct
 }OTA_TEST_VERIFY;
 
 void OTA_SERVICE_TestData(void);
-#endif /* OTA_TEST == INCLUDE_FEATURE */
+#endif /* #if (OTA_TEST == INCLUDE_FEATURE) */
 
 typedef Uint16(*ERASE_FLASH_A)(void);
 
@@ -297,7 +297,7 @@ typedef struct
 
 #if (OTA_TEST == INCLUDE_FEATURE)
     OTA_TEST_VERIFY*    pTestData;
-#endif
+#endif /* #if (OTA_TEST == INCLUDE_FEATURE) */
 /* Function poniters define here*/
     ERASE_FLASH_A       pfEraseFlashA;       
     ERASE_FLASH_B       pfEraseFlashB;       
