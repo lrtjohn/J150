@@ -184,6 +184,7 @@ OTA_SERVICE_ADT gOtaServiceAdt =
     .areaSectorG = OTA_SERVICE_G_AREA_SECTOR,
 
     NULL,
+    .pOtaSeviceLogCnt = NULL,
 };
 
 OTA_SERVICE_ADT* pgOtaServiceAdt = NULL;
@@ -449,7 +450,7 @@ Uint16 OTA_SERVICE_ProcessOneFrame(SCIRXQUE* q)
             // TODO need to check the system state machine state is stop or not
             pOtaAdt->currentStatus = OTA_SERVICE_RX_START_CMD;
 
-            if(!(pOtaAdt->pfEraseFlashB()))
+            if (!(pOtaAdt->pfEraseFlashB()))
             {
                 // TODO What should FW do if erase flash failed?
                 return 0;

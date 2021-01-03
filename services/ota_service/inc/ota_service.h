@@ -193,6 +193,13 @@ typedef Uint16(*UPDATE_FRAME)(SCIRXQUE* q);
 
 typedef Uint16(*UPDATE_HEAD_POS)(SCIRXQUE* q);
 
+typedef struct
+{
+    Uint16 serialNum;
+    Uint16 writeFailCnt;
+    Uint16 eraseFailCnt;
+    /* data */
+}OTA_SERVICE_LOG_CNT;
 
 typedef struct{
 	Uint32 high16Bit    : 16;
@@ -285,8 +292,8 @@ typedef struct
     Uint32              areaSectorA;
     Uint32              areaSectorG;
 
-    OTA_SERVICE_RX_ADAPT*    pOtaServiceRxAdapt;
-
+    OTA_SERVICE_RX_ADAPT    *pOtaServiceRxAdapt;
+    OTA_SERVICE_LOG_CNT     *pOtaSeviceLogCnt;
 }OTA_SERVICE_ADT;
 
 void OTA_SERVICE_PROCESS_RX_DATA_ADAPT(SCIRXQUE* q);
