@@ -171,6 +171,7 @@ OTA_SERVICE_ADT gOtaServiceAdt =
     NULL,
     NULL,
     NULL,
+    .pfSystemReboot = NULL,
 
     NULL,
     NULL,
@@ -595,4 +596,9 @@ void OTA_SERVICE_RxDataToFlashData(Uint16 len)
         gFrameArrayFlash[i] = (gFrameArray[OTA_SERVICE_RX_FLASH_DATA_LEN * i + OTA_SERVICE_RX_FLASH_DATAH_OFFSET] << 8) | 
                               (gFrameArray[OTA_SERVICE_RX_FLASH_DATA_LEN * i + OTA_SERVICE_RX_FLASH_DATAL_OFFSET]);
     }
+}
+
+void OTA_SERVICE_SystemReboot(void)
+{
+    // TODO disable the watch dog to force the system reboot
 }

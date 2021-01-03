@@ -216,6 +216,8 @@ typedef Uint16(*UPDATE_FRAME)(SCIRXQUE* q);
 
 typedef Uint16(*UPDATE_HEAD_POS)(SCIRXQUE* q);
 
+typedef void(*SYSTEM_REBOOT)(void);
+
 typedef struct
 {
     Uint16 serialNum;
@@ -303,6 +305,7 @@ typedef struct
     IS_OTA_ALLOWED      pfIsOtaAllowed;
     FLASH_LINE_DATA     pfFlashLineData;
     GET_CURRENT_STATUS  pfGetCurrentStatus;
+    SYSTEM_REBOOT       pfSystemReboot;
 
     READ_CUR_VER_NUM    pfReadCurVerNum;
     READ_NEW_VER_NUM    pfReadNewVerNum;
