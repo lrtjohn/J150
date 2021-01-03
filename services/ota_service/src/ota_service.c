@@ -539,3 +539,35 @@ Uint16 OTA_SERVICE_UpdateLowAddr(Uint16 *data, Uint16 len)
 
     return ret;
 }
+
+Uint16 OTA_SERVICE_FlashWriteAndVerify(Uint32 addr, Uint16 *buffer, Uint16 len)
+{
+    Uint16      *addrTemp = 0;
+    FLASH_ST    flashStatus;
+    Uint16      status = 1;
+
+    addrTemp = (Uint16*)addr;
+
+    status = Flash_Program(addrTemp, buffer, len, &flashStatus);
+
+    if (status != STATUS_SUCCESS)
+    {
+        return status;
+    }
+
+    status = 1;
+
+    status = Flash_Verify(addrTemp, buffer, len, &flashStatus);
+
+    if (status != STATUS_SUCCESS)
+    {
+        return status;
+    }
+
+    return STATUS_SUCCESS;
+}
+
+Uint16 OTA_SERVICE_WriteFlashOneFrame(Uint32 addr, Uint16 *data, Uint16 len)
+{
+    return OTA_SERVICE_FlashWriteAndVerify(addr, data, len);
+}
