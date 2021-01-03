@@ -524,7 +524,18 @@ Uint16 OTA_SERVICE_UpdateHighAddr(Uint16 *data, Uint16 len)
 
     // TODO replace the 0 and 1 later, user the position of high addr instead
     ret = (data[0] << 8) | data[1];
-    (PTR_OTA_SERVICE_ADT_RX_APP)->addr.value = ret;
+    (PTR_OTA_SERVICE_ADT_RX_APP)->addr.uAddr32.high16Bit = ret;
+
+    return ret;
+}
+
+Uint16 OTA_SERVICE_UpdateLowAddr(Uint16 *data, Uint16 len)
+{
+    Uint16 ret;
+
+    // TODO replace the 0 and 1 later, user the position of low addr instead
+    ret = (data[0] << 8) | data[1];
+    (PTR_OTA_SERVICE_ADT_RX_APP)->addr.uAddr32.low16Bit = ret;
 
     return ret;
 }

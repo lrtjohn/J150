@@ -183,10 +183,15 @@ typedef Uint16(*UPDATE_FRAME)(SCIRXQUE* q);
 
 typedef Uint16(*UPDATE_HEAD_POS)(SCIRXQUE* q);
 
+
+typedef struct{
+	Uint32 high16Bit    : 16;
+	Uint32 low16Bit	    : 16;
+}ADDR32BIT;
 typedef union
 {
-	Uint16          	value;
-	VAR16BIT        	data;
+	Uint32          	value;
+	ADDR32BIT        	uAddr32;
 }OTA_SERVICE_ADDR;
 
 typedef struct 
