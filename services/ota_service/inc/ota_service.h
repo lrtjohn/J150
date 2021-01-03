@@ -271,4 +271,16 @@ extern OTA_SERVICE_ADT* pgOtaServiceAdt;
 #define PTR_OTA_SERVICE_ADT (&gOtaServiceAdt)
 #define PTR_OTA_SERVICE_ADT_RX_ADAPT (gOtaServiceAdt.pOtaServiceRxAdapt)
 #define PTR_OTA_SERVICE_ADT_RX_APP (gOtaServiceAdt.pOtaServiceRxAdapt->pOtaServiceRxApp)
+
+static inline void OTA_SERVICE_INTERRUPT_DISABLE(void)
+{
+    DINT;
+    DRTM;
+}
+
+static inline void OTA_SERVICE_INTERRUPT_ENABLE(void)
+{
+    EINT;
+    ERTM;
+}
 #endif /* OTA_SERVICE_H */

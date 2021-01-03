@@ -494,11 +494,13 @@ Uint16 OTA_SERVICE_EraseFlash(Uint16 sector)
     Uint16 ret;
     FLASH_ST flashStatus;
 
-    // TODO disable interrupt
+    // TODO FW need to disable watch dog here,
+    // Because the erase flash may takes a long time and caused the system reboot.
+    OTA_SERVICE_INTERRUPT_DISABLE();
 
     ret = Flash_Erase(sector, &flashStatus);
 
-    // TODO enable interrupt
+    OTA_SERVICE_INTERRUPT_ENABLE();
 
     return ret;
 }
