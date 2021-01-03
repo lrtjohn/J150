@@ -330,7 +330,7 @@ Uint16 OTA_SERVICE_CheckLen(SCIRXQUE* q)
 
     length = q->buffer[(q->front + 0) % (q->bufferLen)];
 
-    // This is a potencial check if the length valude is too big
+    // This is a potencial check if the length value is too big
     if (length > 0xFF)
     {
         return FAIL;
@@ -473,19 +473,6 @@ Uint16 OTA_SERVICE_ProcessOneFrame(SCIRXQUE* q)
         default:
             break;
     }
-
-    return 1;
-}
-
-Uint16 OTA_SERVICE_FlashImageData(Uint16 hAddr, Uint16 lAddr, Uint16* flashData, Uint16 len)
-{
-    // TODO implement this function later
-
-#if (0)
-    Uint32 addr;
-
-    addr = ((Uint32)hAddr << 16) | lAddr;
-#endif
 
     return 1;
 }
