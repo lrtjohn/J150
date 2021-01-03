@@ -10,9 +10,11 @@
 #define OTA_SERVICE_FRAME_ARRAY_LEN     (80)
 
 Uint16 gFrameArray[OTA_SERVICE_FRAME_ARRAY_LEN];
+Uint16 gFrameArrayFlash[OTA_SERVICE_FRAME_ARRAY_LEN];
 
 Uint16 OTA_SERVICE_FlashImageData(Uint16 hAddr, Uint16 lAddr, Uint16* flashData, Uint16 len);
 Uint16 OTA_SERVICE_EraseFlash(Uint16 sector);
+void OTA_SERVICE_RxDataToFlashData(Uint16 len);
 
 static Uint16 OTA_SERVICE_FIND_RX_HEADER_ADAPT(SCIRXQUE* q);
 static Uint16 OTA_SERVICE_CHECK_RX_LEN_ADAPT(SCIRXQUE* q);
@@ -582,4 +584,15 @@ Uint16 OTA_SERVICE_WriteFlashOneFrame(Uint32 addr, Uint16 *data, Uint16 len)
     OTA_SERVICE_INTERRUPT_ENABLE();
 
     return ret;
+}
+
+void OTA_SERVICE_RxDataToFlashData(Uint16 len)
+{
+    Uint16 i;
+
+    for (i = 0; i < ((len - OTA_SERVICE_RX_EXTRA_LEN) >> 1); ++i)
+    {
+        gFrameArrayFlash[i] = (gFrameArray[OTA_SERVICE_RX_FLASH_DATA_LEN * i + OTA_SERVICE_RX_FLASH_DATAH_OFFSET] << 8) | 
+                              (gFrameArray[OTA_SERVICE_RX_FLASH_DATA_LEN * i + OTA_SERVICE_RX_FLASH_DATAL_OFFSET]);
+    }
 }
