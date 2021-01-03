@@ -357,7 +357,7 @@ Uint16 OTA_SERVICE_CheckSum(SCIRXQUE* q)
 
     // TODO correct the start position when calculate the check sum
     // TODO get the dynamic length
-    for (i = 0; i < 0; ++i)
+    for (i = 0; i < 1; ++i)
     {
         sum += q->buffer[(q->front + i) % (q->bufferLen)];
     }
@@ -516,4 +516,15 @@ Uint16 OTA_SERVICE_EraseB(void)
 {
     // TODO need more check for the pointer
     return OTA_SERVICE_EraseFlash(PTR_OTA_SERVICE_ADT->areaSectorB);
+}
+
+Uint16 OTA_SERVICE_UpdateHighAddr(Uint16 *data, Uint16 len)
+{
+    Uint16 ret;
+
+    // TODO replace the 0 and 1 later, user the position of high addr instead
+    ret = (data[0] << 8) | data[1];
+    (PTR_OTA_SERVICE_ADT_RX_APP)->addr.value = ret;
+
+    return ret;
 }

@@ -182,14 +182,23 @@ typedef Uint16(*CHECK_SUM)(SCIRXQUE* q);
 typedef Uint16(*UPDATE_FRAME)(SCIRXQUE* q);
 
 typedef Uint16(*UPDATE_HEAD_POS)(SCIRXQUE* q);
+
+typedef union
+{
+	Uint16          	value;
+	VAR16BIT        	data;
+}OTA_SERVICE_ADDR;
+
 typedef struct 
 {
     Uint16(*pfGetOpcode)(Uint16* array);
     Uint16(*pfIsOpcodeValid)(Uint16* array);
     Uint16(*pfFlashImageData)(Uint16 lAddr, Uint16 hAddr, Uint16* data, Uint16 len);
+    Uint16(*pfUpdateHighAddr)(Uint16* data, Uint16 len);
     Uint16 opcode;
     Uint16 lAddr;
     Uint16 hAddr;
+    OTA_SERVICE_ADDR addr;
 }OTA_SERVICE_RX_APP;
 
 typedef struct
