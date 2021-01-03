@@ -428,7 +428,7 @@ Uint16 OTA_SERVICE_ProcessOneFrame(SCIRXQUE* q)
             }
 
             // TODO FW need to add a offset of the data buffer
-            pOtaAdt->pOtaServiceRxAdapt->pOtaServiceRxApp->pfUpdateHighAddr(gFrameArray, pOtaAdt->pOtaServiceRxAdapt->rxFrameLen);
+            pOtaAdtRxAdapt->pOtaServiceRxApp->pfUpdateHighAddr(gFrameArray, pOtaAdtRxAdapt->rxFrameLen);
 
             break;
         case OTA_UD_F_DATA:
@@ -443,7 +443,7 @@ Uint16 OTA_SERVICE_ProcessOneFrame(SCIRXQUE* q)
             }
 
             // TODO FW need to add a offset of the data buffer
-            pOtaAdt->pOtaServiceRxAdapt->pOtaServiceRxApp->pfUpdateLowAddr(gFrameArray, pOtaAdt->pOtaServiceRxAdapt->rxFrameLen);
+            pOtaAdtRxAdapt->pOtaServiceRxApp->pfUpdateLowAddr(gFrameArray, pOtaAdtRxAdapt->rxFrameLen);
 
             break;
         case OTA_RX_S_CMD:
