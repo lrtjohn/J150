@@ -181,6 +181,7 @@ OTA_SERVICE_ADT gOtaServiceAdt =
     0,
     .areaSectorB = OTA_SERVICE_B_AREA_SECTOR,
     .areaSectorA = OTA_SERVICE_A_AREA_SECTOR,
+    .areaSectorG = OTA_SERVICE_G_AREA_SECTOR,
 
     NULL,
 };
@@ -518,6 +519,11 @@ Uint16 OTA_SERVICE_EraseB(void)
     return OTA_SERVICE_EraseFlash(PTR_OTA_SERVICE_ADT->areaSectorB);
 }
 
+Uint16 OTA_SERVICE_EraseG(void)
+{
+    return OTA_SERVICE_EraseFlash(PTR_OTA_SERVICE_ADT->areaSectorG);
+}
+
 Uint16 OTA_SERVICE_UpdateHighAddr(Uint16 *data, Uint16 len)
 {
     Uint16 ret;
@@ -574,6 +580,8 @@ Uint16 OTA_SERVICE_WriteFlashOneFrame(Uint32 addr, Uint16 *data, Uint16 len)
     OTA_SERVICE_INTERRUPT_DISABLE();
 
     ret =  OTA_SERVICE_FlashWriteAndVerify(addr, data, len);
+
+    // TODO if ret equals to FAIL, FW may could have a secode try writing
 
     OTA_SERVICE_INTERRUPT_ENABLE();
 
