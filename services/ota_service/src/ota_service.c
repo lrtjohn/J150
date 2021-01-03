@@ -569,5 +569,13 @@ Uint16 OTA_SERVICE_FlashWriteAndVerify(Uint32 addr, Uint16 *buffer, Uint16 len)
 
 Uint16 OTA_SERVICE_WriteFlashOneFrame(Uint32 addr, Uint16 *data, Uint16 len)
 {
-    return OTA_SERVICE_FlashWriteAndVerify(addr, data, len);
+    Uint16 ret;
+
+    OTA_SERVICE_INTERRUPT_DISABLE();
+
+    ret =  OTA_SERVICE_FlashWriteAndVerify(addr, data, len);
+
+    OTA_SERVICE_INTERRUPT_ENABLE();
+
+    return ret;
 }
