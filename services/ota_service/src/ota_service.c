@@ -335,7 +335,7 @@ Uint16 OTA_SERVICE_CheckLen(SCIRXQUE* q)
         return FAIL;
     }
 
-    pOtaAdtRxAdapt->frameLen = length;
+    pOtaAdtRxAdapt->rxFrameLen = length;
 
     // TODO determine the length value 
     // Maybe there should be a extra lenght here
@@ -394,13 +394,13 @@ Uint16 OTA_SERVICE_ProcessOneFrame(SCIRXQUE* q)
         return 0;
     }
 
-    if (pOtaAdtRxAdapt->frameLen > OTA_SERVICE_FRAME_ARRAY_LEN)
+    if (pOtaAdtRxAdapt->rxFrameLen > OTA_SERVICE_FRAME_ARRAY_LEN)
     {
         return 0;
     }
 #endif
 
-    for (i = 0; i < pOtaAdtRxAdapt->frameLen; ++i)
+    for (i = 0; i < pOtaAdtRxAdapt->rxFrameLen; ++i)
     {
         gFrameArray[i] = q->buffer[(q->front + i) % (q->bufferLen)];
     }

@@ -202,7 +202,7 @@ typedef struct
     void(*pfRxAdapt)(SCIRXQUE* q);
     /* data */
     OTA_SERVICE_RX_APP* pOtaServiceRxApp;
-    Uint16          frameLen;
+    Uint16          rxFrameLen;
     Uint16          headerLen;
     Uint16          tailLen;
     Uint16          extraLen;
