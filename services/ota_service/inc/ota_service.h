@@ -110,6 +110,24 @@
 
 #define OTA_SERVICE_RX_HEAD_DATA        (0x3a)
 
+#define OTA_SERVICE_RX_HAED_POS         (0)
+#define OTA_SERVICE_RX_HAED_LEN         (1)
+
+#define OTA_SERVICE_RX_LEN_POS          (OTA_SERVICE_RX_HAED_POS + OTA_SERVICE_RX_HAED_LEN)
+#define OTA_SERVICE_RX_LEN_LEN          (1)
+
+#define OTA_SERVICE_RX_ADDRL_POS        (OTA_SERVICE_RX_LEN_POS + OTA_SERVICE_RX_LEN_LEN)
+#define OTA_SERVICE_RX_ADDRL_LEN        (2)
+
+#define OTA_SERVICE_RX_OPCODE_POS       (OTA_SERVICE_RX_ADDRL_POS + OTA_SERVICE_RX_ADDRL_LEN)
+#define OTA_SERVICE_RX_OPCODE_LEN       (1)
+
+#define OTA_SERVICE_RX_ADDRH_POS        (OTA_SERVICE_RX_OPCODE_POS + OTA_SERVICE_RX_OPCODE_LEN)
+#define OTA_SERVICE_RX_ADDRH_LEN        (2)
+
+#define OTA_SERVICE_RX_SUM_POS          (OTA_SERVICE_RX_OPCODE_POS + OTA_SERVICE_RX_OPCODE_LEN + PTR_OTA_SERVICE_ADT_RX_ADAPT->rxFrameLen + 1)
+#define OTA_SERVICE_RX_SUM_LEN          (1)
+
 #if (OTA_TEST == INCLUDE_FEATURE)
 typedef struct 
 {
@@ -202,7 +220,8 @@ typedef struct
     /* data */
 }OTA_SERVICE_LOG_CNT;
 
-typedef struct{
+typedef struct
+{
 	Uint32 high16Bit    : 16;
 	Uint32 low16Bit	    : 16;
 }ADDR32BIT;
