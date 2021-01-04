@@ -130,6 +130,21 @@ void OTA_SERVICE_TestData(void)
 }
 #endif /* (OTA_TEST == INCLUDE_FEATURE) */
 
+OTA_SERVICE_RX_ADAPT gOtaServiceRxAdapt =
+{
+    .pfFindHeader       = NULL,
+    .pfCheckLen         = NULL,
+    .pfCheckSum         = NULL,
+    .pfUpdateFrame      = NULL,
+    .pfUpdateHeadPos    = NULL,
+    .pfRxAdapt          = NULL,
+    .pOtaServiceRxApp   = NULL,
+    .rxFrameLen         = 0,
+    .headerLen          = 0,
+    .tailLen            = 0,
+    .extraLen           = 0,
+};
+
 OTA_SERVICE_ADT gOtaServiceAdt = 
 {
     .currentStatus      = OTA_SERVICE_IDLE,
@@ -157,7 +172,7 @@ OTA_SERVICE_ADT gOtaServiceAdt =
     .areaSectorA        = OTA_SERVICE_A_AREA_SECTOR,
     .areaSectorG        = OTA_SERVICE_G_AREA_SECTOR,
 
-    .pOtaServiceRxAdapt = NULL,
+    .pOtaServiceRxAdapt = &gOtaServiceRxAdapt,
     .pOtaSeviceLogCnt   = NULL,
 };
 
@@ -572,5 +587,6 @@ void OTA_SERVICE_RxDataToFlashData(Uint16 len)
 
 void OTA_SERVICE_SystemReboot(void)
 {
+    // TODO FW need to set a flag to indicate that there is a new FW need to update
     // TODO disable the watch dog to force the system reboot
 }
