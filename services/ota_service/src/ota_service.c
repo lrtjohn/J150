@@ -130,6 +130,19 @@ void OTA_SERVICE_TestData(void)
 }
 #endif /* (OTA_TEST == INCLUDE_FEATURE) */
 
+OTA_SERVICE_RX_APP gOtaServiceRxApp =
+{
+    .pfGetOpcode        = NULL,
+    .pfIsOpcodeValid    = NULL,
+    .pfFlashImageData   = NULL,
+    .pfUpdateHighAddr   = NULL,
+    .pfUpdateLowAddr    = NULL,
+    .opcode             = 0,
+    .lAddr              = 0,
+    .hAddr              = 0,
+    .addr               ={0},
+};
+
 OTA_SERVICE_RX_ADAPT gOtaServiceRxAdapt =
 {
     .pfFindHeader       = NULL,
@@ -138,7 +151,7 @@ OTA_SERVICE_RX_ADAPT gOtaServiceRxAdapt =
     .pfUpdateFrame      = NULL,
     .pfUpdateHeadPos    = NULL,
     .pfRxAdapt          = NULL,
-    .pOtaServiceRxApp   = NULL,
+    .pOtaServiceRxApp   = &gOtaServiceRxApp,
     .rxFrameLen         = 0,
     .headerLen          = 0,
     .tailLen            = 0,
