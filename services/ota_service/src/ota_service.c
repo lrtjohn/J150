@@ -130,6 +130,15 @@ void OTA_SERVICE_TestData(void)
 }
 #endif /* (OTA_TEST == INCLUDE_FEATURE) */
 
+Uint16 gImageBitMap[OTA_SERVICE_RX_IMAGE_SIZE] = {0};
+
+OTA_SERVICE_LOG_CNT gOtaServiceLogCnt = 
+{
+    .serialNum      = 0,
+    .writeFailCnt   = 0,
+    .eraseFailCnt   = 0,
+};
+
 OTA_SERVICE_RX_APP gOtaServiceRxApp =
 {
     .pfGetOpcode        = NULL,
@@ -175,7 +184,7 @@ OTA_SERVICE_ADT gOtaServiceAdt =
     .pfReadCurVerNum    = NULL,
     .pfReadNewVerNum    = NULL,
 
-    .pImageBitMap       = NULL,
+    .pImageBitMap       = gImageBitMap,
     .imageTotalLines    = 0,
     .currentLineNum     = 0,
     .rxLineNum          = 0,
@@ -186,7 +195,7 @@ OTA_SERVICE_ADT gOtaServiceAdt =
     .areaSectorG        = OTA_SERVICE_G_AREA_SECTOR,
 
     .pOtaServiceRxAdapt = &gOtaServiceRxAdapt,
-    .pOtaSeviceLogCnt   = NULL,
+    .pOtaSeviceLogCnt   = &gOtaServiceLogCnt,
 };
 
 OTA_SERVICE_ADT* pgOtaServiceAdt = NULL;

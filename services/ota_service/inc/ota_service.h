@@ -132,6 +132,8 @@
 #define OTA_SERVICE_RX_FLASH_DATAL_OFFSET   (6)
 #define OTA_SERVICE_RX_FLASH_DATA_LEN       (2)
 
+#define OTA_SERVICE_RX_IMAGE_SIZE           (20)
+
 #if (OTA_TEST == INCLUDE_FEATURE)
 typedef struct 
 {
