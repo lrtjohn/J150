@@ -22,6 +22,16 @@ static Uint16 OTA_SERVICE_CHECK_RX_CRC_ADAPT(SCIRXQUE* q);
 static Uint16 OTA_SERVICE_UPDATE_PAYLOAD_ADAPT(SCIRXQUE* q);
 static Uint16 OTA_SERVICE_UPDATE_HEAD_POS_ADAPT(SCIRXQUE* q);
 
+Uint16 OTA_SERVICE_EraseB(void);
+Uint16 OTA_SERVICE_EraseA(void);
+Uint16 OTA_SERVICE_EraseG(void);
+
+Uint16 OTA_SERVICE_FindRxHeader(SCIRXQUE* q);
+Uint16 OTA_SERVICE_CheckLen(SCIRXQUE* q);
+Uint16 OTA_SERVICE_CheckSum(SCIRXQUE* q);
+Uint16 OTA_SERVICE_ProcessOneFrame(SCIRXQUE* q);
+Uint16 OTA_SERVICE_UpdateHeadPos(SCIRXQUE* q);
+
 #if (OTA_TEST == INCLUDE_FEATURE)
 OTA_TEST_VERIFY gOtaServiceTestData = 
 {
@@ -154,11 +164,11 @@ OTA_SERVICE_RX_APP gOtaServiceRxApp =
 
 OTA_SERVICE_RX_ADAPT gOtaServiceRxAdapt =
 {
-    .pfFindHeader       = NULL,
-    .pfCheckLen         = NULL,
-    .pfCheckSum         = NULL,
-    .pfUpdateFrame      = NULL,
-    .pfUpdateHeadPos    = NULL,
+    .pfFindHeader       = OTA_SERVICE_FindRxHeader,
+    .pfCheckLen         = OTA_SERVICE_CheckLen,
+    .pfCheckSum         = OTA_SERVICE_CheckSum,
+    .pfUpdateFrame      = OTA_SERVICE_ProcessOneFrame,
+    .pfUpdateHeadPos    = OTA_SERVICE_UpdateHeadPos,
     .pfRxAdapt          = NULL,
     .pOtaServiceRxApp   = &gOtaServiceRxApp,
     .rxFrameLen         = 0,
@@ -173,9 +183,9 @@ OTA_SERVICE_ADT gOtaServiceAdt =
 #if (OTA_TEST == INCLUDE_FEATURE)
     .pTestData          = NULL,
 #endif
-    .pfEraseFlashA      = NULL,
-    .pfEraseFlashB      = NULL,
-    .pfEraseFlashG      = NULL,
+    .pfEraseFlashA      = OTA_SERVICE_EraseA,
+    .pfEraseFlashB      = OTA_SERVICE_EraseB,
+    .pfEraseFlashG      = OTA_SERVICE_EraseG,
     .pfIsOtaAllowed     = NULL,
     .pfFlashLineData    = NULL,
     .pfGetCurrentStatus = NULL,
@@ -494,6 +504,14 @@ Uint16 OTA_SERVICE_ProcessOneFrame(SCIRXQUE* q)
         default:
             break;
     }
+
+    return 1;
+}
+
+Uint16 OTA_SERVICE_UpdateHeadPos(SCIRXQUE* q)
+{
+    // TODO replace 0 later
+    q->front = (q->front + 0) % (q->bufferLen);
 
     return 1;
 }
