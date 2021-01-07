@@ -32,6 +32,15 @@ Uint16 OTA_SERVICE_CheckSum(SCIRXQUE* q);
 Uint16 OTA_SERVICE_ProcessOneFrame(SCIRXQUE* q);
 Uint16 OTA_SERVICE_UpdateHeadPos(SCIRXQUE* q);
 
+
+Uint16 OTA_SERVICE_GetOpcode(Uint16* data);
+Uint16 OTA_SERVICE_IsOpcodeValid(Uint16* array);
+Uint16 OTA_SERVICE_WriteFlashOneFrame(Uint32 addr, Uint16 *data, Uint16 len);
+Uint16 OTA_SERVICE_UpdateHighAddr(Uint16 *data, Uint16 len);
+Uint16 OTA_SERVICE_UpdateLowAddr(Uint16 *data, Uint16 len);
+
+void OTA_SERVICE_SystemReboot(void);
+
 #if (OTA_TEST == INCLUDE_FEATURE)
 OTA_TEST_VERIFY gOtaServiceTestData = 
 {
@@ -151,11 +160,11 @@ OTA_SERVICE_LOG_CNT gOtaServiceLogCnt =
 
 OTA_SERVICE_RX_APP gOtaServiceRxApp =
 {
-    .pfGetOpcode        = NULL,
-    .pfIsOpcodeValid    = NULL,
-    .pfFlashImageData   = NULL,
-    .pfUpdateHighAddr   = NULL,
-    .pfUpdateLowAddr    = NULL,
+    .pfGetOpcode        = OTA_SERVICE_GetOpcode,
+    .pfIsOpcodeValid    = OTA_SERVICE_IsOpcodeValid,
+    .pfFlashImageData   = OTA_SERVICE_WriteFlashOneFrame,
+    .pfUpdateHighAddr   = OTA_SERVICE_UpdateHighAddr,
+    .pfUpdateLowAddr    = OTA_SERVICE_UpdateLowAddr,
     .opcode             = 0,
     .lAddr              = 0,
     .hAddr              = 0,
@@ -169,7 +178,7 @@ OTA_SERVICE_RX_ADAPT gOtaServiceRxAdapt =
     .pfCheckSum         = OTA_SERVICE_CheckSum,
     .pfUpdateFrame      = OTA_SERVICE_ProcessOneFrame,
     .pfUpdateHeadPos    = OTA_SERVICE_UpdateHeadPos,
-    .pfRxAdapt          = NULL,
+    .pfRxAdapt          = OTA_SERVICE_PROCESS_RX_DATA_ADAPT,
     .pOtaServiceRxApp   = &gOtaServiceRxApp,
     .rxFrameLen         = 0,
     .headerLen          = 0,
@@ -181,7 +190,7 @@ OTA_SERVICE_ADT gOtaServiceAdt =
 {
     .currentStatus      = OTA_SERVICE_IDLE,
 #if (OTA_TEST == INCLUDE_FEATURE)
-    .pTestData          = NULL,
+    .pTestData          = &gOtaServiceTestData,
 #endif
     .pfEraseFlashA      = OTA_SERVICE_EraseA,
     .pfEraseFlashB      = OTA_SERVICE_EraseB,
@@ -189,7 +198,7 @@ OTA_SERVICE_ADT gOtaServiceAdt =
     .pfIsOtaAllowed     = NULL,
     .pfFlashLineData    = NULL,
     .pfGetCurrentStatus = NULL,
-    .pfSystemReboot     = NULL,
+    .pfSystemReboot     = OTA_SERVICE_SystemReboot,
 
     .pfReadCurVerNum    = NULL,
     .pfReadNewVerNum    = NULL,
@@ -629,4 +638,14 @@ void OTA_SERVICE_SystemReboot(void)
 {
     // TODO FW need to set a flag to indicate that there is a new FW need to update
     // TODO disable the watch dog to force the system reboot
+}
+
+Uint16 OTA_SERVICE_GetOpcode(Uint16* data)
+{
+    return 0;
+}
+
+Uint16 OTA_SERVICE_IsOpcodeValid(Uint16* array)
+{
+    return 0;
 }
