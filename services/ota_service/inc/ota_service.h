@@ -202,7 +202,7 @@ typedef Uint16(*IS_OTA_ALLOWED)(void);
 
 typedef Uint16(*FLASH_LINE_DATA)(Uint16* pDtata);
 
-typedef Uint16(*GET_CURRENT_STATUS)(Uint16* pDtata);
+typedef Uint16(*GET_CURRENT_STATUS)(void);
 
 typedef Uint16(*READ_CUR_VER_NUM)(void);
 

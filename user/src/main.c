@@ -103,6 +103,8 @@ void main(void)
         ProcessSciRxPacket(gScibRxQue);
 #else
 		SCI_RX_UnpackData(gScibRxQue);
+
+		OTA_SERVICE_PROCESS_RX_DATA_ADAPT(gScibRxQue);
 		/*
 		gSpwmPara.DutyMinusInterval = gDebugDataArray[0];
 		gPID_Speed_Para.ka = gDebugDataArray[1];

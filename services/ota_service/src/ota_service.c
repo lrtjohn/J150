@@ -41,6 +41,8 @@ Uint16 OTA_SERVICE_UpdateLowAddr(Uint16 *data, Uint16 len);
 
 void OTA_SERVICE_SystemReboot(void);
 
+Uint16 OTA_SERVICE_GetCurrentStatus();
+
 #if (OTA_TEST == INCLUDE_FEATURE)
 OTA_TEST_VERIFY gOtaServiceTestData = 
 {
@@ -197,7 +199,7 @@ OTA_SERVICE_ADT gOtaServiceAdt =
     .pfEraseFlashG      = OTA_SERVICE_EraseG,
     .pfIsOtaAllowed     = NULL,
     .pfFlashLineData    = NULL,
-    .pfGetCurrentStatus = NULL,
+    .pfGetCurrentStatus = OTA_SERVICE_GetCurrentStatus,
     .pfSystemReboot     = OTA_SERVICE_SystemReboot,
 
     .pfReadCurVerNum    = NULL,
@@ -648,4 +650,9 @@ Uint16 OTA_SERVICE_GetOpcode(Uint16* data)
 Uint16 OTA_SERVICE_IsOpcodeValid(Uint16* array)
 {
     return 0;
+}
+
+Uint16 OTA_SERVICE_GetCurrentStatus(void)
+{
+    return PTR_OTA_SERVICE_ADT->currentStatus;
 }

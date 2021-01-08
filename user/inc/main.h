@@ -15,6 +15,7 @@
 #include "kalman_service.h"
 #include "pid_service.h"
 #include "ecap_service.h"
+#include "ota_service.h"
 
 #define BUSRATIO_K (-0.00021)
 #define BUSRATIO_B (1.441)
