@@ -284,7 +284,8 @@ typedef enum
 
 typedef enum
 {
-    OTA_SERVICE_IDLE,
+    OTA_SERVICE_DISABLE,
+    OTA_SERVICE_IDLE,       /*  IDLE state means the OTA service has been enabled */
     OTA_SERVICE_RX_START_CMD,
     OTA_SERVICE_START,
     OTA_SERVICE_RUNNING,
@@ -346,4 +347,6 @@ static inline void OTA_SERVICE_INTERRUPT_ENABLE(void)
     EINT;
     ERTM;
 }
+
+#define IS_OTA_SERVICE_ENABLE()     (PTR_OTA_SERVICE_ADT->currentStatus == OTA_SERVICE_DISABLE)
 #endif /* OTA_SERVICE_H */
