@@ -366,5 +366,5 @@ static inline void OTA_SERVICE_INTERRUPT_ENABLE(void)
     ERTM;
 }
 
-#define IS_OTA_SERVICE_ENABLE()     (PTR_OTA_SERVICE_ADT->currentStatus == OTA_SERVICE_DISABLE)
+#define IS_OTA_SERVICE_ENABLE()     (PTR_OTA_SERVICE_ADT->currentStatus != OTA_SERVICE_DISABLE)
 #endif /* OTA_SERVICE_H */
