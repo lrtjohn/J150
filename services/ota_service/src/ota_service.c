@@ -39,9 +39,9 @@ Uint16 OTA_SERVICE_WriteFlashOneFrame(Uint32 addr, Uint16 *data, Uint16 len);
 Uint16 OTA_SERVICE_UpdateHighAddr(Uint16 *data, Uint16 len);
 Uint16 OTA_SERVICE_UpdateLowAddr(Uint16 *data, Uint16 len);
 
+Uint16 OTA_SERVICE_SendSerialNum(void);
+Uint16 OTA_SERVICE_GetCurrentStatus(void);
 void OTA_SERVICE_SystemReboot(void);
-
-Uint16 OTA_SERVICE_GetCurrentStatus();
 
 #if (OTA_TEST == INCLUDE_FEATURE)
 OTA_TEST_VERIFY gOtaServiceTestData = 
@@ -190,7 +190,7 @@ OTA_SERVICE_RX_ADAPT gOtaServiceRxAdapt =
 
 OTA_SERVICE_ADT gOtaServiceAdt = 
 {
-    .currentStatus      = OTA_SERVICE_IDLE,
+    .currentStatus      = OTA_SERVICE_IDLE, /* If system hss two kind of protocols, the default current status should be disabled*/
 #if (OTA_TEST == INCLUDE_FEATURE)
     .pTestData          = &gOtaServiceTestData,
 #endif
@@ -201,6 +201,7 @@ OTA_SERVICE_ADT gOtaServiceAdt =
     .pfFlashLineData    = NULL,
     .pfGetCurrentStatus = OTA_SERVICE_GetCurrentStatus,
     .pfSystemReboot     = OTA_SERVICE_SystemReboot,
+    .pfSendSerialNum    = OTA_SERVICE_SendSerialNum,
 
     .pfReadCurVerNum    = NULL,
     .pfReadNewVerNum    = NULL,
@@ -521,8 +522,11 @@ Uint16 OTA_SERVICE_ProcessOneFrame(SCIRXQUE* q)
 
 Uint16 OTA_SERVICE_UpdateHeadPos(SCIRXQUE* q)
 {
-    // TODO replace 0 later
-    q->front = (q->front + 0) % (q->bufferLen);
+    Uint16 len;
+
+    len = PTR_OTA_SERVICE_ADT_RX_ADAPT->rxFrameLen;
+
+    q->front = (q->front + len) % (q->bufferLen);
 
     return 1;
 }
@@ -655,4 +659,10 @@ Uint16 OTA_SERVICE_IsOpcodeValid(Uint16* array)
 Uint16 OTA_SERVICE_GetCurrentStatus(void)
 {
     return PTR_OTA_SERVICE_ADT->currentStatus;
+}
+
+Uint16 OTA_SERVICE_SendSerialNum(void)
+{
+    // TODO send the serial numnber to the upper layer once received a good packet.
+    return 0;
 }

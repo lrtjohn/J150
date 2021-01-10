@@ -218,6 +218,8 @@ typedef Uint16(*UPDATE_FRAME)(SCIRXQUE* q);
 
 typedef Uint16(*UPDATE_HEAD_POS)(SCIRXQUE* q);
 
+typedef Uint16(*SEND_SERIAL_NUM)(void);
+
 typedef void(*SYSTEM_REBOOT)(void);
 
 typedef struct
@@ -309,6 +311,7 @@ typedef struct
     FLASH_LINE_DATA     pfFlashLineData;
     GET_CURRENT_STATUS  pfGetCurrentStatus;
     SYSTEM_REBOOT       pfSystemReboot;
+    SEND_SERIAL_NUM     pfSendSerialNum;
 
     READ_CUR_VER_NUM    pfReadCurVerNum;
     READ_NEW_VER_NUM    pfReadNewVerNum;

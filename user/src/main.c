@@ -110,17 +110,10 @@ void main(void)
 		{
 			SCI_RX_UnpackData(gScibRxQue);
 		}
-
-		/*
-		gSpwmPara.DutyMinusInterval = gDebugDataArray[0];
-		gPID_Speed_Para.ka = gDebugDataArray[1];
-		gPID_Speed_Para.kb = gDebugDataArray[2];
-		*/
-//		gSpwmPara.DutyAddInterval = gDebugDataArray[0];
-
 #endif
-//		ScibRegs.SCIRXST.bit.RXERROR = gDebugDataArray[1];
+
 		ClearScibRxOverFlow();
+
 		CheckScibRxError();
 
 #if(J150_SCI_PROTOCOL_TX == NOT_INCLUDE_FEATURE)
