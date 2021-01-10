@@ -9,6 +9,7 @@
 *********************************************************************************/
 #define OTA_SERVICE_FRAME_ARRAY_LEN     (80)
 
+extern SCITXQUE* gScibTxQue;
 Uint16 gFrameArray[OTA_SERVICE_FRAME_ARRAY_LEN] = {0};
 Uint16 gFrameArrayFlash[OTA_SERVICE_FRAME_ARRAY_LEN] = {0};
 Uint16 gOtaTxFrameArray[OTA_SERVICE_TX_ONE_FRAME_SIZE] = 
@@ -54,12 +55,12 @@ Uint16 OTA_SERVICE_WriteFlashOneFrame(Uint32 addr, Uint16 *data, Uint16 len);
 Uint16 OTA_SERVICE_UpdateHighAddr(Uint16 *data, Uint16 len);
 Uint16 OTA_SERVICE_UpdateLowAddr(Uint16 *data, Uint16 len);
 
-Uint16 OTA_SERVICE_SendSerialNum(void);
+Uint16 OTA_SERVICE_SendSerialNum(SCITXQUE* txQue);
 Uint16 OTA_SERVICE_GetCurrentStatus(void);
 Uint16 OTA_SERVICE_CheckAddr(Uint32 addr);
 void OTA_SERVICE_SystemReboot(void);
 
-Uint16 OTA_SERVICE_TxCalCrc(Uint16 crc, const char* buf, Uint16 len);
+Uint16 OTA_SERVICE_TxCalCrc(Uint16 crc, Uint16* buf, Uint16 len);
 Uint16 OTA_SERVICE_TxEnQueOneFrame(SCITXQUE* txQue);
 
 #if (OTA_TEST == INCLUDE_FEATURE)
@@ -465,7 +466,7 @@ Uint16 OTA_SERVICE_ProcessOneFrame(SCIRXQUE* q)
         return 0;
     }
     
-    pOtaAdt->pfSendSerialNum();
+    pOtaAdt->pfSendSerialNum(gScibTxQue);
 
     switch(opcode)
     {
@@ -681,13 +682,22 @@ Uint16 OTA_SERVICE_GetCurrentStatus(void)
     return PTR_OTA_SERVICE_ADT->currentStatus;
 }
 
-Uint16 OTA_SERVICE_SendSerialNum(void)
+Uint16 OTA_SERVICE_SendSerialNum(SCITXQUE* txQue)
 {
+    int crc = 0;
+
     PTR_OTA_SERVICE_ADT->rxLineNum++;
 
     gOtaTxFrameArray[OTA_SERVICE_OPCODE_POS]            = OTA_SERVICE_SERIAL_NUM_OPCODE;
     gOtaTxFrameArray[OTA_SERVICE_SERIAL_NUM_POS]        = (char)PTR_OTA_SERVICE_ADT->rxLineNum >> 8;
     gOtaTxFrameArray[OTA_SERVICE_SERIAL_NUM_POS + 1]    = (char)PTR_OTA_SERVICE_ADT->rxLineNum;
+
+    crc = OTA_SERVICE_TxCalCrc(crc, gOtaTxFrameArray, OTA_SERVICE_TX_ONE_FRAME_SIZE);
+
+    gOtaTxFrameArray[OTA_SERVICE_SERIAL_NUM_POS]        = (char)crc >> 8;
+    gOtaTxFrameArray[OTA_SERVICE_SERIAL_NUM_POS + 1]    = (char)crc;
+
+    OTA_SERVICE_TxPackData(txQue);
 
     return 0;
 }
@@ -716,10 +726,11 @@ void OTA_SERVICE_TxPackData(SCITXQUE* txQue)
 {
     // TODO, maybe could do it simple.
     // because the OTA sending packet is not complicated.
-
+        
+    OTA_SERVICE_TxEnQueOneFrame(txQue);
 }
 
-Uint16 OTA_SERVICE_TxCalCrc(Uint16 crc, const char* buf, Uint16 len)
+Uint16 OTA_SERVICE_TxCalCrc(Uint16 crc, Uint16* buf, Uint16 len)
 {
     int x;
     int i;

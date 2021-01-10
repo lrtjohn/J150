@@ -144,6 +144,7 @@
 
 #define OTA_SERVICE_OPCODE_POS              (5)
 #define OTA_SERVICE_SERIAL_NUM_POS          (6)
+#define OTA_SERVICE_CRC_POS                 (8)
 
 #define ERR_NONE                            (0)
 #define ERR_FLASH_ADDR_IN_PROTECT_AREA      (1)
@@ -234,7 +235,7 @@ typedef Uint16(*UPDATE_FRAME)(SCIRXQUE* q);
 
 typedef Uint16(*UPDATE_HEAD_POS)(SCIRXQUE* q);
 
-typedef Uint16(*SEND_SERIAL_NUM)(void);
+typedef Uint16(*SEND_SERIAL_NUM)(SCITXQUE* txQue);
 
 typedef Uint16(*CHECK_ADDR)(Uint32 addr);
 
