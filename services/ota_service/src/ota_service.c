@@ -689,3 +689,10 @@ Uint16 OTA_SERVICE_CheckAddr(Uint32 addr)
 
     return 1;
 }
+
+
+void OTA_SERVICE_TxPackData(SCITXQUE* txQue)
+{
+    // TODO, maybe could do it simple.
+    // because the OTA sending packet is not complicated.
+}

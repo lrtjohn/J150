@@ -138,6 +138,12 @@
 
 #define OTA_SERVICE_RX_IMAGE_SIZE           (20)
 
+
+#define ERR_NONE                            (0)
+#define ERR_FLASH_ADDR_IN_PROTECT_AREA      (1)
+#define ERR_WRITE_FLASH_FAILED              (2)
+#define ERR_ERASE_FLASH_FAILED              (3)
+
 #if (OTA_TEST == INCLUDE_FEATURE)
 typedef struct 
 {
@@ -339,6 +345,7 @@ typedef struct
 }OTA_SERVICE_ADT;
 
 void OTA_SERVICE_PROCESS_RX_DATA_ADAPT(SCIRXQUE* q);
+void OTA_SERVICE_TxPackData(SCITXQUE* txQue);
 
 extern OTA_SERVICE_ADT  gOtaServiceAdt;
 extern OTA_SERVICE_ADT* pgOtaServiceAdt;
