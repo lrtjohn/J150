@@ -18,7 +18,7 @@ Uint16 gOtaTxFrameArray[OTA_SERVICE_TX_ONE_FRAME_SIZE] =
     0x01,
     0xff,
     0xff,
-    0xf2,
+    0x00,
     0x00,
     0x00,
     0x00,
@@ -684,6 +684,11 @@ Uint16 OTA_SERVICE_GetCurrentStatus(void)
 Uint16 OTA_SERVICE_SendSerialNum(void)
 {
     PTR_OTA_SERVICE_ADT->rxLineNum++;
+
+    gOtaTxFrameArray[OTA_SERVICE_OPCODE_POS]            = OTA_SERVICE_SERIAL_NUM_OPCODE;
+    gOtaTxFrameArray[OTA_SERVICE_SERIAL_NUM_POS]        = (char)PTR_OTA_SERVICE_ADT->rxLineNum >> 8;
+    gOtaTxFrameArray[OTA_SERVICE_SERIAL_NUM_POS + 1]    = (char)PTR_OTA_SERVICE_ADT->rxLineNum;
+
     return 0;
 }
 
@@ -711,6 +716,7 @@ void OTA_SERVICE_TxPackData(SCITXQUE* txQue)
 {
     // TODO, maybe could do it simple.
     // because the OTA sending packet is not complicated.
+
 }
 
 Uint16 OTA_SERVICE_TxCalCrc(Uint16 crc, const char* buf, Uint16 len)
