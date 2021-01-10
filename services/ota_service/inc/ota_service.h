@@ -102,6 +102,10 @@
 #define GLOBAL_START_ADDR               (C_SECTOR_28_START)
 #define GLOBAL_LEN                      (2 * TI_28_ONE_SECTOR_LEN)
 #define GLOBAL_END_ADDR                 (GLOBAL_START_ADDR + GLOBAL_LEN)
+
+#define PROTECT_START_ADDR              (0x33FF80)
+#define PROTECT_LEN                     (2)
+#define PROTECT_END_ADDR                (PROTECT_START_ADDR + PROTECT_LEN)
 #endif /* #if (OTA_SOLUTION_1 == INCLUDE_FEATURE) */
 
 #define DLETA_BETWEEN_A_AND_B           (0)
@@ -220,7 +224,10 @@ typedef Uint16(*UPDATE_HEAD_POS)(SCIRXQUE* q);
 
 typedef Uint16(*SEND_SERIAL_NUM)(void);
 
+typedef Uint16(*CHECK_ADDR)(Uint32 addr);
+
 typedef void(*SYSTEM_REBOOT)(void);
+
 
 typedef struct
 {
@@ -312,6 +319,7 @@ typedef struct
     GET_CURRENT_STATUS  pfGetCurrentStatus;
     SYSTEM_REBOOT       pfSystemReboot;
     SEND_SERIAL_NUM     pfSendSerialNum;
+    CHECK_ADDR          pfCheckAddr;
 
     READ_CUR_VER_NUM    pfReadCurVerNum;
     READ_NEW_VER_NUM    pfReadNewVerNum;

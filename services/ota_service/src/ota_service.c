@@ -41,6 +41,7 @@ Uint16 OTA_SERVICE_UpdateLowAddr(Uint16 *data, Uint16 len);
 
 Uint16 OTA_SERVICE_SendSerialNum(void);
 Uint16 OTA_SERVICE_GetCurrentStatus(void);
+Uint16 OTA_SERVICE_CheckAddr(Uint32 addr);
 void OTA_SERVICE_SystemReboot(void);
 
 #if (OTA_TEST == INCLUDE_FEATURE)
@@ -202,6 +203,7 @@ OTA_SERVICE_ADT gOtaServiceAdt =
     .pfGetCurrentStatus = OTA_SERVICE_GetCurrentStatus,
     .pfSystemReboot     = OTA_SERVICE_SystemReboot,
     .pfSendSerialNum    = OTA_SERVICE_SendSerialNum,
+    .pfCheckAddr        = OTA_SERVICE_CheckAddr,
 
     .pfReadCurVerNum    = NULL,
     .pfReadNewVerNum    = NULL,
@@ -446,6 +448,8 @@ Uint16 OTA_SERVICE_ProcessOneFrame(SCIRXQUE* q)
     {
         return 0;
     }
+    
+    pOtaAdt->pfSendSerialNum();
 
     switch(opcode)
     {
@@ -663,6 +667,25 @@ Uint16 OTA_SERVICE_GetCurrentStatus(void)
 
 Uint16 OTA_SERVICE_SendSerialNum(void)
 {
-    // TODO send the serial numnber to the upper layer once received a good packet.
+    PTR_OTA_SERVICE_ADT->rxLineNum++;
     return 0;
+}
+
+Uint16 OTA_SERVICE_CheckAddr(Uint32 addr)
+{
+    /*
+     *  There is a potencial risk that the flash address maybe the password area
+     *  This could leads the password area corrupted.
+     *  TI 28x chip would locked if the password area is flashed not by purpose
+     *  So FW need to abort the flash data if the address is OOR.
+     */
+
+    if ((addr >= PROTECT_START_ADDR) &&
+        (addr <= PROTECT_END_ADDR)
+        )
+    {
+        return 0;
+    }
+
+    return 1;
 }
