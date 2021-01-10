@@ -138,6 +138,7 @@
 
 #define OTA_SERVICE_RX_IMAGE_SIZE           (20)
 
+#define OTA_SERVICE_TX_ONE_FRAME_SIZE       (12)
 
 #define ERR_NONE                            (0)
 #define ERR_FLASH_ADDR_IN_PROTECT_AREA      (1)

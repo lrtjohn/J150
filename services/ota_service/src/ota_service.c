@@ -9,8 +9,24 @@
 *********************************************************************************/
 #define OTA_SERVICE_FRAME_ARRAY_LEN     (80)
 
-Uint16 gFrameArray[OTA_SERVICE_FRAME_ARRAY_LEN];
-Uint16 gFrameArrayFlash[OTA_SERVICE_FRAME_ARRAY_LEN];
+Uint16 gFrameArray[OTA_SERVICE_FRAME_ARRAY_LEN] = {0};
+Uint16 gFrameArrayFlash[OTA_SERVICE_FRAME_ARRAY_LEN] = {0};
+Uint16 gOtaTxFrameArray[OTA_SERVICE_TX_ONE_FRAME_SIZE] = 
+{
+    0x5a,
+    0x5a,
+    0x01,
+    0xff,
+    0xff,
+    0xf2,
+    0x00,
+    0x00,
+    0x00,
+    0x00,
+    0xa5,
+    0xa5
+};
+Uint16 gImageBitMap[OTA_SERVICE_RX_IMAGE_SIZE] = {0};
 
 Uint16 OTA_SERVICE_FlashImageData(Uint16 hAddr, Uint16 lAddr, Uint16* flashData, Uint16 len);
 Uint16 OTA_SERVICE_EraseFlash(Uint16 sector);
@@ -32,7 +48,6 @@ Uint16 OTA_SERVICE_CheckSum(SCIRXQUE* q);
 Uint16 OTA_SERVICE_ProcessOneFrame(SCIRXQUE* q);
 Uint16 OTA_SERVICE_UpdateHeadPos(SCIRXQUE* q);
 
-
 Uint16 OTA_SERVICE_GetOpcode(Uint16* data);
 Uint16 OTA_SERVICE_IsOpcodeValid(Uint16* array);
 Uint16 OTA_SERVICE_WriteFlashOneFrame(Uint32 addr, Uint16 *data, Uint16 len);
@@ -43,6 +58,9 @@ Uint16 OTA_SERVICE_SendSerialNum(void);
 Uint16 OTA_SERVICE_GetCurrentStatus(void);
 Uint16 OTA_SERVICE_CheckAddr(Uint32 addr);
 void OTA_SERVICE_SystemReboot(void);
+
+Uint16 OTA_SERVICE_TxCalCrc(Uint16 crc, const char* buf, Uint16 len);
+Uint16 OTA_SERVICE_TxEnQueOneFrame(SCITXQUE* txQue);
 
 #if (OTA_TEST == INCLUDE_FEATURE)
 OTA_TEST_VERIFY gOtaServiceTestData = 
@@ -151,8 +169,6 @@ void OTA_SERVICE_TestData(void)
     gOtaServiceTestData.Delta               =0;
 }
 #endif /* (OTA_TEST == INCLUDE_FEATURE) */
-
-Uint16 gImageBitMap[OTA_SERVICE_RX_IMAGE_SIZE] = {0};
 
 OTA_SERVICE_LOG_CNT gOtaServiceLogCnt = 
 {
@@ -695,4 +711,35 @@ void OTA_SERVICE_TxPackData(SCITXQUE* txQue)
 {
     // TODO, maybe could do it simple.
     // because the OTA sending packet is not complicated.
+}
+
+Uint16 OTA_SERVICE_TxCalCrc(Uint16 crc, const char* buf, Uint16 len)
+{
+    int x;
+    int i;
+
+    for (i = 0; i < len; ++i)
+    {
+        x = ((crc >> 8) ^ buf[i]) & 0xFF;
+        x ^= x >> 4;
+        crc = (crc << 8) ^ (x << 12) ^ (x << 5) ^ x;
+        crc &= 0xFFFF;
+    }
+
+    return crc;
+}
+
+Uint16 OTA_SERVICE_TxEnQueOneFrame(SCITXQUE* txQue)
+{
+    int i;
+
+    for (i = 0; i < OTA_SERVICE_TX_ONE_FRAME_SIZE; ++i)
+    {
+        if (SciTxEnQueue(gOtaTxFrameArray[i], txQue) == 0)
+        {
+            return 0;
+        }
+    }
+
+    return 1;
 }
