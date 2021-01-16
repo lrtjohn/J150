@@ -18,12 +18,9 @@ typedef struct _ECAP_PARA
 	double SpeedLowerWarnLimit;
 }ECAP_PARA;
 
-void GetECap1Count(void);
 void GetECap2Count(void);
 void GetECap3Count(void);
 void GetECap4Count(void);
-void GetECap5Count(void);
-void GetECap6Count(void);
 double CalculateSpeed(Uint32 capCount);
 void checkMotorSpeed(void);
 void InitEcapVar(void);

@@ -129,101 +129,6 @@ Uint16 GetCurrentHallValue(void){
 	return temp;
 }
 
-
-//static void FindSinTbl(int16 ct,int16 *psinvalue)
-//{
-//	if(ct < 1024)
-//	{
-//		*psinvalue = SDC_Sin_Tbl[ct]; 		/* 0--90*/
-//	}
-//	else if(ct < 2048)
-//	{
-//		*psinvalue = SDC_Sin_Tbl[2047-ct]; 	/* 90--180*/
-//	}
-//	else if(ct < 3072)
-//	{
-//		*psinvalue = -SDC_Sin_Tbl[ct-2048];	/* 180--270*/
-//	}
-//	else if(ct < 4096)
-//	{
-//		*psinvalue = -SDC_Sin_Tbl[4095-ct]; 	/* 270--360*/
-//	}
-//	else
-//	{
-//
-//    }
-//}
-
-//void Calculate_Three_Phase_Duty(SPWM_PARA* spwmPara)
-//{
-//	   long ful;
-//	   int16 pa,pb;
-//       int16 ct = spwmPara->Rvdt_Pos;
-//
-//	   FindSinTbl(ct,&pa);
-//
-//	   ful = (long)pa * (long)spwmPara->Duty;
-//	   spwmPara->Phase_Duty_U = (int16)(ful/32000);
-//
-//	   if((ct >= 0) && (ct <= 2047)){
-//		    EPMW6_OUTPUT_UP(750, spwmPara->Phase_Duty_U);
-//		    closeAL();
-//		    openAH();
-//	   }
-//	   else if((ct >= 2048) && (ct < 4096)){
-//		   EPMW6_OUTPUT_DOWN(750, spwmPara->Phase_Duty_U);
-//		   closeAH();
-//		   openAL();
-//	   }
-//	   else{
-//		   closeAH();
-//		   closeAL();
-//	   }
-//
-//	   ct += 1365;
-//	   if(ct > 4095) ct -= 4096;
-//	   FindSinTbl(ct,&pb);
-//	   ful = (long)pb * (long)spwmPara->Duty;
-//	   spwmPara->Phase_Duty_V = (int16)(ful/32000);
-//
-//	   if((ct >= 0) && (ct <= 2047)){
-//		   EPMW3_OUTPUT_UP(750, spwmPara->Phase_Duty_V);
-//		   closeBL();
-//		   openBH();
-//	   }
-//	   else if((ct >= 2048) && (ct < 4096)){
-//		   EPMW3_OUTPUT_DOWN(750, spwmPara->Phase_Duty_V);
-//		   closeBH();
-//		   openBL();
-//	   }
-//	   else{
-//		   closeBH();
-//		   closeBL();
-//	   }
-//
-//	   ct += 1365;
-//	   if(ct > 4095) ct -= 4096;
-//	   spwmPara->Phase_Duty_W = -(spwmPara->Phase_Duty_U + spwmPara->Phase_Duty_V);
-//
-//	   if((ct >= 0) && (ct <= 2047)){
-//		   EPMW2_OUTPUT_UP(750, spwmPara->Phase_Duty_W);
-//		   closeCL();
-//		   openCH();
-//	   }
-//	   else if((ct >= 2048) && (ct < 4096)){
-//		   EPMW2_OUTPUT_DOWN(750, spwmPara->Phase_Duty_W);
-//		   closeCH();
-//		   openCL();
-//	   }
-//	   else{
-//		   closeCH();
-//		   closeCL();
-//	   }
-////	   ful = (long)pa * (long)spwmPara->Duty;
-////	   spwmPara->Phase_Duty_U = (int16)(ful/32000);
-//}
-
-
 #pragma CODE_SECTION(SwitchDirection, "ramfuncs")
 void SwitchDirection(SPWM_PARA* spwmPara){
     //1:A 2:B 3:C
@@ -342,16 +247,6 @@ void SwitchDirection(SPWM_PARA* spwmPara){
             break;
     }
 }
-
-//#pragma CODE_SECTION(OverCurrentSoftProtect, "ramfuncs")
-//void OverCurrentSoftProtect(SPWM_PARA* spwmPara){
-//	if(1 == spwmPara->restrictduty){
-//		spwmPara->Duty_Gradual = spwmPara->Duty_Gradual - 7;
-//	}
-//	else{
-//		spwmPara->Duty_Gradual = spwmPara->Duty_Gradual;
-//	}
-//}
 
 #pragma CODE_SECTION(Duty_Gradual_Change, "ramfuncs")
 void Duty_Gradual_Change (SPWM_PARA* spwmPara){
@@ -536,12 +431,6 @@ void Spwm_Output(SPWM_PARA* spwmPara) /*PWM中断函数*/
 void Init_Spwm_Service(void)
 {
 	gSpwmPara.Duty = 0;
-//	gSpwmPara.Phase_Duty_U = 0;
-//	gSpwmPara.Phase_Duty_V = 0;
-//	gSpwmPara.Phase_Duty_W = 0;
-//	gSpwmPara.Rvdt_Current_Pos = 0;
-//	gSpwmPara.Rvdt_Pos = 0;
-//	gSpwmPara.Rvdt_Zero = 1500;
 	gSpwmPara.Duty_Gradual = 0;
 	gSpwmPara.Duty_Gradual_mid = 0;
 	gSpwmPara.DutyAddInterval = 12;//15;

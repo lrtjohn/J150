@@ -29,28 +29,6 @@ typedef union _PF_UION_2BYTES{
 /******************************************************************************/
 /******************************************************************************/
 /******************************************************************************/
-typedef struct _PF_RX_PACKET_HEAD
-{
-	Uint16* head;
-	Uint16 	headLen;
-}PF_RX_PACKET_HEAD;
-
-typedef struct _PF_RX_PACKET_TAIL
-{
-	Uint16* tail;
-	Uint16 	tailLen;
-}PF_RX_PACKET_TAIL;
-
-typedef Uint16 (*CalRxPacketTotalLen)(Uint16 a);
-typedef struct _PF_RX_PACKET_INFO
-{
-	Uint16 lenPos;
-    Uint16 profileStartPos;
-    Uint16 extraLen;
-	Uint16 totallLen;
-    Uint16 minLen;
-    CalRxPacketTotalLen updateTotalLen; 
-}PF_RX_PACKET_INFO;
 
 typedef struct _PF_RX_PACKET_VERIFY
 {

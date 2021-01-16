@@ -7,23 +7,11 @@
 #include "sci_queue.h"
 
 
-void Sci_A_Receive(SCIRXQUE* RS422RxQue);
 void Sci_B_Receive(SCIRXQUE* RS422RxQue);
-void Sci_C_Receive(SCIRXQUE* RS422RxQue);
-
-void SCI_A_Transmit(SCITXQUE* RS422TxQue);
 void SCI_B_Transmit(SCITXQUE* RS422TxQue);
-void SCI_C_Transmit(SCITXQUE* RS422TxQue);
-
-void ClearSciaRxOverFlow(void);
 void ClearScibRxOverFlow(void);
-void ClearScicRxOverFlow(void);
-
 void CheckScibRxError(void);
-
-void CheckEnableSciaTx(SCITXQUE* RS422TxQue);
 void CheckEnableScibTx(SCITXQUE* RS422TxQue);
-void CheckEnableScicTx(SCITXQUE* RS422TxQue);
 
 /*初始化SCI接收和发送环形队列，初始化协议层接收和发送函数指针，初始化物理层接收和发送函数指针*/
 #define Init_Sci_Service(){                                                 	\

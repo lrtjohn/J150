@@ -320,11 +320,6 @@ static int J150_TransRxUpdateHeadPos(SCIRXQUE* q)
     return SUCCESS;
 }
 
-unsigned char* SCI_APP_PROTOCOL_GetGoodPacketArray()
-{
-    return pSciRxAppProtocol->goodPacketArray;
-}
-
 void SCI_APP_PROTOCOL_RX_Init(SCI_APP_PROTOCOL_RX* rxAppProtocol)
 {
     pSciRxAppProtocol = rxAppProtocol; 

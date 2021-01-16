@@ -574,7 +574,6 @@ interrupt void EPWM6_INT_ISR(void)    // EPWM-6
 interrupt void ECAP1_INT_ISR(void)    // ECAP-1
 {
   // Insert ISR Code here
-	ECap1_Isr();
 	ECap1Regs.ECCLR.all = 0xFFFF;
 	PieCtrlRegs.PIEACK.all = PIEACK_GROUP4;
 
@@ -640,7 +639,7 @@ interrupt void ECAP4_INT_ISR(void)     // ECAP-4
 interrupt void ECAP5_INT_ISR(void)     // ECAP-5
 {
   // Insert ISR Code here
-	ECap5_Isr();
+
   // To receive more interrupts from this PIE group, acknowledge this interrupt
 
 //	ECap5Regs.ECCLR.bit.CEVT1 = 1;
@@ -656,7 +655,7 @@ interrupt void ECAP5_INT_ISR(void)     // ECAP-5
 interrupt void ECAP6_INT_ISR(void)     // ECAP-6
 {
   // Insert ISR Code here
-	ECap6_Isr();
+
   // To receive more interrupts from this PIE group, acknowledge this interrupt
 
 //	ECap6Regs.ECCLR.bit.CEVT1 = 1;
@@ -933,7 +932,6 @@ interrupt void I2CINT2A_ISR(void)     // I2C-A
 // INT8.5
 interrupt void SCIRXINTC_ISR(void)     // SCI-C
 {
-  PFAL_SCIC_RX_ISR();
   ScicRegs.SCIFFRX.bit.RXFFINTCLR = 1;
   PieCtrlRegs.PIEACK.all = PIEACK_GROUP8;
 
@@ -942,7 +940,6 @@ interrupt void SCIRXINTC_ISR(void)     // SCI-C
 // INT8.6
 interrupt void SCITXINTC_ISR(void)     // SCI-C
 {
-  PFAL_SCIC_TX_ISR();
   ScicRegs.SCIFFTX.bit.TXFFINTCLR = 1;
 	PieCtrlRegs.PIEACK.all = PIEACK_GROUP8;
 }

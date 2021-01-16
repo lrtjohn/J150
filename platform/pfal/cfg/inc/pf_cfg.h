@@ -8,7 +8,6 @@
 #include "pf_ecap_cfg.h"
 #include "pf_sci_cfg.h"
 #include "pf_spi_cfg.h"
-#include "pf_xintf_cfg.h"
 #include "pf_timer_cfg.h"
 #include "pf_interrupt_cfg.h"
 #include "prod.h"
@@ -240,17 +239,6 @@ CFG_SCI_TBL CfgSciTbl_User[] =
 CFG_SPI_TBL CfgSpiTbl_User[] =
 {
     {54, 55, 56, 57}
-};
-
-CFG_XINTF_TBL CfgXintfTbl_User[] =
-{
-    {
-        DATA_MODE_16BIT,        //DATA_MODE_16BIT   DATA_MODE_32BIT          select data bus width
-        ADDR_DISABLE,           //ADDR_DISABLE  ADDR_ENAABLE                 address bus enable or not
-        ZONE0_DISABLE,          //ZONE0_DISABLE  ZONE0_ENABLE                zone0 enable or not
-        ZONE6_ENABLE,           //ZONE6_DISABLE  ZONE6_ENABLE                zone6 enable or not
-        ZONE7_DISABLE           //ZONE7_DISABLE  ZONE7_ENABLE                zone7 enable or not
-    }
 };
 
 CFG_TIMER_TBL CfgTimerTbl_User[] =

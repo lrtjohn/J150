@@ -30,21 +30,11 @@
 typedef PF_UION_2BYTES VAR16;
 typedef void (*functionMsgCodeUnpack)(VAR16 a, int b,int c);
 typedef void (*UpdateTxVal)(int a, int b,int c);
-typedef struct _SCITXVAR{
-	Uint16 value;
-	unsigned char index;
-	unsigned char isTx;
-	UpdateTxVal updateValue;
-}SCITXVAR;
 
-void PF_ProcessSciRxPacket(SCIRXQUE *RS422RxQue);
-void ProcessSciRxPacket(SCIRXQUE *RS422RxQue);
-void PackSciTxPacket(SCITXQUE *RS422TxQue, SCITXVAR* sciTxVar);
 void Init_Sci_Protocol(void);
 
 extern SCIRXQUE* gScibRxQue;
 extern SCITXQUE* gScibTxQue;
-extern SCITXVAR* gSciTxVar;
 #endif
 
 

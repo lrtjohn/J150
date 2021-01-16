@@ -25,18 +25,6 @@ int SciRxDeQueue(SCIRXQUE *RS422RxQue)
 	return 1;
 }
 
-int IsSciRxQueueEmpty(SCIRXQUE *RS422RxQue)
-{
-	if(RS422RxQue->front == RS422RxQue->rear)
-	{
-		return 0;
-	}
-	else
-	{
-		return 1;
-	}
-}
-
 int GetSciRxQueLength(SCIRXQUE *RS422RxQue)
 {
 	int length;

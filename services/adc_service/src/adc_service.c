@@ -147,40 +147,6 @@ void PwrBus_OverVoltage_BIT(void){
 	}
 }
 
-/*由主循环调用*/
-void PwrBus_UnderVoltage(void){
-	static int count_min = 0;
-	static int count_min2nd = 0;
-
-		if (gSysAnalogVar.single.var[updatePower270V_M].value < gVoltage_Struct.Thr_min_Voltage){ /*210*/
-            ++count_min;
-            if(count_min > 10){
-                count_min = 0;
-                SET_SYS_BUS_UNDER_VOLTAGE_ALARM;
-                SET_BUS_UND_VOLT_PROT;
-            }
-		}
-		else{
-			if(count_min >= 1) --count_min;
-			else count_min = 0; 
-		}
-
-		if(IS_SYS_BUS_UNDER_VOLTAGE_ALARM){
-			if(gSysAnalogVar.single.var[updatePower270V_M].value > gVoltage_Struct.Thr_min2nd_Voltage){ /*215V*/
-				++count_min2nd;
-				if(count_min2nd > 150){					
-					count_min2nd = 0;
-					CLEAR_SYS_BUS_UNDER_VOLTAGE_ALARM;
-					CLEAR_BUS_UND_VOLT_PROT;
-				}
-				else{
-					if(count_min2nd >= 1) --count_min2nd;
-					else count_min2nd = 0;
-				}
-			}
-		}
-}
-
 #pragma CODE_SECTION(BridgeABC_Current_Monitor_BIT, "ramfuncs")
 void BridgeABC_Current_Monitor_BIT(void){
 	int16 I_bridge_temp;
@@ -499,43 +465,6 @@ void check_Analog_Ref(void){
 				CLEAR_HW_ANALOG_LEVEL_ALARM;
 			} 			
 		}
-	}
-
-}
-
-
-int IsSingleAnalogValueAbnormal(SysAnalogVar* sysAnalogVar)
-{
-	int index;
-	int ret = 1;
-	for(index = 0; index < TOTAL_SNGL_ANAL_CHS; ++index)
-	{
-		if((sysAnalogVar->single.var[index].value > sysAnalogVar->single.var[index].max) ||
-				(sysAnalogVar->single.var[index].value < sysAnalogVar->single.var[index].min)) 
-		{
-			ret = 0;
-		}
-	}
-	return ret;
-}
-
-void Init_Adc_Service_Ptr(SysAnalogVar* sysAnalogVar)
-{
-	int index;
-	for (index = 0; index < TOTAL_SNGL_ANAL_CHS; ++index) {
-		sysAnalogVar->single.var[index].updateValue = SDB_SingleAdUVTBL[index];
-		sysAnalogVar->single.var[index].max =
-				SDB_SingleAnologMaxMinInit[index][0];
-        sysAnalogVar->single.var[index].max2nd =
-                SDB_SingleAnologMaxMinInit[index][1];
-		sysAnalogVar->single.var[index].min =
-				SDB_SingleAnologMaxMinInit[index][2];
-        sysAnalogVar->single.var[index].min2nd =
-                SDB_SingleAnologMaxMinInit[index][3];
-
-		sysAnalogVar->single.var[index].count_max = 0;
-		sysAnalogVar->single.var[index].count_min = 0;
-		sysAnalogVar->single.var[index].value = 0;
 	}
 
 }

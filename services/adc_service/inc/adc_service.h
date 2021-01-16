@@ -21,18 +21,18 @@ enum SNGL_ANAL_IDX
 	updateBridgeCurrentB = 0,		//0  X_IAB_3V3AN
 	updateBridgeCurrentC,		    //1  X_ICD_3V3AN
 	updateBridgeCurrentA,			//2 Y_ICD_3V3AN
-	updateCurrentMin,		    //3 Z_ICD_3V3AN
-	updateDriverTemp,	        //4 Z_IAB_3V3AN
-	updateVoltageRef1V5,			    //5 VBUS_AN3V3
-	updatePower270V_M,		    //6 Y_IAB_3V3AN
+	updateCurrentMin,		    	//3 Z_ICD_3V3AN
+	updateDriverTemp,	        	//4 Z_IAB_3V3AN
+	updateVoltageRef1V5,			//5 VBUS_AN3V3
+	updatePower270V_M,		    	//6 Y_IAB_3V3AN
 	updateDriverVoltage5V,		    //7 T1V9_ISEN_AN
-	Reversed_chl5,	        //8 T1V9V_TEMP_AN
-	updateCurrentMax,		    //9 VDD3V3_ISEN_AN
-	updateVoltage28V,         //10 VDD3V3_TEMP_AN
-	updateVoltageRef2V5,		        //11 ADCINB4
-	updateCurrent28V,                //12 ADCINB5
-	updateVoltageAVDD5V,         //13 VCC3V3_ISEN_AN
-	updateMotorTemp,         //14 VCC3V3_TEMP_AN
+	Reversed_chl5,	        		//8 T1V9V_TEMP_AN
+	updateCurrentMax,		   	 	//9 VDD3V3_ISEN_AN
+	updateVoltage28V,         		//10 VDD3V3_TEMP_AN
+	updateVoltageRef2V5,		    //11 ADCINB4
+	updateCurrent28V,               //12 ADCINB5
+	updateVoltageAVDD5V,         	//13 VCC3V3_ISEN_AN
+	updateMotorTemp,         		//14 VCC3V3_TEMP_AN
 	updateVoltageVCC5V,
     TOTAL_SNGL_ANAL_CHS
 };
@@ -134,11 +134,9 @@ typedef struct _Analog_Ref_Struct{
 	Uint16 cnt_analog_ref[7];
 }Analog_Ref_Struct;
 
-void Init_Adc_Service_Ptr(SysAnalogVar* sysAnalogVar);
 void Init_Adc_Service(void);
 void UpdateSingleAnalog(SysAnalogVar* sysAnalogVar);
 void PwrBus_OverVoltage_BIT(void);
-void PwrBus_UnderVoltage(void);
 void BridgeABC_Current_Monitor_BIT(void);
 void CheckMotorTemperature(void);
 void CheckDriverTemperature(void);

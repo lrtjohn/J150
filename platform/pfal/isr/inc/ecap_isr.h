@@ -3,12 +3,9 @@
 
 #include "ecap_service.h"
 
-void ECap1_Isr(void);
 void ECap2_Isr(void);
 void ECap3_Isr(void);
 void ECap4_Isr(void);
-void ECap5_Isr(void);
-void ECap6_Isr(void);
 
 //extern volatile double gMotorSpeedEcap;
 #endif

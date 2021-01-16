@@ -18,9 +18,6 @@ Uint16 flashArrayR[4] = {0, 0, 0, 0};
 int i = 0;
 #endif
 
-Uint32 gtArinc429SendWord = 0x00002008 + 0x01010101;
-Uint32 gtArinc429ReadWord = 0;
-
 void main(void)
 {
 	double currVolt;
@@ -69,14 +66,12 @@ void main(void)
 	PFAL_SCI_CFG(CfgSciTbl_User,sizeof(CfgSciTbl_User)/sizeof(CfgSciTbl_User[0]));		        			// pass the test
 	/*SPI事件管理器配置*/
 	PFAL_SPI_CFG(CfgSpiTbl_User,sizeof(CfgSpiTbl_User)/sizeof(CfgSpiTbl_User[0]));              			// pass the test
-//	PFAL_XINTF_CFG(CfgXintfTbl_User,sizeof(CfgXintfTbl_User)/sizeof(CfgXintfTbl_User[0]));  				// pass the test
 	/*定时器0，1事件管理器配置*/
 	PFAL_TIMER_CFG(CfgTimerTbl_User,sizeof(CfgTimerTbl_User)/sizeof(CfgTimerTbl_User[0]));      			// pass the test
 
 	/*检查硬件过流故障是否存在，如果存在，对硬件过流故障置位*/
 	/*检查270V，对母线电压欠压故障置位*/
 	/*中断配置使能*/
-
 	PFAL_INTERRUPT_CFG(CfgInterruptTbl_User,sizeof(CfgInterruptTbl_User)/sizeof(CfgInterruptTbl_User[0]));
 	gSpwmPara.CurrentHallPosition = GetCurrentHallValue();
 	 /*等待VDD5V完成上电后清除硬件过流及使能RS422*/
@@ -85,7 +80,6 @@ void main(void)
 	
 	while(1)
 	{
-		/*补周期BIT*/
 		period_BIT();
 
 		currVolt = gSysAnalogVar.single.var[updatePower270V_M].value;
@@ -94,40 +88,12 @@ void main(void)
 		else /*NO USE*/;
 
 		gOpenLoop_Para.volt_Ratio = gOpenLoop_Para.nominalBusVoltage / currVolt;
-//		gSpwmPara.BusVolt_Ratio = gOpenLoop_Para.volt_Ratio * (((double)(gDebugDataArray[0])) / 10);
 		gSpwmPara.BusVolt_Ratio = gOpenLoop_Para.volt_Ratio * 1.2 * (BUSRATIO_K * currVolt + BUSRATIO_B);
 
 		/*补内部看门狗*/
-#if(SYS_DEBUG == INCLUDE_FEATURE)
-		PF_ProcessSciRxPacket(gScibRxQue);
-        ProcessSciRxPacket(gScibRxQue);
-#else
 		SCI_RX_UnpackData(gScibRxQue);
-		/*
-		gSpwmPara.DutyMinusInterval = gDebugDataArray[0];
-		gPID_Speed_Para.ka = gDebugDataArray[1];
-		gPID_Speed_Para.kb = gDebugDataArray[2];
-		*/
-//		gSpwmPara.DutyAddInterval = gDebugDataArray[0];
 
-#endif
-//		ScibRegs.SCIRXST.bit.RXERROR = gDebugDataArray[1];
 		ClearScibRxOverFlow();
 		CheckScibRxError();
-
-#if(J150_SCI_PROTOCOL_TX == NOT_INCLUDE_FEATURE)
-        PackSciTxPacket(gScibTxQue,gSciTxVar);
-#endif
-
-#if (ARINC429_FEATURE == INCLUDE_FEATURE)
-		Arinc429_WriteTxFIFO_ONE_WORD(gtArinc429SendWord);
-
-		if (!(Arinc429_ReadStatusReg() & 0x01))
-		{
-			gtArinc429ReadWord = Arinc429_ReadRxFIFO_ONE_WORD();
-			gtArinc429SendWord++;
-		}
-#endif
-
 	}
 }

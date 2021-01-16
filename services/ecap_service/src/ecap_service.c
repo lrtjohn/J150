@@ -122,37 +122,6 @@ void checkMotorSpeed (void){
 }
 
 /**************************************************************
- *Name:		   GetECap1Count
- *Comment:
- *Input:	   void
- *Output:	   motor speed(int)
- *Author:	   Simon
- *Date:		   2018.11.14
- **************************************************************/
-void GetECap1Count(void){
-
-	if(ECap1Regs.ECFLG.bit.CEVT1){
-		gEcapPara.isEcapRefresh = 1;
-	    gEcapPara.gECapCount = ECap1Regs.CAP1;
-	}
-	else if(ECap1Regs.ECFLG.bit.CEVT2){
-		gEcapPara.isEcapRefresh = 1;
-	    gEcapPara.gECapCount = ECap1Regs.CAP2 - ECap1Regs.CAP1;
-	}
-	else if(ECap1Regs.ECFLG.bit.CEVT3){
-		gEcapPara.isEcapRefresh = 1;
-	    gEcapPara.gECapCount = ECap1Regs.CAP3 - ECap1Regs.CAP2;
-	}
-	else if(ECap1Regs.ECFLG.bit.CEVT4){
-		gEcapPara.isEcapRefresh = 1;
-	    gEcapPara.gECapCount = ECap1Regs.CAP4 - ECap1Regs.CAP3;
-	}
-	else{
-
-	}
-}
-
-/**************************************************************
  *Name:		   GetECap2Count
  *Comment:
  *Input:	   void
@@ -239,66 +208,6 @@ void GetECap4Count(void){
 	else if(ECap4Regs.ECFLG.bit.CEVT4){
 		gEcapPara.isEcapRefresh = 1;
 	    gEcapPara.gECapCount = ECap4Regs.CAP4 - ECap4Regs.CAP3;
-	}
-	else{
-
-	}
-}
-/**************************************************************
- *Name:		   GetECap5Count
- *Comment:
- *Input:	   void
- *Output:	   motor speed(int)
- *Author:	   Simon
- *Date:		   2018.11.14
- **************************************************************/
-void GetECap5Count(void){
-
-	if(ECap5Regs.ECFLG.bit.CEVT1){
-		gEcapPara.isEcapRefresh = 1;
-	    gEcapPara.gECapCount = ECap5Regs.CAP1;
-	}
-	else if(ECap5Regs.ECFLG.bit.CEVT2){
-		gEcapPara.isEcapRefresh = 1;
-	    gEcapPara.gECapCount = ECap5Regs.CAP2 - ECap5Regs.CAP1;
-	}
-	else if(ECap5Regs.ECFLG.bit.CEVT3){
-		gEcapPara.isEcapRefresh = 1;
-	    gEcapPara.gECapCount = ECap5Regs.CAP3 - ECap5Regs.CAP2;
-	}
-	else if(ECap4Regs.ECFLG.bit.CEVT4){
-		gEcapPara.isEcapRefresh = 1;
-	    gEcapPara.gECapCount = ECap5Regs.CAP4 - ECap5Regs.CAP3;
-	}
-	else{
-
-	}
-}
-/**************************************************************
- *Name:		   GetECap6Count
- *Comment:
- *Input:	   void
- *Output:	   motor speed(int)
- *Author:	   Simon
- *Date:		   2018.11.14
- **************************************************************/
-void GetECap6Count(void){
-
-	if(ECap6Regs.ECFLG.bit.CEVT1){
-		gEcapPara.isEcapRefresh = 1;
-	    gEcapPara.gECapCount = ECap6Regs.CAP1;
-	}
-	else if(ECap6Regs.ECFLG.bit.CEVT2){
-		gEcapPara.isEcapRefresh = 1;
-	    gEcapPara.gECapCount = ECap6Regs.CAP2 - ECap6Regs.CAP1;
-	}
-	else if(ECap6Regs.ECFLG.bit.CEVT3){
-		gEcapPara.isEcapRefresh = 1;
-	    gEcapPara.gECapCount = ECap6Regs.CAP3 - ECap6Regs.CAP2;
-	}
-	else if(ECap6Regs.ECFLG.bit.CEVT4){
-		gEcapPara.isEcapRefresh = 1;
-	    gEcapPara.gECapCount = ECap6Regs.CAP4 - ECap6Regs.CAP3;
 	}
 	else{
 

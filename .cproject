@@ -51,9 +51,7 @@
 									<listOptionValue builtIn="false" value="${workspace_loc:/${ProjName}/platform/pfal/cfg/inc}"/>
 									<listOptionValue builtIn="false" value="${workspace_loc:/${ProjName}/user_lib/Flash28335_API_V210/inc}"/>
 									<listOptionValue builtIn="false" value="${workspace_loc:/${ProjName}/services/sci_service/inc}"/>
-									<listOptionValue builtIn="false" value="${workspace_loc:/${ProjName}/services/arinc429/inc}"/>
 									<listOptionValue builtIn="false" value="${workspace_loc:/${ProjName}/services/algorithm_service/inc}"/>
-									<listOptionValue builtIn="false" value="${workspace_loc:/${ProjName}/services/sensor_service/inc}"/>
 									<listOptionValue builtIn="false" value="${workspace_loc:/${ProjName}/platform/prod/cfg/inc}"/>
 									<listOptionValue builtIn="false" value="${workspace_loc:/${ProjName}/services/gpio_service/inc}"/>
 									<listOptionValue builtIn="false" value="${workspace_loc:/${ProjName}/platform/sys/inc}"/>
@@ -89,11 +87,11 @@
 								<inputType id="com.ti.ccstudio.buildDefinitions.C2000_18.12.exeLinker.inputType__GEN_CMDS.803094393" name="Generated Linker Command Files" superClass="com.ti.ccstudio.buildDefinitions.C2000_18.12.exeLinker.inputType__GEN_CMDS"/>
 							</tool>
 							<tool id="com.ti.ccstudio.buildDefinitions.C2000_18.12.hex.390240068" name="C2000 Hex Utility" superClass="com.ti.ccstudio.buildDefinitions.C2000_18.12.hex">
-								<option id="com.ti.ccstudio.buildDefinitions.C2000_18.12.hex.TOOL_ENABLE.1028022244" superClass="com.ti.ccstudio.buildDefinitions.C2000_18.12.hex.TOOL_ENABLE" value="true" valueType="boolean"/>
-								<option id="com.ti.ccstudio.buildDefinitions.C2000_18.12.hex.ORDER.2088130547" superClass="com.ti.ccstudio.buildDefinitions.C2000_18.12.hex.ORDER" value="com.ti.ccstudio.buildDefinitions.C2000_18.12.hex.ORDER.MS" valueType="enumerated"/>
-								<option id="com.ti.ccstudio.buildDefinitions.C2000_18.12.hex.ROMWIDTH.1305479290" superClass="com.ti.ccstudio.buildDefinitions.C2000_18.12.hex.ROMWIDTH" value="16" valueType="string"/>
-								<option id="com.ti.ccstudio.buildDefinitions.C2000_18.12.hex.OUTPUT_FORMAT.514005644" superClass="com.ti.ccstudio.buildDefinitions.C2000_18.12.hex.OUTPUT_FORMAT" value="com.ti.ccstudio.buildDefinitions.C2000_18.12.hex.OUTPUT_FORMAT.INTEL" valueType="enumerated"/>
-								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.ti.ccstudio.buildDefinitions.C2000_18.12.hex.OTHER_FLAGS.410276207" superClass="com.ti.ccstudio.buildDefinitions.C2000_18.12.hex.OTHER_FLAGS" valueType="stringList">
+								<option id="com.ti.ccstudio.buildDefinitions.C2000_18.12.hex.TOOL_ENABLE.1028022244" name="Enable tool" superClass="com.ti.ccstudio.buildDefinitions.C2000_18.12.hex.TOOL_ENABLE" value="true" valueType="boolean"/>
+								<option id="com.ti.ccstudio.buildDefinitions.C2000_18.12.hex.ORDER.2088130547" name="Specify data ordering (endianness) (--order, -order)" superClass="com.ti.ccstudio.buildDefinitions.C2000_18.12.hex.ORDER" value="com.ti.ccstudio.buildDefinitions.C2000_18.12.hex.ORDER.MS" valueType="enumerated"/>
+								<option id="com.ti.ccstudio.buildDefinitions.C2000_18.12.hex.ROMWIDTH.1305479290" name="Specify rom width (--romwidth, -romwidth=width)" superClass="com.ti.ccstudio.buildDefinitions.C2000_18.12.hex.ROMWIDTH" value="16" valueType="string"/>
+								<option id="com.ti.ccstudio.buildDefinitions.C2000_18.12.hex.OUTPUT_FORMAT.514005644" name="Output format" superClass="com.ti.ccstudio.buildDefinitions.C2000_18.12.hex.OUTPUT_FORMAT" value="com.ti.ccstudio.buildDefinitions.C2000_18.12.hex.OUTPUT_FORMAT.INTEL" valueType="enumerated"/>
+								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.ti.ccstudio.buildDefinitions.C2000_18.12.hex.OTHER_FLAGS.410276207" name="Other flags" superClass="com.ti.ccstudio.buildDefinitions.C2000_18.12.hex.OTHER_FLAGS" valueType="stringList">
 									<listOptionValue builtIn="false" value=""/>
 								</option>
 							</tool>

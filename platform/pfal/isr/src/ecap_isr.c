@@ -4,17 +4,6 @@
 #include "ecap_isr.h"
 
 /**************************************************************
- *Name:		   ECap1_Isr
- *Comment:
- *Input:	   void
- *Output:	   void
- *Author:	   Simon
- *Date:		   2018��11��12������10:24:47
- **************************************************************/
-void ECap1_Isr(void){
-	GetECap1Count();
-}
-/**************************************************************
  *Name:		   ECap2_Isr
  *Comment:
  *Input:	   void
@@ -48,26 +37,4 @@ void ECap4_Isr(void){
 	GpioDataRegs.GPCDAT.bit.GPIO64 = 1;
 	GetECap4Count();
 	GpioDataRegs.GPCCLEAR.bit.GPIO64 = 1;
-}
-/**************************************************************
- *Name:		   ECap5_Isr
- *Comment:
- *Input:	   void
- *Output:	   void
- *Author:	   Simon
- *Date:		   2018��11��12������10:24:47
- **************************************************************/
-void ECap5_Isr(void){
-	GetECap5Count();
-}
-/**************************************************************
- *Name:		   ECap6_Isr
- *Comment:
- *Input:	   void
- *Output:	   void
- *Author:	   Simon
- *Date:		   2018��11��12������10:24:47
- **************************************************************/
-void ECap6_Isr(void){
-	GetECap6Count();
 }
