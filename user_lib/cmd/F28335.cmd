@@ -82,7 +82,12 @@ PAGE 0:    /* Program Memory */
    ZONE6       : origin = 0x0100000, length = 0x100000    /* XINTF zone 6 */ 
    ZONE7A      : origin = 0x0200000, length = 0x00FC00    /* XINTF zone 7 - program space */ 
    FLASHH      : origin = 0x300000, length = 0x008000     /* on-chip FLASH */
-   FLASHG      : origin = 0x308000, length = 0x008000     /* on-chip FLASH */
+
+   /*-----------------------------------------------------------------------------*/
+	FLASHG_BEGIN : origin = 0x308000, length = 0x000010
+	/*-----------------------------------------------------------------------------*/
+
+   FLASHG      : origin = 0x308010, length = 0x007ff0     /* on-chip FLASH */
 
    /*-----------------------------------------------------------------------------*/
 	FLASHF_BEGIN : origin = 0x310000, length = 0x000010
@@ -133,24 +138,24 @@ SECTIONS
 {
  
    /* Allocate program areas: */
-   .cinit              : > FLASHF      PAGE = 0
-   .pinit              : > FLASHF,     PAGE = 0
-   .text               : > FLASHF      PAGE = 0
-   codestart           : > FLASHF_BEGIN       PAGE = 0
+   .cinit              : > FLASHG      PAGE = 0
+   .pinit              : > FLASHG,     PAGE = 0
+   .text               : > FLASHG      PAGE = 0
+   codestart           : > FLASHG_BEGIN       PAGE = 0
 
 	Flash28_API:
 	{
 		/*-l Flash28335_API_V210.lib(.econst)*/
 		-l Flash28335_API_V210.lib(.text)
 	}
-			LOAD = FLASHF,
+			LOAD = FLASHG,
 			RUN = RAML0,
 			LOAD_START(_Flash28_API_LoadStart),
 			LOAD_END(_Flash28_API_LoadEnd),
 			RUN_START(_Flash28_API_RunStart),
 			PAGE = 0
 	/*----------------------------------------------*/
-   ramfuncs            : LOAD = FLASHF,
+   ramfuncs            : LOAD = FLASHG,
                          RUN = RAML0, 
                          LOAD_START(_RamfuncsLoadStart),
                          LOAD_END(_RamfuncsLoadEnd),
@@ -168,11 +173,11 @@ SECTIONS
 
    /* Initalized sections go in Flash */
    /* For SDFlash to program these, they must be allocated to page 0 */
-   .econst             : > FLASHF      PAGE = 0
-   .switch             : > FLASHF      PAGE = 0      
+   .econst             : > FLASHG      PAGE = 0
+   .switch             : > FLASHG      PAGE = 0      
 
    /* Allocate IQ math areas: */
-   IQmath              : > FLASHF      PAGE = 0                  /* Math Code */
+   IQmath              : > FLASHG      PAGE = 0                  /* Math Code */
    IQmathTables     : > IQTABLES,  PAGE = 0, TYPE = NOLOAD 
    
    /* Uncomment the section below if calling the IQNexp() or IQexp()
