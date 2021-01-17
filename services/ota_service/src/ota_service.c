@@ -494,7 +494,11 @@ Uint16 OTA_SERVICE_ProcessOneFrame(SCIRXQUE* q)
 
             // TODO FW need to add a offset of the data buffer
             pOtaRxApp->pfUpdateLowAddr(gFrameArray, pOtaAdtRxAdapt->rxFrameLen);
-            pOtaRxApp->pfFlashImageData(pOtaRxApp->addr.value, gFrameArray, pOtaAdtRxAdapt->rxFrameLen);
+
+            if (!(pOtaRxApp->pfFlashImageData(pOtaRxApp->addr.value, gFrameArray, pOtaAdtRxAdapt->rxFrameLen)))
+            {
+                pOtaAdt->pOtaSeviceLogCnt->serialNum++;
+            }
 
             break;
         case OTA_RX_S_CMD:
@@ -508,6 +512,14 @@ Uint16 OTA_SERVICE_ProcessOneFrame(SCIRXQUE* q)
             if (!(pOtaAdt->pfEraseFlashB()))
             {
                 // TODO What should FW do if erase flash failed?
+
+                /* Currently only log the erase count,
+                 * Not sure if we need to reset the state machine.
+                 * Maybe there are two options.
+                 * One option: Return to idle state
+                 * The other option: Wait here, wait for the second try from the upper layer command.
+                 */
+                pOtaAdt->pOtaSeviceLogCnt->eraseFailCnt++;
                 return 0;
             }
 
@@ -559,7 +571,7 @@ Uint16 OTA_SERVICE_EraseFlash(Uint16 sector)
 
     OTA_SERVICE_INTERRUPT_ENABLE();
 
-    return ~ret;
+    return !ret;
 }
 
 
@@ -641,7 +653,7 @@ Uint16 OTA_SERVICE_WriteFlashOneFrame(Uint32 addr, Uint16 *data, Uint16 len)
 
     OTA_SERVICE_INTERRUPT_ENABLE();
 
-    return ret;
+    return !ret;
 }
 
 void OTA_SERVICE_RxDataToFlashData(Uint16 len)
