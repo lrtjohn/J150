@@ -7,6 +7,7 @@
 ██    ██    ██    ██   ██          ██ ██      ██   ██  ██  ██  ██ ██      ██      
  ██████     ██    ██   ██     ███████ ███████ ██   ██   ████   ██  ██████ ███████ 
 *********************************************************************************/
+Uint16 gOtaDebug[10] = {0};
 #define OTA_SERVICE_FRAME_ARRAY_LEN     (80)
 
 extern SCITXQUE* gScibTxQue;
@@ -351,17 +352,16 @@ Uint16 OTA_SERVICE_FindRxHeader(SCIRXQUE* q)
 {
     while (1)
     {
-        if (q->buffer[(q->front) % (q->bufferLen)] != OTA_SERVICE_RX_HEAD_DATA) 
+        if (q->buffer[(q->front) % (q->bufferLen)] == OTA_SERVICE_RX_HEAD_DATA) 
         {
-            if (SciRxDeQueue(q) == 0)
-            {
-                return FAIL;
-            }
-            break;
+            return SUCCESS;
+        }
+
+        if (SciRxDeQueue(q) == 0)
+        {
+            return FAIL;
         }
     }
-
-    return SUCCESS;
 }
 
 Uint16 OTA_SERVICE_CheckLen(SCIRXQUE* q)
@@ -383,6 +383,8 @@ Uint16 OTA_SERVICE_CheckLen(SCIRXQUE* q)
 
     length = q->buffer[(q->front + 0) % (q->bufferLen)];
 
+    gOtaDebug[1] = length;
+
     // This is a potencial check if the length value is too big
     if (length > 0xFF)
     {
@@ -395,10 +397,13 @@ Uint16 OTA_SERVICE_CheckLen(SCIRXQUE* q)
     // Maybe there should be a extra lenght here
     if (GetSciRxQueLength(q) >= length)
     {
+
+        gOtaDebug[2]++;
         return SUCCESS;
     }
     else
     {
+        gOtaDebug[3]++;
         return FAIL;
     }
 }
@@ -422,10 +427,13 @@ Uint16 OTA_SERVICE_CheckSum(SCIRXQUE* q)
 
     if (sum == q->buffer[((q->front) + checkSumPos) % (q->bufferLen)])
     {
+        gOtaDebug[4]++;
         return SUCCESS;
     }
     else
     {
+        gOtaDebug[5]++;
+        SciRxDeQueue(q);
         return FAIL;
     }
 }
@@ -502,6 +510,7 @@ Uint16 OTA_SERVICE_ProcessOneFrame(SCIRXQUE* q)
 
             break;
         case OTA_RX_S_CMD:
+            gOtaDebug[0] = 1;
             if (pOtaAdt->currentStatus != OTA_SERVICE_IDLE)
             {
                 /* The S CMD could be recived only when status is IDLE */
