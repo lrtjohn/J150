@@ -505,11 +505,13 @@ Uint16 OTA_SERVICE_ProcessOneFrame(SCIRXQUE* q)
                 return 0;
             }
 
+#if (1)
             if (!(pOtaAdt->pfEraseFlashB()))
             {
                 // TODO What should FW do if erase flash failed?
                 return 0;
             }
+#endif
 
             // TODO need to check the system state machine state is stop or not
             pOtaAdt->currentStatus = OTA_SERVICE_RX_START_CMD;
