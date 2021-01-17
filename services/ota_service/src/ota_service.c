@@ -390,12 +390,13 @@ Uint16 OTA_SERVICE_CheckLen(SCIRXQUE* q)
     {
         return FAIL;
     }
+    length += OTA_SERVICE_RX_EXTRA_LEN;
 
     pOtaAdtRxAdapt->rxFrameLen = length;
 
     // TODO determine the length value 
     // Maybe there should be a extra lenght here
-    if (GetSciRxQueLength(q) >= length + OTA_SERVICE_RX_EXTRA_LEN)
+    if (GetSciRxQueLength(q) >= length)
     {
 
         gOtaDebug[2]++;
@@ -411,21 +412,21 @@ Uint16 OTA_SERVICE_CheckLen(SCIRXQUE* q)
 Uint16 OTA_SERVICE_CheckSum(SCIRXQUE* q)
 {
     Uint16 i;
-    Uint16 sum = 0;
-    Uint16 checkSumPos = 0;
+    unsigned int sum = 0;
+    OTA_SERVICE_RX_ADAPT    *pOtaAdtRxAdapt;
 
-    // TODO correct the start position when calculate the check sum
-    // TODO get the dynamic length
-    for (i = 0; i < 1; ++i)
+    pOtaAdtRxAdapt = PTR_OTA_SERVICE_ADT_RX_ADAPT;
+
+    for (i = 1; i < pOtaAdtRxAdapt->rxFrameLen; ++i)
     {
         sum += q->buffer[(q->front + i) % (q->bufferLen)];
     }
 
     sum &= 0x00ff;
 
-    checkSumPos = q->buffer[(q->front + 0) % (q->bufferLen)];
+    gOtaDebug[6] = sum;
 
-    if (sum == q->buffer[((q->front) + checkSumPos) % (q->bufferLen)])
+    if (sum == 0)
     {
         gOtaDebug[4]++;
         return SUCCESS;
@@ -433,7 +434,6 @@ Uint16 OTA_SERVICE_CheckSum(SCIRXQUE* q)
     else
     {
         gOtaDebug[5]++;
-        SciRxDeQueue(q);
         return FAIL;
     }
 }
