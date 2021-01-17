@@ -381,7 +381,7 @@ Uint16 OTA_SERVICE_CheckLen(SCIRXQUE* q)
         return 0;
     }
 
-    length = q->buffer[(q->front + 0) % (q->bufferLen)];
+    length = q->buffer[(q->front + OTA_SERVICE_RX_LEN_POS) % (q->bufferLen)];
 
     gOtaDebug[1] = length;
 
@@ -395,7 +395,7 @@ Uint16 OTA_SERVICE_CheckLen(SCIRXQUE* q)
 
     // TODO determine the length value 
     // Maybe there should be a extra lenght here
-    if (GetSciRxQueLength(q) >= length)
+    if (GetSciRxQueLength(q) >= length + OTA_SERVICE_RX_EXTRA_LEN)
     {
 
         gOtaDebug[2]++;
