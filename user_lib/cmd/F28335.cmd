@@ -141,7 +141,7 @@ SECTIONS
    .cinit              : > FLASHG      PAGE = 0
    .pinit              : > FLASHG,     PAGE = 0
    .text               : > FLASHG      PAGE = 0
-   codestart           : > BEGIN       PAGE = 0
+   codestart           : > FLASHG_BEGIN       PAGE = 0
 
 	Flash28_API:
 	{

@@ -1,11 +1,11 @@
 #include "ota_service.h"
 
 /*********************************************************************************
- ██████  ████████  █████      ███████ ███████ ██████  ██    ██ ██  ██████ ███████ 
-██    ██    ██    ██   ██     ██      ██      ██   ██ ██    ██ ██ ██      ██      
-██    ██    ██    ███████     ███████ █████   ██████  ██    ██ ██ ██      █████   
-██    ██    ██    ██   ██          ██ ██      ██   ██  ██  ██  ██ ██      ██      
- ██████     ██    ██   ██     ███████ ███████ ██   ██   ████   ██  ██████ ███████ 
+ ██████  ████████  █████      ███████ ███████ ██████  ██    ██ ██  ██████ ███████
+██    ██    ██    ██   ██     ██      ██      ██   ██ ██    ██ ██ ██      ██
+██    ██    ██    ███████     ███████ █████   ██████  ██    ██ ██ ██      █████
+██    ██    ██    ██   ██          ██ ██      ██   ██  ██  ██  ██ ██      ██
+ ██████     ██    ██   ██     ███████ ███████ ██   ██   ████   ██  ██████ ███████
 *********************************************************************************/
 #define OTA_SERVICE_FRAME_ARRAY_LEN     (80)
 
@@ -505,13 +505,11 @@ Uint16 OTA_SERVICE_ProcessOneFrame(SCIRXQUE* q)
                 return 0;
             }
 
-#if (1)
             if (!(pOtaAdt->pfEraseFlashB()))
             {
                 // TODO What should FW do if erase flash failed?
                 return 0;
             }
-#endif
 
             // TODO need to check the system state machine state is stop or not
             pOtaAdt->currentStatus = OTA_SERVICE_RX_START_CMD;
@@ -552,18 +550,16 @@ Uint16 OTA_SERVICE_UpdateHeadPos(SCIRXQUE* q)
 
 Uint16 OTA_SERVICE_EraseFlash(Uint16 sector)
 {
-    Uint16 ret;
+    Uint16 ret = 0;
     FLASH_ST flashStatus;
 
-    // TODO FW need to disable watch dog here,
-    // Because the erase flash may takes a long time and caused the system reboot.
     OTA_SERVICE_INTERRUPT_DISABLE();
 
     ret = Flash_Erase(sector, &flashStatus);
 
     OTA_SERVICE_INTERRUPT_ENABLE();
 
-    return ret;
+    return ~ret;
 }
 
 
