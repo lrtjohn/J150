@@ -2,6 +2,7 @@
 #define PROD_DEFS_H_
 
 #define CPU_FREQUENCY (150UL)
+//#define CPU_FREQUENCY (120UL)
 
 #define INCLUDE_FEATURE     0x01
 #define EXCLUDE_FEATURE     0x00

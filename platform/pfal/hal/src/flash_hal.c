@@ -1,4 +1,5 @@
 #include "flash_hal.h"
+
 void FlashAPI_Init(void)
 {
 	EALLOW;
@@ -6,6 +7,7 @@ void FlashAPI_Init(void)
 	Flash_CallbackPtr = NULL;
 	EDIS;
 }
+
 #pragma CODE_SECTION(Flash_RD,"ramfuncs");
 Uint16 Flash_RD(Uint32 addr, Uint16 *buffer, Uint16 leng)
 {
@@ -20,6 +22,7 @@ Uint16 Flash_RD(Uint32 addr, Uint16 *buffer, Uint16 leng)
 	return STATUS_SUCCESS;
 
 }
+
 #pragma CODE_SECTION(Flash_WR,"ramfuncs");
 Uint16 Flash_WR(Uint32 addr, Uint16 *buffer, Uint16 leng)
 {

@@ -27,7 +27,7 @@ void PFAL_Timer1_ISR(void)
 		 * clean the rest data when the OTA sercive is enabled.
 		 * But now use the same buffer to verify the TX data path.
 		 */
-		OTA_SERVICE_TxPackData(gScibTxQue);
+		// OTA_SERVICE_TxPackData(gScibTxQue);
 
 		CheckEnableScibTx(gScibTxQue);
 	}
