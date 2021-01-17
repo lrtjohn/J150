@@ -7,7 +7,6 @@
 ██    ██    ██    ██   ██          ██ ██      ██   ██  ██  ██  ██ ██      ██      
  ██████     ██    ██   ██     ███████ ███████ ██   ██   ████   ██  ██████ ███████ 
 *********************************************************************************/
-Uint16 gOtaDebug[10] = {0};
 #define OTA_SERVICE_FRAME_ARRAY_LEN     (80)
 
 extern SCITXQUE* gScibTxQue;
@@ -383,8 +382,6 @@ Uint16 OTA_SERVICE_CheckLen(SCIRXQUE* q)
 
     length = q->buffer[(q->front + OTA_SERVICE_RX_LEN_POS) % (q->bufferLen)];
 
-    gOtaDebug[1] = length;
-
     // This is a potencial check if the length value is too big
     if (length > 0xFF)
     {
@@ -394,17 +391,12 @@ Uint16 OTA_SERVICE_CheckLen(SCIRXQUE* q)
 
     pOtaAdtRxAdapt->rxFrameLen = length;
 
-    // TODO determine the length value 
-    // Maybe there should be a extra lenght here
     if (GetSciRxQueLength(q) >= length)
     {
-
-        gOtaDebug[2]++;
         return SUCCESS;
     }
     else
     {
-        gOtaDebug[3]++;
         return FAIL;
     }
 }
@@ -424,16 +416,12 @@ Uint16 OTA_SERVICE_CheckSum(SCIRXQUE* q)
 
     sum &= 0x00ff;
 
-    gOtaDebug[6] = sum;
-
     if (sum == 0)
     {
-        gOtaDebug[4]++;
         return SUCCESS;
     }
     else
     {
-        gOtaDebug[5]++;
         return FAIL;
     }
 }
@@ -450,17 +438,14 @@ Uint16 OTA_SERVICE_ProcessOneFrame(SCIRXQUE* q)
     pOtaRxApp       = PTR_OTA_SERVICE_ADT_RX_APP;
     pOtaAdtRxAdapt  = PTR_OTA_SERVICE_ADT_RX_ADAPT;
 
-    gOtaDebug[8]++;
 #if (OTA_PTR_NULL_CHECK == INCLUDE_FEATURE)
     if ((pOtaAdt == NULL) || (pOtaRxApp == NULL) || (pOtaAdtRxAdapt == NULL))
     {            
-        gOtaDebug[9]++;
         return 0;
     }
 
     if (pOtaAdtRxAdapt->rxFrameLen > OTA_SERVICE_FRAME_ARRAY_LEN)
     {
-        gOtaDebug[7]++;
         return 0;
     }
 #endif
@@ -472,8 +457,6 @@ Uint16 OTA_SERVICE_ProcessOneFrame(SCIRXQUE* q)
 
     opcode = pOtaAdt->pOtaServiceRxAdapt->pOtaServiceRxApp->pfGetOpcode(gFrameArray);
 
-    gOtaDebug[6] = opcode;
-
     if (!(pOtaRxApp->pfIsOpcodeValid(gFrameArray)))
     {
         return 0;
@@ -484,9 +467,6 @@ Uint16 OTA_SERVICE_ProcessOneFrame(SCIRXQUE* q)
     switch(opcode)
     {
         case OTA_UD_H_ADDR:
-
-            gOtaDebug[0]++;
-
             if (pOtaAdt->currentStatus == OTA_SERVICE_RX_START_CMD)
             {
                 pOtaAdt->currentStatus = OTA_SERVICE_RUNNING;
