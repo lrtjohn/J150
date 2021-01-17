@@ -294,11 +294,11 @@ typedef struct
 
 typedef enum
 {
-    OTA_UD_H_ADDR   = 0,
+    OTA_UD_H_ADDR   = 4,
     OTA_UD_F_DATA   = 1,
     OTA_RX_S_CMD    = 2,
     OTA_RX_E_CMD    = 3,
-    OTA_RX_RFU1     = 4,
+    OTA_RX_RFU1     = 8,
     OTA_RX_RFU2     = 5,
     OTA_RX_RFU3     = 6,
     OTA_RX_RFU4     = 7,

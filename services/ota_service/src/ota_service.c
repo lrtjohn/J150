@@ -450,14 +450,17 @@ Uint16 OTA_SERVICE_ProcessOneFrame(SCIRXQUE* q)
     pOtaRxApp       = PTR_OTA_SERVICE_ADT_RX_APP;
     pOtaAdtRxAdapt  = PTR_OTA_SERVICE_ADT_RX_ADAPT;
 
+    gOtaDebug[8]++;
 #if (OTA_PTR_NULL_CHECK == INCLUDE_FEATURE)
-    if ((pOtaAdt == NULL) || (pOtaRxApp == NULL) || (pOtaAdtRxAdapt))
+    if ((pOtaAdt == NULL) || (pOtaRxApp == NULL) || (pOtaAdtRxAdapt == NULL))
     {            
+        gOtaDebug[9]++;
         return 0;
     }
 
     if (pOtaAdtRxAdapt->rxFrameLen > OTA_SERVICE_FRAME_ARRAY_LEN)
     {
+        gOtaDebug[7]++;
         return 0;
     }
 #endif
@@ -469,6 +472,8 @@ Uint16 OTA_SERVICE_ProcessOneFrame(SCIRXQUE* q)
 
     opcode = pOtaAdt->pOtaServiceRxAdapt->pOtaServiceRxApp->pfGetOpcode(gFrameArray);
 
+    gOtaDebug[6] = opcode;
+
     if (!(pOtaRxApp->pfIsOpcodeValid(gFrameArray)))
     {
         return 0;
@@ -479,6 +484,9 @@ Uint16 OTA_SERVICE_ProcessOneFrame(SCIRXQUE* q)
     switch(opcode)
     {
         case OTA_UD_H_ADDR:
+
+            gOtaDebug[0]++;
+
             if (pOtaAdt->currentStatus == OTA_SERVICE_RX_START_CMD)
             {
                 pOtaAdt->currentStatus = OTA_SERVICE_RUNNING;
@@ -510,7 +518,6 @@ Uint16 OTA_SERVICE_ProcessOneFrame(SCIRXQUE* q)
 
             break;
         case OTA_RX_S_CMD:
-            gOtaDebug[0] = 1;
             if (pOtaAdt->currentStatus != OTA_SERVICE_IDLE)
             {
                 /* The S CMD could be recived only when status is IDLE */
@@ -678,12 +685,12 @@ void OTA_SERVICE_SystemReboot(void)
 
 Uint16 OTA_SERVICE_GetOpcode(Uint16* data)
 {
-    return 0;
+    return data[OTA_SERVICE_RX_OPCODE_POS];
 }
 
 Uint16 OTA_SERVICE_IsOpcodeValid(Uint16* array)
 {
-    return 0;
+    return 1;
 }
 
 Uint16 OTA_SERVICE_GetCurrentStatus(void)
