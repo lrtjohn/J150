@@ -51,7 +51,6 @@
 									<listOptionValue builtIn="false" value="${workspace_loc:/${ProjName}/user_lib/Flash28335_API_V210/inc}"/>
 									<listOptionValue builtIn="false" value="${workspace_loc:/${ProjName}/services/sci_service/inc}"/>
 									<listOptionValue builtIn="false" value="${workspace_loc:/${ProjName}/services/algorithm_service/inc}"/>
-									<listOptionValue builtIn="false" value="${workspace_loc:/${ProjName}/platform/prod/cfg/inc}"/>
 									<listOptionValue builtIn="false" value="${workspace_loc:/${ProjName}/services/gpio_service/inc}"/>
 									<listOptionValue builtIn="false" value="${workspace_loc:/${ProjName}/platform/sys/inc}"/>
 									<listOptionValue builtIn="false" value="${workspace_loc:/${ProjName}/services/sys_service/inc}"/>
