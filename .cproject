@@ -45,7 +45,6 @@
 									<listOptionValue builtIn="false" value="${workspace_loc:/${ProjName}/services/ecap_service/inc}"/>
 									<listOptionValue builtIn="false" value="${workspace_loc:/${ProjName}/user_lib/inc}"/>
 									<listOptionValue builtIn="false" value="${workspace_loc:/${ProjName}/user/inc}"/>
-									<listOptionValue builtIn="false" value="${workspace_loc:/${ProjName}/bsp/inc}"/>
 									<listOptionValue builtIn="false" value="${workspace_loc:/${ProjName}/platform/prod}"/>
 									<listOptionValue builtIn="false" value="${workspace_loc:/${ProjName}/platform/pfal/hal/inc}"/>
 									<listOptionValue builtIn="false" value="${workspace_loc:/${ProjName}/platform/pfal/cfg/inc}"/>
