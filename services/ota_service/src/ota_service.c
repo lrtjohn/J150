@@ -338,6 +338,7 @@ void OTA_SERVICE_PROCESS_RX_DATA_ADAPT(SCIRXQUE* q)
 
         if (!OTA_SERVICE_CHECK_RX_CRC_ADAPT(q))
         {
+            OTA_SERVICE_UPDATE_HEAD_POS_ADAPT(q);
             return;
         }
 
@@ -385,6 +386,8 @@ Uint16 OTA_SERVICE_CheckLen(SCIRXQUE* q)
     // This is a potencial check if the length value is too big
     if (length > 0xFF)
     {
+        SciRxDeQueue(q);
+
         return FAIL;
     }
     length += OTA_SERVICE_RX_EXTRA_LEN;
@@ -596,8 +599,8 @@ Uint16 OTA_SERVICE_UpdateHighAddr(Uint16 *data, Uint16 len)
 {
     Uint16 ret;
 
-    // TODO replace the 0 and 1 later, user the position of high addr instead
-    ret = (data[0] << 8) | data[1];
+    ret = (data[OTA_SERVICE_RX_ADDRH_POS] << 8) | data[OTA_SERVICE_RX_ADDRH_POS + 1];
+
     (PTR_OTA_SERVICE_ADT_RX_APP)->addr.uAddr32.high16Bit = ret;
 
     return ret;
