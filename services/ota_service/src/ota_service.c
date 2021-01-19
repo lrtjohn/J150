@@ -498,10 +498,12 @@ Uint16 OTA_SERVICE_ProcessOneFrame(SCIRXQUE* q)
             // TODO FW need to add a offset of the data buffer
             pOtaRxApp->pfUpdateLowAddr(gFrameArray, pOtaAdtRxAdapt->rxFrameLen);
 
+#if (0)
             if (!(pOtaRxApp->pfFlashImageData(pOtaRxApp->addr.value, gFrameArray, pOtaAdtRxAdapt->rxFrameLen)))
             {
                 pOtaAdt->pOtaSeviceLogCnt->serialNum++;
             }
+#endif
 
             break;
         case OTA_RX_S_CMD:
@@ -610,8 +612,8 @@ Uint16 OTA_SERVICE_UpdateLowAddr(Uint16 *data, Uint16 len)
 {
     Uint16 ret;
 
-    // TODO replace the 0 and 1 later, user the position of low addr instead
-    ret = (data[0] << 8) | data[1];
+    ret = (data[OTA_SERVICE_RX_ADDRL_POS] << 8) | data[OTA_SERVICE_RX_ADDRL_POS + 1];
+
     (PTR_OTA_SERVICE_ADT_RX_APP)->addr.uAddr32.low16Bit = ret;
 
     return ret;
