@@ -34,7 +34,7 @@ double CurrentCompensate(void){
 	int16 I_busCurrent = 0;
 	double kqn = 0;
 
-    gKF_Current.currentData = gCurrent_Struct.I_bus_RBUF_Sum >> 8;//7
+    gKF_Current.currentData = pwm_busCurrent_Que.bufSum >> 8;//7
     gCurrent_Struct.I_busCurrent_Ave = KalmanVarFilter(&gKF_Current);
 
     kqn = K_KQN * gPID_Speed_Para.targetVal + B_KQN;

@@ -45,4 +45,8 @@
 #define BIT_30 (0x40000000)
 #define BIT_31 (0x80000000)
 
+#define ZERO 0
+#define LONG_ZERO 0L
+#define ONE  1
+
 #endif

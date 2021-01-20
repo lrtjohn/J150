@@ -186,7 +186,7 @@ void BridgeABC_Current_Monitor_BIT(void){
 		else gCurrent_Struct.cnt_max_threshold[i] = 0;
 	}
 
-    gCurrent_Struct.I_bus_RBUF_Sum = PwmBusCurrentEnQueue(gCurrent_Struct.I_busCurrent, pwm_busCurrent_Que);
+    func_pwm_RingBuffer_Push(gCurrent_Struct.I_busCurrent, &pwm_busCurrent_Que);
 
 	if(gCurrent_Struct.I_bridgeSum < 0 ) gCurrent_Struct.I_bridgeSum = - gCurrent_Struct.I_bridgeSum;
 	if(gCurrent_Struct.I_bridgeSum >= gCurrent_Struct.Thr_BridgeSum){
@@ -522,7 +522,6 @@ void Init_ADC_Current(void)
 	gCurrent_Struct.Neg_BridgeSum = 0;
 	gCurrent_Struct.Max_BusCurrent = 0;
 	gCurrent_Struct.I_busCurrent_Ave = 0;
-	gCurrent_Struct.I_bus_RBUF_Sum = 0;
 }
 
 void Init_ADC_Voltage(void)

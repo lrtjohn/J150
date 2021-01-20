@@ -17,6 +17,8 @@
 #define K_MAXDUTY 		  (0.2786)
 #define B_MAXDUTY 		  (103.14)
 
+#define PWM_LEN 256
+
 typedef enum _PWM_RUNNING_STATE
 {
     PWM_INIT,
@@ -50,10 +52,9 @@ typedef struct _SPWM_PARA
     Uint16 Cnt_PWM_Init_BIT;
 }SPWM_PARA;
 
-typedef PF_RING_BUFFER PWM_CURRENT_QUE;
-extern PWM_CURRENT_QUE* pwm_busCurrent_Que;
+extern _PF_S_RING_BUFFER pwm_busCurrent_Que;
 void Init_PWM_Buf(void);
-int32 PwmBusCurrentEnQueue(Uint16 e, PWM_CURRENT_QUE *PWMBusCurrentQue);
+void func_pwm_RingBuffer_Push(int16 newData, _PF_S_RING_BUFFER *pbuf);
 Uint16 GetCurrentHallValue(void);
 void Spwm_Output(SPWM_PARA* spwmPara);
 void Init_Spwm_Service(void);

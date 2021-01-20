@@ -13,6 +13,15 @@ typedef struct _PF_RING_BUFFER
     Uint16* buffer;
 }PF_RING_BUFFER;
 
+typedef struct
+{
+    int16 newP;
+    int16 oldP;
+    int16 bufferLen;
+    int16* buffer;
+    int32 bufSum;
+} _PF_S_RING_BUFFER;
+
 
 typedef struct _PF_HIGH_LOW_BYTE{
 	Uint16 h : 8;

@@ -6,51 +6,50 @@ SPWM_PARA gSpwmPara = {0};
 #define ZERO_MAX (2250)
 #define ZERO_MIN (1840)
 
-PWM_CURRENT_QUE* pwm_busCurrent_Que = NULL;
+int16 pwm_Que_Init [PWM_LEN] = {ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,
+								ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,
+								ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,
+								ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,
+								ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,
+								ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,
+								ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,
+								ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,
+								ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,
+								ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,
+								ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,
+								ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,
+								ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,
+								ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,
+								ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,
+								ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO};
+
+_PF_S_RING_BUFFER pwm_busCurrent_Que = {};
 
 void Init_PWM_Buf(void)
 {
-	if(pwm_busCurrent_Que == NULL)
-	{
-		pwm_busCurrent_Que = (PWM_CURRENT_QUE*)malloc(sizeof(PWM_CURRENT_QUE));
-		if(pwm_busCurrent_Que == NULL)
-		{
-			//TODO generate alarm
-			SET_SYS_MEMORY_MOLLOC_ERROR;
-			return;
-		}
-		pwm_busCurrent_Que->front = 0;
-		pwm_busCurrent_Que->rear = 0;
-		pwm_busCurrent_Que->bufferLen = 256;//V7.128
-		pwm_busCurrent_Que->buffer = (Uint16*)malloc(sizeof(Uint16) * pwm_busCurrent_Que->bufferLen);
-		if(pwm_busCurrent_Que->buffer == NULL)
-		{
-			SET_SYS_MEMORY_MOLLOC_ERROR;
-			return;
-		}
-		memset(pwm_busCurrent_Que->buffer, 0 , sizeof(pwm_busCurrent_Que->buffer));
-	}
+	pwm_busCurrent_Que.newP = ZERO;
+	pwm_busCurrent_Que.oldP = ZERO;
+	pwm_busCurrent_Que.bufferLen = PWM_LEN;
+	pwm_busCurrent_Que.buffer = pwm_Que_Init;
+	pwm_busCurrent_Que.bufSum = LONG_ZERO;
 }
 
-#pragma CODE_SECTION(PwmBusCurrentEnQueue, "ramfuncs")
-int32 PwmBusCurrentEnQueue(Uint16 e, PWM_CURRENT_QUE *PWMBusCurrentQue)
+#pragma CODE_SECTION(func_pwm_RingBuffer_Push, "ramfuncs")
+void func_pwm_RingBuffer_Push(int16 newData, _PF_S_RING_BUFFER *pbuf)
 {
-//	static int isfull = 0;
-	static int32 I_bus_Sum_tmp = 0;
-	if((PWMBusCurrentQue->rear + 1) % (PWMBusCurrentQue->bufferLen) == PWMBusCurrentQue->front)
+	if(((pbuf -> oldP + ONE) % (pbuf -> bufferLen)) == (pbuf -> newP))
 	{
-		I_bus_Sum_tmp = I_bus_Sum_tmp - PWMBusCurrentQue->buffer[PWMBusCurrentQue->front];
-		PWMBusCurrentQue->front = (PWMBusCurrentQue->front + 1) % (PWMBusCurrentQue->bufferLen);
-//		isfull = 1;
+		pbuf -> bufSum = pbuf -> bufSum - (int32)(pbuf -> buffer[pbuf -> oldP]);
+		pbuf -> newP = (pbuf -> newP + ONE) % pbuf -> bufferLen;
 	}
-	else{
-//		isbfull = 0;
+	else
+	{
+		/*DO NOTHING*/
 	}
 
-	PWMBusCurrentQue->buffer[PWMBusCurrentQue->rear] = e;
-	I_bus_Sum_tmp = I_bus_Sum_tmp + PWMBusCurrentQue->buffer[PWMBusCurrentQue->rear];
-	PWMBusCurrentQue->rear = (PWMBusCurrentQue->rear + 1) % (PWMBusCurrentQue->bufferLen);
-	return I_bus_Sum_tmp;
+	pbuf -> buffer[pbuf -> oldP] = newData;
+	pbuf -> bufSum = pbuf -> bufSum + (int32)(newData);
+	pbuf -> oldP = (pbuf -> oldP + ONE) % pbuf -> bufferLen;
 }
 
 inline void openAH(void){
