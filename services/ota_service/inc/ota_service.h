@@ -252,8 +252,8 @@ typedef struct
 
 typedef struct
 {
-	Uint32 high16Bit    : 16;
 	Uint32 low16Bit	    : 16;
+	Uint32 high16Bit    : 16;
 }ADDR32BIT;
 typedef union
 {

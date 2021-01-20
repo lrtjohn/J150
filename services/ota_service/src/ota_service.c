@@ -31,7 +31,7 @@ Uint16 gImageBitMap[OTA_SERVICE_RX_IMAGE_SIZE] = {0};
 
 Uint16 OTA_SERVICE_FlashImageData(Uint16 hAddr, Uint16 lAddr, Uint16* flashData, Uint16 len);
 Uint16 OTA_SERVICE_EraseFlash(Uint16 sector);
-void OTA_SERVICE_RxDataToFlashData(Uint16 len);
+void OTA_SERVICE_RxDataToFlashData(Uint16* des, Uint16* src, Uint16 len);
 
 static Uint16 OTA_SERVICE_FIND_RX_HEADER_ADAPT(SCIRXQUE* q);
 static Uint16 OTA_SERVICE_CHECK_RX_LEN_ADAPT(SCIRXQUE* q);
@@ -498,8 +498,10 @@ Uint16 OTA_SERVICE_ProcessOneFrame(SCIRXQUE* q)
             // TODO FW need to add a offset of the data buffer
             pOtaRxApp->pfUpdateLowAddr(gFrameArray, pOtaAdtRxAdapt->rxFrameLen);
 
-#if (0)
-            if (!(pOtaRxApp->pfFlashImageData(pOtaRxApp->addr.value, gFrameArray, pOtaAdtRxAdapt->rxFrameLen)))
+            OTA_SERVICE_RxDataToFlashData(gFrameArrayFlash, gFrameArray, pOtaAdtRxAdapt->rxFrameLen);
+
+#if (1)
+            if (!(pOtaRxApp->pfFlashImageData(pOtaRxApp->addr.value, gFrameArrayFlash, pOtaAdtRxAdapt->rxFrameLen)))
             {
                 pOtaAdt->pOtaSeviceLogCnt->serialNum++;
             }
@@ -603,6 +605,8 @@ Uint16 OTA_SERVICE_UpdateHighAddr(Uint16 *data, Uint16 len)
 
     ret = (data[OTA_SERVICE_RX_ADDRH_POS] << 8) | data[OTA_SERVICE_RX_ADDRH_POS + 1];
 
+    ret += 0x01;
+
     (PTR_OTA_SERVICE_ADT_RX_APP)->addr.uAddr32.high16Bit = ret;
 
     return ret;
@@ -650,6 +654,8 @@ Uint16 OTA_SERVICE_WriteFlashOneFrame(Uint32 addr, Uint16 *data, Uint16 len)
 {
     Uint16 ret;
 
+    len = (len - OTA_SERVICE_RX_EXTRA_LEN) >> 1;
+
     OTA_SERVICE_INTERRUPT_DISABLE();
 
     ret =  OTA_SERVICE_FlashWriteAndVerify(addr, data, len);
@@ -661,14 +667,22 @@ Uint16 OTA_SERVICE_WriteFlashOneFrame(Uint32 addr, Uint16 *data, Uint16 len)
     return !ret;
 }
 
-void OTA_SERVICE_RxDataToFlashData(Uint16 len)
+void OTA_SERVICE_RxDataToFlashData(Uint16* des, Uint16* src, Uint16 len)
 {
     Uint16 i;
 
+#if (0)
     for (i = 0; i < ((len - OTA_SERVICE_RX_EXTRA_LEN) >> 1); ++i)
     {
         gFrameArrayFlash[i] = (gFrameArray[OTA_SERVICE_RX_FLASH_DATA_LEN * i + OTA_SERVICE_RX_FLASH_DATAH_OFFSET] << 8) | 
                               (gFrameArray[OTA_SERVICE_RX_FLASH_DATA_LEN * i + OTA_SERVICE_RX_FLASH_DATAL_OFFSET]);
+    }
+#endif
+
+    for (i = 0; i < ((len - OTA_SERVICE_RX_EXTRA_LEN) >> 1); ++i)
+    {
+        des[i] = (src[OTA_SERVICE_RX_FLASH_DATA_LEN * i + OTA_SERVICE_RX_FLASH_DATAH_OFFSET] << 8) | 
+                              (src[OTA_SERVICE_RX_FLASH_DATA_LEN * i + OTA_SERVICE_RX_FLASH_DATAL_OFFSET]);
     }
 }
 
@@ -705,8 +719,8 @@ Uint16 OTA_SERVICE_SendSerialNum(SCITXQUE* txQue)
 
     crc = OTA_SERVICE_TxCalCrc(crc, gOtaTxFrameArray, OTA_SERVICE_TX_ONE_FRAME_SIZE);
 
-    gOtaTxFrameArray[OTA_SERVICE_SERIAL_NUM_POS]        = (char)crc >> 8;
-    gOtaTxFrameArray[OTA_SERVICE_SERIAL_NUM_POS + 1]    = (char)crc;
+    gOtaTxFrameArray[OTA_SERVICE_CRC_POS]               = (char)crc >> 8;
+    gOtaTxFrameArray[OTA_SERVICE_CRC_POS + 1]           = (char)crc;
 
     OTA_SERVICE_TxPackData(txQue);
 
