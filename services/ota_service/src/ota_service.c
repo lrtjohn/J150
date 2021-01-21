@@ -503,6 +503,10 @@ Uint16 OTA_SERVICE_ProcessOneFrame(SCIRXQUE* q)
 #if (1)
             if (!(pOtaRxApp->pfFlashImageData(pOtaRxApp->addr.value, gFrameArrayFlash, pOtaAdtRxAdapt->rxFrameLen)))
             {
+                pOtaAdt->pOtaSeviceLogCnt->writeFailCnt++;
+            }
+            else
+            {
                 pOtaAdt->pOtaSeviceLogCnt->serialNum++;
             }
 #endif
