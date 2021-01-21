@@ -63,6 +63,8 @@ void OTA_SERVICE_SystemReboot(void);
 Uint16 OTA_SERVICE_TxCalCrc(Uint16 crc, Uint16* buf, Uint16 len);
 Uint16 OTA_SERVICE_TxEnQueOneFrame(SCITXQUE* txQue);
 
+Uint16 OTA_SERVICE_SetFwUpdateFlag(void);
+
 void OTA_SERVICE_EnableWatchDog(void);
 void OTA_SERVICE_DisableWatchDog(void);
 
@@ -176,9 +178,10 @@ void OTA_SERVICE_TestData(void)
 
 OTA_SERVICE_LOG_CNT gOtaServiceLogCnt = 
 {
-    .serialNum      = 0,
-    .writeFailCnt   = 0,
-    .eraseFailCnt   = 0,
+    .serialNum          = 0,
+    .writeFailCnt       = 0,
+    .eraseFailCnt       = 0,
+    .setFwUpdateFail    = 0,
 };
 
 OTA_SERVICE_RX_APP gOtaServiceRxApp =
@@ -227,6 +230,7 @@ OTA_SERVICE_ADT gOtaServiceAdt =
 
     .pfReadCurVerNum    = NULL,
     .pfReadNewVerNum    = NULL,
+    .pfSetFwUpdateFlag  = NULL,
 
     .pImageBitMap       = gImageBitMap,
     .imageTotalLines    = 0,
@@ -545,8 +549,16 @@ Uint16 OTA_SERVICE_ProcessOneFrame(SCIRXQUE* q)
             {
                 return 0;
             }
+
             pOtaAdt->currentStatus = OTA_SERVICE_END;
+
+            if (!(pOtaAdt->pfSetFwUpdateFlag()))
+            {
+
+            }
+
             pOtaAdt->pfSystemReboot();
+
             break;
         case OTA_RX_RFU1:
             break;
@@ -697,6 +709,7 @@ void OTA_SERVICE_SystemReboot(void)
 {
     // TODO FW need to set a flag to indicate that there is a new FW need to update
     // TODO disable the watch dog to force the system reboot
+    OTA_SERVICE_EnableWatchDog();
 }
 
 Uint16 OTA_SERVICE_GetOpcode(Uint16* data)
@@ -806,4 +819,20 @@ void OTA_SERVICE_DisableWatchDog(void)
     EALLOW;
     SysCtrlRegs.WDCR= 0x0068;
     EDIS;
+}
+
+Uint16 OTA_SERVICE_SetFwUpdateFlag(void)
+{
+    Uint16 ret;
+    Uint16 data[2] = {0,1};
+    Uint32 addr = GLOBAL_START_ADDR;
+    Uint16 len = 1;
+
+    OTA_SERVICE_INTERRUPT_DISABLE();
+
+    ret =  OTA_SERVICE_FlashWriteAndVerify(addr, data, len);
+
+    OTA_SERVICE_INTERRUPT_ENABLE();
+
+    return !ret;
 }

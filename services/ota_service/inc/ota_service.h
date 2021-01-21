@@ -241,12 +241,14 @@ typedef Uint16(*CHECK_ADDR)(Uint32 addr);
 
 typedef void(*SYSTEM_REBOOT)(void);
 
+typedef void(*SET_FW_UPDATE_FLAG)(void);
 
 typedef struct
 {
     Uint16 serialNum;
     Uint16 writeFailCnt;
     Uint16 eraseFailCnt;
+    Uint16 setFwUpdatFail;
     /* data */
 }OTA_SERVICE_LOG_CNT;
 
@@ -336,6 +338,7 @@ typedef struct
 
     READ_CUR_VER_NUM    pfReadCurVerNum;
     READ_NEW_VER_NUM    pfReadNewVerNum;
+    SET_FW_UPDATE_FLAG  pfSetFwUpdateFlag;
 
     Uint16*             pImageBitMap;
     Uint16              imageTotalLines;
