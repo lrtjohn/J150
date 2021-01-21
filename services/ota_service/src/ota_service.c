@@ -63,6 +63,9 @@ void OTA_SERVICE_SystemReboot(void);
 Uint16 OTA_SERVICE_TxCalCrc(Uint16 crc, Uint16* buf, Uint16 len);
 Uint16 OTA_SERVICE_TxEnQueOneFrame(SCITXQUE* txQue);
 
+void OTA_SERVICE_EnableWatchDog(void);
+void OTA_SERVICE_DisableWatchDog(void);
+
 #if (OTA_TEST == INCLUDE_FEATURE)
 OTA_TEST_VERIFY gOtaServiceTestData = 
 {
@@ -788,4 +791,19 @@ Uint16 OTA_SERVICE_TxEnQueOneFrame(SCITXQUE* txQue)
     }
 
     return 1;
+}
+
+void OTA_SERVICE_EnableWatchDog(void)
+{
+	EALLOW;
+    SysCtrlRegs.WDCR= 0x002f;
+	SysCtrlRegs.SCSR= 0;
+    EDIS;
+}
+
+void OTA_SERVICE_DisableWatchDog(void)
+{
+    EALLOW;
+    SysCtrlRegs.WDCR= 0x0068;
+    EDIS;
 }
