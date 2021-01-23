@@ -241,14 +241,14 @@ typedef Uint16(*CHECK_ADDR)(Uint32 addr);
 
 typedef void(*SYSTEM_REBOOT)(void);
 
-typedef void(*SET_FW_UPDATE_FLAG)(void);
+typedef Uint16(*SET_FW_UPDATE_FLAG)(void);
 
 typedef struct
 {
     Uint16 serialNum;
     Uint16 writeFailCnt;
     Uint16 eraseFailCnt;
-    Uint16 setFwUpdatFail;
+    Uint16 setFwUpdateFail;
     /* data */
 }OTA_SERVICE_LOG_CNT;
 

@@ -230,7 +230,7 @@ OTA_SERVICE_ADT gOtaServiceAdt =
 
     .pfReadCurVerNum    = NULL,
     .pfReadNewVerNum    = NULL,
-    .pfSetFwUpdateFlag  = NULL,
+    .pfSetFwUpdateFlag  = OTA_SERVICE_SetFwUpdateFlag,
 
     .pImageBitMap       = gImageBitMap,
     .imageTotalLines    = 0,
@@ -541,6 +541,12 @@ Uint16 OTA_SERVICE_ProcessOneFrame(SCIRXQUE* q)
                 return 0;
             }
 
+            if (!(pOtaAdt->pfEraseFlashG()))
+            {
+                pOtaAdt->pOtaSeviceLogCnt->eraseFailCnt++;
+                return 0;
+            }
+
             // TODO need to check the system state machine state is stop or not
             pOtaAdt->currentStatus = OTA_SERVICE_RX_START_CMD;
             break;
@@ -808,10 +814,12 @@ Uint16 OTA_SERVICE_TxEnQueOneFrame(SCITXQUE* txQue)
 
 void OTA_SERVICE_EnableWatchDog(void)
 {
+#if (0)
 	EALLOW;
     SysCtrlRegs.WDCR= 0x002f;
 	SysCtrlRegs.SCSR= 0;
     EDIS;
+#endif
 }
 
 void OTA_SERVICE_DisableWatchDog(void)
@@ -821,18 +829,24 @@ void OTA_SERVICE_DisableWatchDog(void)
     EDIS;
 }
 
+Uint32 gGaddress = GLOBAL_START_ADDR;
+Uint32 gRet = 4;
+
 Uint16 OTA_SERVICE_SetFwUpdateFlag(void)
 {
     Uint16 ret;
-    Uint16 data[2] = {0,1};
-    Uint32 addr = GLOBAL_START_ADDR;
+    Uint16 data[2] = {2, 1};
+    Uint32 addr = 0x328000;
     Uint16 len = 1;
 
+    gGaddress = addr;
     OTA_SERVICE_INTERRUPT_DISABLE();
 
     ret =  OTA_SERVICE_FlashWriteAndVerify(addr, data, len);
 
     OTA_SERVICE_INTERRUPT_ENABLE();
+
+    gRet = ret;
 
     return !ret;
 }
