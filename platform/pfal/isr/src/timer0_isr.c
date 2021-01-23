@@ -33,53 +33,34 @@ TIMER_INTERVAL_CNT gTimerCnt =
 	0
 };
 
-PWRBUS_VLTGE_QUE* pwrBus_Vltge_Que = NULL;
+int16 pwrBus_Vltge_Que_Init [PWRBUS_LEN] = {ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO,ZERO};
+
+_PF_T0_RING_BUFFER pwrBus_Vltge_Que = {};
 
 void Init_Timer0_Buf(void)
 {
-	if(pwrBus_Vltge_Que == NULL)
-	{
-		pwrBus_Vltge_Que = (PWRBUS_VLTGE_QUE*)malloc(sizeof(PWRBUS_VLTGE_QUE));
-		if(pwrBus_Vltge_Que == NULL)
-		{
-			//TODO generate alarm
-			SET_SYS_MEMORY_MOLLOC_ERROR;
-			return;
-		}
-		pwrBus_Vltge_Que->front = 0;
-		pwrBus_Vltge_Que->rear = 0;
-		pwrBus_Vltge_Que->bufferLen = 10;
-		pwrBus_Vltge_Que->buffer = (Uint16*)malloc(sizeof(Uint16) * pwrBus_Vltge_Que->bufferLen);
-		if(pwrBus_Vltge_Que->buffer == NULL)
-		{
-			SET_SYS_MEMORY_MOLLOC_ERROR;
-			return;
-		}
-		memset(pwrBus_Vltge_Que->buffer, 0 , sizeof(pwrBus_Vltge_Que->buffer));
-	}
+	pwrBus_Vltge_Que.newP = ZERO;
+	pwrBus_Vltge_Que.oldP = ZERO;
+	pwrBus_Vltge_Que.bufferLen = PWM_LEN;
+	pwrBus_Vltge_Que.buffer = pwrBus_Vltge_Que_Init;
 }
 
-int PwrBusVotlageEnQueue(Uint16 e, PWRBUS_VLTGE_QUE *PWRBUSVoltageQue)
+int PwrBusVotlageEnQueue(Uint16 newData, _PF_T0_RING_BUFFER *pbuf)
 {
 	static int isfull = 0;
-	if((PWRBUSVoltageQue->rear + 1) % (PWRBUSVoltageQue->bufferLen) == PWRBUSVoltageQue->front)
+	if(((pbuf -> oldP + ONE) % (pbuf -> bufferLen)) == (pbuf -> newP))
 	{
-		PWRBUSVoltageQue->front = (PWRBUSVoltageQue->front + 1) % (PWRBUSVoltageQue->bufferLen);
+		pbuf -> newP = (pbuf -> newP + ONE) % pbuf -> bufferLen;
 		isfull = 1;
 	}
-	else{
+	else
+	{
 		isfull = 0;
 	}
 
-	PWRBUSVoltageQue->buffer[PWRBUSVoltageQue->rear] = e;
-	PWRBUSVoltageQue->rear = (PWRBUSVoltageQue->rear + 1) % (PWRBUSVoltageQue->bufferLen);
+	pbuf -> buffer[pbuf -> oldP] = newData;
+	pbuf -> oldP = (pbuf -> oldP + ONE) % pbuf -> bufferLen;
 	return isfull;
-}
-
-void PwrBusVotlageClrQueue(PWRBUS_VLTGE_QUE *PWRBUSVoltageQue)
-{
-	PWRBUSVoltageQue->rear = 0;
-	PWRBUSVoltageQue->front = 0;
 }
 
 void PwrBusVoltageMonitor(void)
@@ -98,7 +79,7 @@ void PwrBusVoltageMonitor(void)
 		cnt_UnderWarnLimit = 0;
 		if(pwrbus_buildup == 0){
 			++cnt_NormalVoltage;
-			PwrBusVotlageEnQueue(gSysAnalogVar.single.var[updatePower270V_M].value, pwrBus_Vltge_Que);
+			PwrBusVotlageEnQueue(gSysAnalogVar.single.var[updatePower270V_M].value, &pwrBus_Vltge_Que);
 			if(cnt_NormalVoltage > PWRBUS_BUILTUP_TIMES){
 				pwrbus_buildup = 1;
 				tmp_cnt = 1;
@@ -106,8 +87,8 @@ void PwrBusVoltageMonitor(void)
 			}
 		}
 		else{
-			if(PwrBusVotlageEnQueue(gSysAnalogVar.single.var[updatePower270V_M].value, pwrBus_Vltge_Que)){
-				pwrbus_delta = (pwrBus_Vltge_Que->buffer[pwrBus_Vltge_Que->rear])-(pwrBus_Vltge_Que->buffer[pwrBus_Vltge_Que->front]);
+			if(PwrBusVotlageEnQueue(gSysAnalogVar.single.var[updatePower270V_M].value, &pwrBus_Vltge_Que)){
+				pwrbus_delta = (pwrBus_Vltge_Que.buffer[pwrBus_Vltge_Que.oldP])-(pwrBus_Vltge_Que.buffer[pwrBus_Vltge_Que.newP]);
 				if(pwrbus_delta > PWRBUS_VOLTAGE_DELTA){
 					cnt_VoltageDelta = 0;
 					CLR_J150_POWER_BUS;
@@ -139,7 +120,7 @@ void PwrBusVoltageMonitor(void)
 		if(cnt_UnderVoltage > PWRBUS_UNDERVL_TIMES){
 			pwrbus_buildup = 0;
 			CLR_J150_POWER_BUS;
-			PwrBusVotlageClrQueue(pwrBus_Vltge_Que);
+			Init_Timer0_Buf();
 			SET_SYS_BUS_UNDER_VOLTAGE_ALARM;
 			SET_BUS_UND_VOLT_PROT;
 			SET_BUS_UNDER_VOLT_WARN;

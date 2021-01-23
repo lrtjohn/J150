@@ -20,12 +20,12 @@ typedef struct _TIMER_INTERVAL_CNT
 #define PWRBUS_UNWARNL_TIMES (5)
 #define PWRBUS_VOLTAGE_DELTA (55)
 
-typedef PF_RING_BUFFER PWRBUS_VLTGE_QUE;
-extern PWRBUS_VLTGE_QUE* pwrBus_Vltge_Que;
+#define PWRBUS_LEN 10
+
+extern _PF_T0_RING_BUFFER pwrBus_Vltge_Que;
+int PwrBusVotlageEnQueue(Uint16 newData, _PF_T0_RING_BUFFER *pbuf);
 
 void Init_Timer0_Buf(void);
-int PwrBusVotlageEnQueue(Uint16 e, PWRBUS_VLTGE_QUE *PWRBUSVoltageQue);
-void PwrBusVotlageClrQueue(PWRBUS_VLTGE_QUE *PWRBUSVoltageQue);
 void MotorSpeed(void);
 void updateCtrlStrategyParameters(void);
 void CtrlStrategyCalculation(void);

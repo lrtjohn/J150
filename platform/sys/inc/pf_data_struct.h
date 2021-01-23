@@ -22,6 +22,13 @@ typedef struct
     int32 bufSum;
 } _PF_S_RING_BUFFER;
 
+typedef struct
+{
+    int16 newP;
+    int16 oldP;
+    int16 bufferLen;
+    int16* buffer;
+} _PF_T0_RING_BUFFER;
 
 typedef struct _PF_HIGH_LOW_BYTE{
 	Uint16 h : 8;
