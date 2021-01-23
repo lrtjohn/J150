@@ -829,24 +829,19 @@ void OTA_SERVICE_DisableWatchDog(void)
     EDIS;
 }
 
-Uint32 gGaddress = GLOBAL_START_ADDR;
-Uint32 gRet = 4;
-
 Uint16 OTA_SERVICE_SetFwUpdateFlag(void)
 {
     Uint16 ret;
     Uint16 data[2] = {2, 1};
-    Uint32 addr = 0x328000;
-    Uint16 len = 1;
+    Uint32 addr = GLOBAL_START_ADDR;
+    Uint16 len = 2;
 
-    gGaddress = addr;
     OTA_SERVICE_INTERRUPT_DISABLE();
 
     ret =  OTA_SERVICE_FlashWriteAndVerify(addr, data, len);
 
     OTA_SERVICE_INTERRUPT_ENABLE();
 
-    gRet = ret;
 
     return !ret;
 }

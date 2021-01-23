@@ -9,11 +9,11 @@
 #include <stdlib.h>
 
 /*********************************************************************************
- ██████  ████████  █████      ███████ ███████ ██████  ██    ██ ██  ██████ ███████ 
-██    ██    ██    ██   ██     ██      ██      ██   ██ ██    ██ ██ ██      ██      
-██    ██    ██    ███████     ███████ █████   ██████  ██    ██ ██ ██      █████   
-██    ██    ██    ██   ██          ██ ██      ██   ██  ██  ██  ██ ██      ██      
- ██████     ██    ██   ██     ███████ ███████ ██   ██   ████   ██  ██████ ███████ 
+ ██████  ████████  █████      ███████ ███████ ██████  ██    ██ ██  ██████ ███████
+██    ██    ██    ██   ██     ██      ██      ██   ██ ██    ██ ██ ██      ██
+██    ██    ██    ███████     ███████ █████   ██████  ██    ██ ██ ██      █████
+██    ██    ██    ██   ██          ██ ██      ██   ██  ██  ██  ██ ██      ██
+ ██████     ██    ██   ██     ███████ ███████ ██   ██   ████   ██  ██████ ███████
 *********************************************************************************/
 
 /* The h file is for the OTA process definition and declaration */
@@ -47,8 +47,8 @@
 #define OTA_SERVICE_B_AREA_SECTOR   (E_SECTOR | D_SECTOR)
 #define OTA_SERVICE_G_AREA_SECTOR   (B_SECTOR | C_SECTOR)
 
-#define TI_28_START_ADDR            (0x300000)
-#define TI_28_ONE_SECTOR_LEN        (0x7FFFF)
+#define TI_28_START_ADDR            (0x00300000)
+#define TI_28_ONE_SECTOR_LEN        (0x00007FFF)
 
 #define H_SECTOR_28_START           (TI_28_START_ADDR)
 #define H_SECTOR_28_LEN             (TI_28_ONE_SECTOR_LEN)
@@ -88,19 +88,19 @@
 */
 #if (OTA_SOLUTION_1 == INCLUDE_FEATURE)
 #define USER_BOOTLOADER_START_ADDR      (H_SECTOR_28_START)
-#define USER_BOOTLOADER_LEN             (1 * TI_28_ONE_SECTOR_LEN)
+#define USER_BOOTLOADER_LEN             (1UL * TI_28_ONE_SECTOR_LEN)
 #define USER_BOOTLOADER_END_ADDR        (USER_BOOTLOADER_START_ADDR + USER_BOOTLOADER_LEN)
 
 #define A_APPLICATION_START_ADDR        (G_SECTOR_28_START)
-#define A_APPLICATION_LEN               (2 * TI_28_ONE_SECTOR_LEN)
+#define A_APPLICATION_LEN               (2UL * TI_28_ONE_SECTOR_LEN)
 #define A_APPLICATION_END_ADDR          (A_APPLICATION_START_ADDR + A_APPLICATION_LEN)
 
 #define B_APPLICATION_START_ADDR        (E_SECTOR_28_START)
-#define B_APPLICATION_LEN               (2 * TI_28_ONE_SECTOR_LEN)
+#define B_APPLICATION_LEN               (2UL * TI_28_ONE_SECTOR_LEN)
 #define B_APPLICATION_END_ADDR          (B_APPLICATION_START_ADDR + B_APPLICATION_LEN)
 
 #define GLOBAL_START_ADDR               (C_SECTOR_28_START)
-#define GLOBAL_LEN                      (2 * TI_28_ONE_SECTOR_LEN)
+#define GLOBAL_LEN                      (2UL * TI_28_ONE_SECTOR_LEN)
 #define GLOBAL_END_ADDR                 (GLOBAL_START_ADDR + GLOBAL_LEN)
 
 #define PROTECT_START_ADDR              (0x33FF80)
