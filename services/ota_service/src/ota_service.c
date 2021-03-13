@@ -9,6 +9,7 @@
 *********************************************************************************/
 #define OTA_SERVICE_FRAME_ARRAY_LEN     (80)
 
+Uint16 gNewFwVersion = 0;
 extern SCITXQUE* gScibTxQue;
 Uint16 gFrameArray[OTA_SERVICE_FRAME_ARRAY_LEN] = {0};
 Uint16 gFrameArrayFlash[OTA_SERVICE_FRAME_ARRAY_LEN] = {0};
@@ -894,16 +895,19 @@ void OTA_SERVICE_DisableWatchDog(void)
 Uint16 OTA_SERVICE_SetFwUpdateFlag(void)
 {
     Uint16 ret;
-    Uint16 data[2] = {2, 1};
+    Uint16 data[3] = {0, 0, 0};
     Uint32 addr = GLOBAL_START_ADDR;
-    Uint16 len = 2;
+    Uint16 len = 3;
+
+    data[0] = 1;
+    data[1] = gSysVersionNum;
+    data[2] = gNewFwVersion;
 
     OTA_SERVICE_INTERRUPT_DISABLE();
 
     ret =  OTA_SERVICE_FlashWriteAndVerify(addr, data, len);
 
     OTA_SERVICE_INTERRUPT_ENABLE();
-
 
     return !ret;
 }
