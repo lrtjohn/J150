@@ -138,9 +138,11 @@
 
 #define OTA_SERVICE_RX_IMAGE_SIZE           (20)
 
-#define OTA_SERVICE_TX_ONE_FRAME_SIZE       (12)
-#define OTA_SERVICE_SERIAL_NUM_OPCODE       (0xf2)
-#define OTA_SERVICE_END_OPCODE              (0xf4)
+#define OTA_SERVICE_TX_ONE_FRAME_SIZE           (12)
+#define OTA_SERVICE_SERIAL_NUM_OPCODE           (0xf2)
+#define OTA_SERVICE_END_OPCODE                  (0xf4)
+#define OTA_SERVICE_START_CMD_ACK_OPCODE        (0xf6)
+#define OTA_SERVICE_ERASE_FLASH_STATE_OPCODE    (0xf7)
 
 #define OTA_SERVICE_OPCODE_POS              (5)
 #define OTA_SERVICE_SERIAL_NUM_POS          (6)

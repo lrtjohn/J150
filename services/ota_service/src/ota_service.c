@@ -527,6 +527,8 @@ Uint16 OTA_SERVICE_ProcessOneFrame(SCIRXQUE* q)
                 return 0;
             }
 
+            OTA_SERVICE_SendStartCmdAck(gScibTxQue);
+
             if (!(pOtaAdt->pfEraseFlashB()))
             {
                 // TODO What should FW do if erase flash failed?
@@ -538,17 +540,21 @@ Uint16 OTA_SERVICE_ProcessOneFrame(SCIRXQUE* q)
                  * The other option: Wait here, wait for the second try from the upper layer command.
                  */
                 pOtaAdt->pOtaSeviceLogCnt->eraseFailCnt++;
+                OTA_SERVICE_SendEraseFlashFail(gScibTxQue);
                 return 0;
             }
 
             if (!(pOtaAdt->pfEraseFlashG()))
             {
                 pOtaAdt->pOtaSeviceLogCnt->eraseFailCnt++;
+                OTA_SERVICE_SendEraseFlashFail(gScibTxQue);
                 return 0;
             }
 
             // TODO need to check the system state machine state is stop or not
             pOtaAdt->currentStatus = OTA_SERVICE_RX_START_CMD;
+            OTA_SERVICE_SendEraseFlashSuccess(gScibTxQue);
+
             break;
         case OTA_RX_E_CMD:
             if (pOtaAdt->currentStatus != OTA_SERVICE_RUNNING)
@@ -744,6 +750,60 @@ Uint16 OTA_SERVICE_SendSerialNum(SCITXQUE* txQue)
     gOtaTxFrameArray[OTA_SERVICE_OPCODE_POS]            = OTA_SERVICE_SERIAL_NUM_OPCODE;
     gOtaTxFrameArray[OTA_SERVICE_SERIAL_NUM_POS]        = (char)PTR_OTA_SERVICE_ADT->rxLineNum >> 8;
     gOtaTxFrameArray[OTA_SERVICE_SERIAL_NUM_POS + 1]    = (char)PTR_OTA_SERVICE_ADT->rxLineNum;
+
+    crc = OTA_SERVICE_TxCalCrc(crc, gOtaTxFrameArray, OTA_SERVICE_TX_ONE_FRAME_SIZE);
+
+    gOtaTxFrameArray[OTA_SERVICE_CRC_POS]               = (char)crc >> 8;
+    gOtaTxFrameArray[OTA_SERVICE_CRC_POS + 1]           = (char)crc;
+
+    OTA_SERVICE_TxPackData(txQue);
+
+    return 0;
+}
+
+Uint16 OTA_SERVICE_SendStartCmdAck(SCITXQUE* txQue)
+{
+    int crc = 0;
+
+    gOtaTxFrameArray[OTA_SERVICE_OPCODE_POS]            = OTA_SERVICE_START_CMD_ACK_OPCODE;
+    gOtaTxFrameArray[OTA_SERVICE_SERIAL_NUM_POS]        = 0;
+    gOtaTxFrameArray[OTA_SERVICE_SERIAL_NUM_POS + 1]    = 0;
+
+    crc = OTA_SERVICE_TxCalCrc(crc, gOtaTxFrameArray, OTA_SERVICE_TX_ONE_FRAME_SIZE);
+
+    gOtaTxFrameArray[OTA_SERVICE_CRC_POS]               = (char)crc >> 8;
+    gOtaTxFrameArray[OTA_SERVICE_CRC_POS + 1]           = (char)crc;
+
+    OTA_SERVICE_TxPackData(txQue);
+
+    return 0;
+}
+
+Uint16 OTA_SERVICE_SendEraseFlashSuccess(SCITXQUE* txQue)
+{
+    int crc = 0;
+
+    gOtaTxFrameArray[OTA_SERVICE_OPCODE_POS]            = OTA_SERVICE_ERASE_FLASH_STATE_OPCODE;
+    gOtaTxFrameArray[OTA_SERVICE_SERIAL_NUM_POS]        = 0;
+    gOtaTxFrameArray[OTA_SERVICE_SERIAL_NUM_POS + 1]    = 0;
+
+    crc = OTA_SERVICE_TxCalCrc(crc, gOtaTxFrameArray, OTA_SERVICE_TX_ONE_FRAME_SIZE);
+
+    gOtaTxFrameArray[OTA_SERVICE_CRC_POS]               = (char)crc >> 8;
+    gOtaTxFrameArray[OTA_SERVICE_CRC_POS + 1]           = (char)crc;
+
+    OTA_SERVICE_TxPackData(txQue);
+
+    return 0;
+}
+
+Uint16 OTA_SERVICE_SendEraseFlashFail(SCITXQUE* txQue)
+{
+    int crc = 0;
+
+    gOtaTxFrameArray[OTA_SERVICE_OPCODE_POS]            = OTA_SERVICE_ERASE_FLASH_STATE_OPCODE;
+    gOtaTxFrameArray[OTA_SERVICE_SERIAL_NUM_POS]        = 0;
+    gOtaTxFrameArray[OTA_SERVICE_SERIAL_NUM_POS + 1]    = 1;
 
     crc = OTA_SERVICE_TxCalCrc(crc, gOtaTxFrameArray, OTA_SERVICE_TX_ONE_FRAME_SIZE);
 
