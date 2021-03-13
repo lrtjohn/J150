@@ -9,7 +9,17 @@
 *********************************************************************************/
 #define OTA_SERVICE_FRAME_ARRAY_LEN     (80)
 
-Uint16 gNewFwVersion = 0;
+#pragma DATA_SECTION(NewFwVersion,"NewFwVersionFile");
+const Uint16 NewFwVersion[2] = 
+{
+    0x0802, 
+    0x5634
+};
+
+Uint16 OTA_SERVICE_SendEraseFlashFail(SCITXQUE* txQue);
+Uint16 OTA_SERVICE_SendEraseFlashSuccess(SCITXQUE* txQue);
+Uint16 OTA_SERVICE_SendStartCmdAck(SCITXQUE* txQue);
+
 extern SCITXQUE* gScibTxQue;
 Uint16 gFrameArray[OTA_SERVICE_FRAME_ARRAY_LEN] = {0};
 Uint16 gFrameArrayFlash[OTA_SERVICE_FRAME_ARRAY_LEN] = {0};
@@ -901,7 +911,7 @@ Uint16 OTA_SERVICE_SetFwUpdateFlag(void)
 
     data[0] = 1;
     data[1] = gSysVersionNum;
-    data[2] = gNewFwVersion;
+    data[2] = NewFwVersion[0];
 
     OTA_SERVICE_INTERRUPT_DISABLE();
 

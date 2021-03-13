@@ -93,11 +93,13 @@ PAGE 0:    /* Program Memory */
 	FLASHF_BEGIN : origin = 0x310000, length = 0x000010
 	/*-----------------------------------------------------------------------------*/
 
-   FLASHF      : origin = 0x310010, length = 0x007ff0     /* on-chip FLASH */  
+   FLASHF      : origin = 0x310010, length = 0x007fee     /* on-chip FLASH */  
+   FLASH_NV    : origin = 0x317ffe, length = 2
 
    FLASHE      : origin = 0x318000, length = 0x008000     /* on-chip FLASH */
    FLASHD      : origin = 0x320000, length = 0x008000     /* on-chip FLASH */
    FLASHC      : origin = 0x328000, length = 0x008000     /* on-chip FLASH */
+   FLASHB      : origin = 0x330000, length = 0x008000     /* on-chip FLASH */
    FLASHA      : origin = 0x338000, length = 0x007F80     /* on-chip FLASH */
    CSM_RSVD    : origin = 0x33FF80, length = 0x000076     /* Part of FLASHA.  Program with all 0x0000 when CSM is in use. */
    BEGIN       : origin = 0x33FFF6, length = 0x000002     /* Part of FLASHA.  Used for "boot to Flash" bootloader mode. */
@@ -124,7 +126,6 @@ PAGE 1 :   /* Data Memory */
    RAML6       : origin = 0x00E000, length = 0x001000     /* on-chip RAM block L1 */
    RAML7       : origin = 0x00F000, length = 0x001000     /* on-chip RAM block L1 */
    ZONE7B      : origin = 0x20FC00, length = 0x000400     /* XINTF zone 7 - data space */
-   FLASHB      : origin = 0x330000, length = 0x008000     /* on-chip FLASH */
 }
 
 /* Allocate sections to memory blocks.
@@ -164,6 +165,7 @@ SECTIONS
 
    csmpasswds          : > CSM_PWL     PAGE = 0
    csm_rsvd            : > CSM_RSVD    PAGE = 0
+   NewFwVersionFile    : > FLASH_NV    PAGE = 0
    
    /* Allocate uninitalized data sections: */
    .stack              : > RAMM1       PAGE = 1
