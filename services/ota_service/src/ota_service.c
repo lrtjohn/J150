@@ -472,8 +472,6 @@ Uint16 OTA_SERVICE_ProcessOneFrame(SCIRXQUE* q)
         return 0;
     }
     
-    pOtaAdt->pfSendSerialNum(gScibTxQue);
-
     switch(opcode)
     {
         case OTA_UD_H_ADDR:
@@ -487,6 +485,7 @@ Uint16 OTA_SERVICE_ProcessOneFrame(SCIRXQUE* q)
                 return 0;
             }
 
+            pOtaAdt->pfSendSerialNum(gScibTxQue);
             // TODO FW need to add a offset of the data buffer
             pOtaRxApp->pfUpdateHighAddr(gFrameArray, pOtaAdtRxAdapt->rxFrameLen);
 
@@ -517,6 +516,7 @@ Uint16 OTA_SERVICE_ProcessOneFrame(SCIRXQUE* q)
                 pOtaAdt->pOtaSeviceLogCnt->serialNum++;
             }
 #endif
+            pOtaAdt->pfSendSerialNum(gScibTxQue);
 
             break;
         case OTA_RX_S_CMD:
@@ -562,6 +562,8 @@ Uint16 OTA_SERVICE_ProcessOneFrame(SCIRXQUE* q)
             {
 
             }
+
+            pOtaAdt->pfSendSerialNum(gScibTxQue);
 
             pOtaAdt->pfSystemReboot();
 
