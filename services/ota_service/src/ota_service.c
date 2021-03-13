@@ -13,7 +13,7 @@
 const Uint16 NewFwVersion[2] = 
 {
     0x0802, 
-    0x5634
+    0x5638      /* FW need to update the version number here, this value will be stored at a fixed Flash address*/
 };
 
 Uint16 OTA_SERVICE_SendEraseFlashFail(SCITXQUE* txQue);
@@ -734,6 +734,11 @@ void OTA_SERVICE_SystemReboot(void)
 {
     // TODO FW need to set a flag to indicate that there is a new FW need to update
     // TODO disable the watch dog to force the system reboot
+	while(gScibTxQue->front != gScibTxQue->rear)
+    {
+
+    }
+
     OTA_SERVICE_EnableWatchDog();
 }
 
@@ -887,9 +892,9 @@ Uint16 OTA_SERVICE_TxEnQueOneFrame(SCITXQUE* txQue)
 
 void OTA_SERVICE_EnableWatchDog(void)
 {
-#if (0)
+#if (1)
 	EALLOW;
-    SysCtrlRegs.WDCR= 0x002f;
+    SysCtrlRegs.WDCR= 0x0028;
 	SysCtrlRegs.SCSR= 0;
     EDIS;
 #endif
