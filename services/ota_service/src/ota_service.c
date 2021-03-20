@@ -225,7 +225,12 @@ OTA_SERVICE_RX_ADAPT gOtaServiceRxAdapt =
 
 OTA_SERVICE_ADT gOtaServiceAdt = 
 {
-    .currentStatus      = OTA_SERVICE_IDLE, /* If system hss two kind of protocols, the default current status should be disabled*/
+#if (AB_OTA_ENABLE_DEFAULT_FEATURE == INCDLUE_FEATURE)
+    .currentStatus      = OTA_SERVICE_IDLE,         /* If system has two kinds of protocols, the default current status should be disabled*/
+#else
+    .currentStatus      = OTA_SERVICE_DISABLE,      /* If system has two kinds of protocols, the default current status should be disabled*/
+#endif
+
 #if (OTA_TEST == INCLUDE_FEATURE)
     .pTestData          = &gOtaServiceTestData,
 #endif

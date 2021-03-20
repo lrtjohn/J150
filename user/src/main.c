@@ -116,7 +116,7 @@ void main(void)
 
 		CheckScibRxError();
 
-#if(J150_SCI_PROTOCOL_TX == NOT_INCLUDE_FEATURE)
+#if(J150_SCI_PROTOCOL_TX == EXCLUDE_FEATURE)
         PackSciTxPacket(gScibTxQue,gSciTxVar);
 #endif
 
