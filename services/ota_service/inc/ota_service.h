@@ -306,6 +306,7 @@ typedef enum
     OTA_RX_RFU2     = 5,
     OTA_RX_RFU3     = 6,
     OTA_RX_RFU4     = 7,
+    OTA_RX_RESET    = 9,
 }E_OTA_OPCODE;
 
 typedef enum

@@ -598,6 +598,13 @@ Uint16 OTA_SERVICE_ProcessOneFrame(SCIRXQUE* q)
             break;
         case OTA_RX_RFU4:
             break;
+        case OTA_RX_RESET:
+            /* TODO Reset opcode is used when something error during OTA process
+             * Upper layer use this opcode to reset the OTA process
+             * Then Upper layer could restart a new OTA process
+             * Need to clean up things related with the OTA process, like serial number, couters...
+             */
+            break;
         default:
             break;
     }
