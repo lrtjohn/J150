@@ -737,14 +737,13 @@ void OTA_SERVICE_RxDataToFlashData(Uint16* des, Uint16* src, Uint16 len)
 
 void OTA_SERVICE_SystemReboot(void)
 {
-    // TODO FW need to set a flag to indicate that there is a new FW need to update
-    // TODO disable the watch dog to force the system reboot
+#if (SYSTEM_REBOOT_AUTO_FEATURE == INCLUDE_FEATURE)
 	while(gScibTxQue->front != gScibTxQue->rear)
     {
 
     }
-
     OTA_SERVICE_EnableWatchDog();
+#endif /* SYSTEM_REBOOT_AUTO_FEATURE == INCLUDE_FEATURE */
 }
 
 Uint16 OTA_SERVICE_GetOpcode(Uint16* data)

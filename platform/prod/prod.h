@@ -50,6 +50,6 @@
 /* System reboot automatically after received the update FW image
  * If you want to reboot the system by yourself, please exclude this feature
  */
-#define SYSTEM_REBOOT_FEATURE               INCLUDE_FEATURE
+#define SYSTEM_REBOOT_AUTO_FEATURE          INCLUDE_FEATURE
 
 #endif
